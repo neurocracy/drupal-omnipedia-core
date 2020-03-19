@@ -1,0 +1,5 @@
+services:
+  # Timeline service.
+  omnipedia.timeline:
+    class: Drupal\omnipedia_core\Service\Timeline
+    arguments: ['@session']
