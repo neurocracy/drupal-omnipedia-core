@@ -3,3 +3,10 @@ services:
   omnipedia.timeline:
     class: Drupal\omnipedia_core\Service\Timeline
     arguments: ['@session']
+
+  # Event subscriber to update current date if a wiki page node is being viewed.
+  omnipedia_core.timeline_wiki_page_node_event_subscriber:
+    class: \Drupal\omnipedia_core\EventSubscriber\TimelineWikiPageNodeEventSubscriber
+    arguments: ['@omnipedia.timeline', '@current_route_match']
+    tags:
+      - { name: 'event_subscriber' }
