@@ -45,7 +45,7 @@ class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
   public function __construct(
     TimelineInterface   $timeline,
     RouteMatchInterface $routeMatch
-  ): void {
+  ) {
     $this->timeline   = $timeline;
     $this->routeMatch = $routeMatch;
   }
