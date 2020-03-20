@@ -1,7 +1,7 @@
 services:
   # Timeline service.
   omnipedia.timeline:
-    class: Drupal\omnipedia_core\Service\Timeline
+    class: \Drupal\omnipedia_core\Service\Timeline
     arguments: ['@session']
 
   # Event subscriber to update current date if a wiki page node is being viewed.
