@@ -4,6 +4,13 @@ services:
     class: \Drupal\omnipedia_core\Service\Timeline
     arguments: ['@session']
 
+  # Dates cache context.
+  cache_context.omnipedia_dates:
+    class: \Drupal\omnipedia_core\Cache\Context\DatesCacheContext
+    arguments: ['@omnipedia.timeline']
+    tags:
+      - { name: cache.context }
+
   # Event subscriber to update current date if a wiki page node is being viewed.
   omnipedia_core.timeline_wiki_page_node_event_subscriber:
     class: \Drupal\omnipedia_core\EventSubscriber\TimelineWikiPageNodeEventSubscriber
