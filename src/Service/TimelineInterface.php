@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  * The Omnipedia timeline service interface.
  */
 interface TimelineInterface {
+
   /**
    * Validate and set the current date.
    *
@@ -86,4 +87,5 @@ interface TimelineInterface {
   public function getDateFormatted(
     $date = 'current', string $format = 'long'
   ): string;
+
 }
