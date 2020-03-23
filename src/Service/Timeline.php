@@ -179,7 +179,7 @@ class Timeline implements TimelineInterface {
   public function setCurrentDate($date): void {
     $dateObject = $this->getDateObject($date);
 
-    $this->currentDateString = $dateObject->format(self::DATE_FORMAT_STORAGE);
+    $this->currentDateString = $this->getDateFormatted($dateObject, 'storage');
 
     // Save to session storage.
     $this->session->set(
