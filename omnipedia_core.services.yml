@@ -2,7 +2,11 @@ services:
   # Timeline service.
   omnipedia.timeline:
     class: \Drupal\omnipedia_core\Service\Timeline
-    arguments: ['@session']
+    arguments:
+      - '@config.factory'
+      - '@entity_type.manager'
+      - '@session'
+      - '@state'
 
   # Dates cache context.
   cache_context.omnipedia_dates:

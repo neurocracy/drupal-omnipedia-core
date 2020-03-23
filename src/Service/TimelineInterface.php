@@ -14,10 +14,17 @@ interface TimelineInterface {
    * @param string|\Drupal\Core\Datetime\DrupalDateTime $date
    *   Either a string that can be parsed by
    *   \Drupal\Core\Datetime\DrupalDateTime or an instance of said class.
-   *
-   * @throws \InvalidArgumentException
    */
   public function setCurrentDate($date): void;
+
+  /**
+   * Validate and set the default date.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $date
+   *   Either a string that can be parsed by
+   *   \Drupal\Core\Datetime\DrupalDateTime or an instance of said class.
+   */
+  public function setDefaultDate($date): void;
 
   /**
    * Get a date object for a date.
@@ -27,6 +34,8 @@ interface TimelineInterface {
    *
    *   - 'current': Indicates the current date is to be used. This is the
    *     default.
+   *
+   *   - 'default': Indicates the default date is to be used.
    *
    *   - A string that can be parsed by \Drupal\Core\Datetime\DrupalDateTime
    *     without errors.
@@ -50,6 +59,8 @@ interface TimelineInterface {
    *
    *   - 'current': Indicates the current date is to be used. This is the
    *     default.
+   *
+   *   - 'default': Indicates the default date is to be used.
    *
    *   - A string that can be parsed by \Drupal\Core\Datetime\DrupalDateTime
    *     without errors.

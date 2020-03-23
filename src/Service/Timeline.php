@@ -2,7 +2,11 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -11,14 +15,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * The Omnipedia timeline service.
  */
 class Timeline implements TimelineInterface {
-  /**
-   * The default date when one can't be determined from content or session.
-   *
-   * @todo Instead of hard-coding here, grab the date field from the default
-   * front page node and store it in the Drupal state data to be retrieved in
-   * $this->findCurrentDate() if found.
-   */
-  public const DATE_DEFAULT = '2049-09-29';
 
   /**
    * The date format stored in the database.
@@ -52,11 +48,37 @@ class Timeline implements TimelineInterface {
   private const CURRENT_DATE_SESSION_KEY = 'omnipedia/currentDate';
 
   /**
+   * The Drupal state key where we store the default date.
+   */
+  private const DEFAULT_DATE_STATE_KEY = 'omnipedia.default_date';
+
+  /**
+   * The Drupal configuration object factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private $configFactory;
+
+  /**
+   * The Drupal entity type plug-in manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
    */
   private $session;
+
+  /**
+   * The Drupal state system manager.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  private $stateManager;
 
   /**
    * A cache of created date objects.
@@ -82,14 +104,45 @@ class Timeline implements TimelineInterface {
   protected $currentDateObject;
 
   /**
+   * The default date as a string.
+   *
+   * @var string
+   */
+  protected $defaultDateString;
+
+  /**
+   * The default date as a DrupalDateTime object.
+   *
+   * @var \Drupal\Core\Datetime\DrupalDateTime
+   */
+  protected $defaultDateObject;
+
+  /**
    * Constructs this service object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The Drupal configuration object factory service.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type plug-in manager.
    *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The Symfony session service.
+   *
+   * @param \Drupal\Core\State\StateInterface $stateManager
+   *   The Drupal state system manager.
    */
-  public function __construct(SessionInterface $session) {
+  public function __construct(
+    ConfigFactoryInterface      $configFactory,
+    EntityTypeManagerInterface  $entityTypeManager,
+    SessionInterface            $session,
+    StateInterface              $stateManager
+  ) {
     // Save dependencies.
-    $this->session = $session;
+    $this->configFactory      = $configFactory;
+    $this->entityTypeManager  = $entityTypeManager;
+    $this->session            = $session;
+    $this->stateManager       = $stateManager;
 
     $this->findCurrentDate();
   }
@@ -99,8 +152,6 @@ class Timeline implements TimelineInterface {
    *
    * @see $this->setCurrentDate()
    *   Validates and sets the current date.
-   *
-   * @todo Can this just be merged into $this->__construct()?
    */
   protected function findCurrentDate(): void {
     // Don't do this twice.
@@ -110,14 +161,14 @@ class Timeline implements TimelineInterface {
 
     // Retrieve the current date from session storage, if available, falling
     // back to the default date if not found.
-    //
-    // @todo When self::DATE_DEFAULT is removed, use $this->session->has() to
-    // check if the current date exists in session data, so that we don't do any
-    // extra work to get the default date if we don't need to.
-    $date = $this->session->get(
-      self::CURRENT_DATE_SESSION_KEY,
-      self::DATE_DEFAULT
-    );
+    if ($this->session->has(self::CURRENT_DATE_SESSION_KEY)) {
+      $date = $this->session->get(self::CURRENT_DATE_SESSION_KEY);
+
+    } else {
+      $this->findDefaultDate();
+
+      $date = $this->defaultDateString;
+    }
 
     $this->setCurrentDate($date);
   }
@@ -140,12 +191,73 @@ class Timeline implements TimelineInterface {
   }
 
   /**
+   * Find and set the default date if it hasn't yet been set.
+   *
+   * @see $this->setDefaultDate()
+   *   Validates and sets the default date.
+   */
+  protected function findDefaultDate(): void {
+    // Don't do this twice.
+    if (!empty($this->defaultDateString)) {
+      return;
+    }
+
+    /** @var string|null */
+    $stateString = $this->stateManager->get(self::DEFAULT_DATE_STATE_KEY);
+
+    // If we got a string instead of null, assume it's a date string, set it,
+    // and return.
+    if (is_string($stateString) && !empty($stateString)) {
+      $this->setDefaultDate($stateString);
+
+      return;
+    }
+
+    // If there's no default date set in the site state, we have to try to infer
+    // it from the default front page.
+
+    /** @var \Drupal\Core\Url */
+    $urlObject = Url::fromUserInput(
+      $this->configFactory->get('system.site')->get('page.front')
+    );
+
+    /** @var \Drupal\node\NodeInterface */
+    $node = $this->entityTypeManager->getStorage('node')->load(
+      $urlObject->getRouteParameters()['node']
+    );
+
+    $this->setDefaultDate($node->get('field_date')[0]->value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDefaultDate($date): void {
+    $dateObject = $this->getDateObject($date);
+
+    $this->defaultDateString = $this->getDateFormatted($dateObject, 'storage');
+
+    // Save to state storage.
+    $this->stateManager->set(
+      self::DEFAULT_DATE_STATE_KEY,
+      $this->defaultDateString
+    );
+
+    $this->defaultDateObject = $dateObject;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getDateObject($date = 'current'): DrupalDateTime {
     if (is_string($date)) {
       if ($date === 'current') {
         return $this->currentDateObject;
+
+      } else if ($date === 'default') {
+        $this->findDefaultDate();
+
+        return $this->defaultDateObject;
       }
 
       // If a valid and error-free date object already exists in the cache for
@@ -214,4 +326,5 @@ class Timeline implements TimelineInterface {
 
     return $this->getDateObject($date)->format($formatString);
   }
+
 }
