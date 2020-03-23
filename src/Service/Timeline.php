@@ -143,8 +143,6 @@ class Timeline implements TimelineInterface {
     $this->entityTypeManager  = $entityTypeManager;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
-
-    $this->findCurrentDate();
   }
 
   /**
@@ -252,6 +250,8 @@ class Timeline implements TimelineInterface {
   public function getDateObject($date = 'current'): DrupalDateTime {
     if (is_string($date)) {
       if ($date === 'current') {
+        $this->findCurrentDate();
+
         return $this->currentDateObject;
 
       } else if ($date === 'default') {
