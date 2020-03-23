@@ -49,6 +49,12 @@ interface TimelineInterface {
    * @return \Drupal\Core\Datetime\DrupalDateTime
    *   A date object representing $date. If $date was provided as a date object,
    *   it will be returned as-is.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown when the there is an error in constructing a date object
+   *   from $date, when the $date parameter is a date object but has errors, or
+   *   when the $date parameter is neither a string nor an instance of the date
+   *   object class.
    */
   public function getDateObject($date = 'current'): DrupalDateTime;
 
@@ -83,6 +89,13 @@ interface TimelineInterface {
    *
    * @return string
    *   The provided $date as a string, formatted according to $format.
+   *
+   * @see $this->getDateObject()
+   *   $date is passed to this to ensure a date object is retrieved/created to
+   *   format from.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown when the $format parameter isn't an expected value.
    */
   public function getDateFormatted(
     $date = 'current', string $format = 'long'
