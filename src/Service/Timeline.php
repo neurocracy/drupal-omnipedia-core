@@ -206,6 +206,10 @@ class Timeline implements TimelineInterface {
    *
    * @see $this->setDefaultDate()
    *   Validates and sets the default date.
+   *
+   * @throws \UnexpectedValueException
+   *   Exception thrown when a date cannot be retrieved from the front page
+   *   node specified in the site settings.
    */
   protected function findDefaultDate(): void {
     // Don't do this twice.
@@ -236,6 +240,12 @@ class Timeline implements TimelineInterface {
     $nodeDate = $this->wiki->getWikiNodeDate(
       $urlObject->getRouteParameters()['node']
     );
+
+    if ($nodeDate === null) {
+      throw new \UnexpectedValueException(
+        'Could not read the default date from the front page node.'
+      );
+    }
 
     $this->setDefaultDate($nodeDate);
   }
