@@ -9,6 +9,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
+use Drupal\omnipedia_core\Service\WikiInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -65,6 +66,13 @@ class Timeline implements TimelineInterface {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
+
+  /**
+   * The Omnipedia wiki service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   */
+  private $wiki;
 
   /**
    * The Symfony session service.
@@ -126,6 +134,9 @@ class Timeline implements TimelineInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type plug-in manager.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
+   *   The Omnipedia wiki service.
+   *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The Symfony session service.
    *
@@ -135,12 +146,14 @@ class Timeline implements TimelineInterface {
   public function __construct(
     ConfigFactoryInterface      $configFactory,
     EntityTypeManagerInterface  $entityTypeManager,
+    WikiInterface               $wiki,
     SessionInterface            $session,
     StateInterface              $stateManager
   ) {
     // Save dependencies.
     $this->configFactory      = $configFactory;
     $this->entityTypeManager  = $entityTypeManager;
+    $this->wiki               = $wiki;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
   }
@@ -219,12 +232,12 @@ class Timeline implements TimelineInterface {
       $this->configFactory->get('system.site')->get('page.front')
     );
 
-    /** @var \Drupal\node\NodeInterface */
-    $node = $this->entityTypeManager->getStorage('node')->load(
+    /** @var string|null */
+    $nodeDate = $this->wiki->getWikiNodeDate(
       $urlObject->getRouteParameters()['node']
     );
 
-    $this->setDefaultDate($node->get('field_date')[0]->value);
+    $this->setDefaultDate($nodeDate);
   }
 
   /**

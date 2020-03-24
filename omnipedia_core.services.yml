@@ -5,6 +5,7 @@ services:
     arguments:
       - '@config.factory'
       - '@entity_type.manager'
+      - '@omnipedia.wiki'
       - '@session'
       - '@state'
 
@@ -23,6 +24,9 @@ services:
   # Event subscriber to update current date if a wiki page node is being viewed.
   omnipedia_core.timeline_wiki_page_node_event_subscriber:
     class: \Drupal\omnipedia_core\EventSubscriber\TimelineWikiPageNodeEventSubscriber
-    arguments: ['@omnipedia.timeline', '@current_route_match']
+    arguments:
+      - '@current_route_match'
+      - '@omnipedia.timeline'
+      - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }

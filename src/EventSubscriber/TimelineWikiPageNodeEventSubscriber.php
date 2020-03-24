@@ -4,6 +4,7 @@ namespace Drupal\omnipedia_core\EventSubscriber;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
+use Drupal\omnipedia_core\Service\WikiInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -19,12 +20,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *   are other events in that class that we could subscribe to if need be.
  */
 class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
-  /**
-   * The Omnipedia timeline service.
-   *
-   * @var \Drupal\omnipedia_core\Service\TimelineInterface
-   */
-  private $timeline;
 
   /**
    * The Drupal current route match service.
@@ -34,20 +29,39 @@ class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
   private $currentRouteMatch;
 
   /**
+   * The Omnipedia timeline service.
+   *
+   * @var \Drupal\omnipedia_core\Service\TimelineInterface
+   */
+  private $timeline;
+
+  /**
+   * The Omnipedia wiki service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   */
+  private $wiki;
+
+  /**
    * Event subscriber constructor; saves dependencies.
+   *
+   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
+   *   The Drupal current route match service.
    *
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
-   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
-   *   The Drupal current route match service.
+   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
+   *   The Omnipedia wiki service.
    */
   public function __construct(
+    StackedRouteMatchInterface  $currentRouteMatch,
     TimelineInterface           $timeline,
-    StackedRouteMatchInterface  $currentRouteMatch
+    WikiInterface               $wiki
   ) {
-    $this->timeline           = $timeline;
     $this->currentRouteMatch  = $currentRouteMatch;
+    $this->timeline           = $timeline;
+    $this->wiki               = $wiki;
   }
 
   /**
@@ -66,17 +80,18 @@ class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
    *   Symfony response event object.
    */
   public function kernelRequest(GetResponseEvent $event): void {
-    /** @var \Drupal\node\NodeInterface|NULL */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->currentRouteMatch->getParameter('node');
 
-    // Bail if no node was found or if the node is not a wiki page.
-    if (
-      gettype($node)    !== 'object' ||
-      $node->getType()  !== 'wiki_page'
-    ) {
+    /** @var string|null */
+    $currentDate = $this->wiki->getWikiNodeDate($node);
+
+    // Bail if the date couldn't be found.
+    if ($currentDate === null) {
       return;
     }
 
-    $this->timeline->setCurrentDate($node->get('field_date')[0]->value);
+    $this->timeline->setCurrentDate($currentDate);
   }
+
 }
