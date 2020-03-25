@@ -208,8 +208,8 @@ class Timeline implements TimelineInterface {
    *   Validates and sets the default date.
    *
    * @throws \UnexpectedValueException
-   *   Exception thrown when a date cannot be retrieved from the front page
-   *   node specified in the site settings.
+   *   Exception thrown when the configured front page is not a node or a date
+   *   cannot be retrieved from the front page node.
    */
   protected function findDefaultDate(): void {
     // Don't do this twice.
@@ -236,10 +236,17 @@ class Timeline implements TimelineInterface {
       $this->configFactory->get('system.site')->get('page.front')
     );
 
+    /** @var array */
+    $routeParameters = $urlObject->getRouteParameters();
+
+    if (empty($routeParameters['node'])) {
+      throw new \UnexpectedValueException(
+        'The front page does not appear to point to a node.'
+      );
+    }
+
     /** @var string|null */
-    $nodeDate = $this->wiki->getWikiNodeDate(
-      $urlObject->getRouteParameters()['node']
-    );
+    $nodeDate = $this->wiki->getWikiNodeDate($routeParameters['node']);
 
     if ($nodeDate === null) {
       throw new \UnexpectedValueException(
