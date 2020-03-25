@@ -30,3 +30,12 @@ services:
       - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }
+
+  # Event subscriber to alter the site settings form.
+  omnipedia_core.system_site_information_settings_form_event_subscriber:
+    class: \Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
+    arguments:
+      - '@omnipedia.wiki'
+      - '@string_translation'
+    tags:
+      - { name: 'event_subscriber' }
