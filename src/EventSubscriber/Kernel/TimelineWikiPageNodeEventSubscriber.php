@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\omnipedia_core\EventSubscriber;
+namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;

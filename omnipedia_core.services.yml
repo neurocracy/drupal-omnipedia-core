@@ -22,8 +22,8 @@ services:
       - { name: cache.context }
 
   # Event subscriber to update current date if a wiki page node is being viewed.
-  omnipedia_core.timeline_wiki_page_node_event_subscriber:
-    class: \Drupal\omnipedia_core\EventSubscriber\TimelineWikiPageNodeEventSubscriber
+  omnipedia_core.timeline_wiki_page_node_kernel_event_subscriber:
+    class: \Drupal\omnipedia_core\EventSubscriber\Kernel\TimelineWikiPageNodeEventSubscriber
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
