@@ -308,7 +308,7 @@ class Timeline implements TimelineInterface {
         );
       }
 
-      // Save the object to the cache so that we don't have create it again.
+      // Save the object to the cache so that we don't have to create it again.
       $this->dateObjectCache[$date] = $dateObject;
 
       return $dateObject;
