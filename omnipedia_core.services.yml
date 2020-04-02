@@ -4,6 +4,7 @@ services:
     class: \Drupal\omnipedia_core\Service\Timeline
     arguments:
       - '@config.factory'
+      - '@database'
       - '@entity_type.manager'
       - '@omnipedia.wiki'
       - '@session'
@@ -28,6 +29,13 @@ services:
       - '@current_route_match'
       - '@omnipedia.timeline'
       - '@omnipedia.wiki'
+    tags:
+      - { name: 'event_subscriber' }
+
+  # Event subscriber to update defined dates on wiki node entity changes.
+  omnipedia_core.timeline_defined_dates_update_entity_event_subscriber:
+    class: \Drupal\omnipedia_core\EventSubscriber\Entity\TimelineDefinedDatesUpdateEntityEventSubscriber
+    arguments: ['@omnipedia.timeline', '@omnipedia.wiki']
     tags:
       - { name: 'event_subscriber' }
 

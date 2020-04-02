@@ -3,6 +3,7 @@
 namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
@@ -54,11 +55,29 @@ class Timeline implements TimelineInterface {
   private const DEFAULT_DATE_STATE_KEY = 'omnipedia.default_date';
 
   /**
+   * The Drupal state key where we store the list of dates defined by content.
+   *
+   * @see $this->findDefinedDates()
+   *   Uses this constant to save dates to state storage.
+   *
+   * @see $this->getDefinedDates()
+   *   Uses this constant to read dates from state storage.
+   */
+  private const DEFINED_DATES_STATE_KEY = 'omnipedia.defined_dates';
+
+  /**
    * The Drupal configuration object factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   private $configFactory;
+
+  /**
+   * The Drupal database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  private $database;
 
   /**
    * The Drupal entity type plug-in manager.
@@ -126,10 +145,33 @@ class Timeline implements TimelineInterface {
   protected $defaultDateObject;
 
   /**
+   * Dates defined by content.
+   *
+   * Two versions are stored, under the top level keys 'all' (published and
+   * unpublished content) and 'published' (only published content). Each top
+   * level key is an array of date strings in the 'storage' format.
+   *
+   * @var array
+   *
+   * @see $this->findDefinedDates()
+   *   Scans content to build arrays of dates.
+   *
+   * @see $this->getDefinedDates()
+   *   Use this to get these dates.
+   *
+   * @see self::DEFINED_DATES_STATE_KEY
+   *   Drupal state key where dates are stored persistently between requests.
+   */
+  protected $definedDates;
+
+  /**
    * Constructs this service object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The Drupal configuration object factory service.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The Drupal database connection service.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type plug-in manager.
@@ -145,6 +187,7 @@ class Timeline implements TimelineInterface {
    */
   public function __construct(
     ConfigFactoryInterface      $configFactory,
+    Connection                  $database,
     EntityTypeManagerInterface  $entityTypeManager,
     WikiInterface               $wiki,
     SessionInterface            $session,
@@ -152,6 +195,7 @@ class Timeline implements TimelineInterface {
   ) {
     // Save dependencies.
     $this->configFactory      = $configFactory;
+    $this->database           = $database;
     $this->entityTypeManager  = $entityTypeManager;
     $this->wiki               = $wiki;
     $this->session            = $session;
@@ -355,6 +399,118 @@ class Timeline implements TimelineInterface {
     }
 
     return $this->getDateObject($date)->format($formatString);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findDefinedDates(): void {
+    // This defines the keys used to store dates, while the values determine if
+    // the key should include unpublished wiki nodes.
+    /** @var array */
+    $dateTypes = [
+      'all'       => true,
+      'published' => false
+    ];
+
+    /** @var array */
+    $dates = [];
+
+    /** @var \Drupal\Core\Entity\Query\QueryInterface */
+    $nodeCountQuery = $this->entityTypeManager->getStorage('node')->getQuery();
+
+    // This sets up the node query to limit to the wiki node content type and
+    // marks it as a count query rather than returning the actual nodes.
+    $nodeCountQuery
+      ->condition('type', 'wiki_page')
+      ->count();
+
+    /** @var \Drupal\Core\Database\Query\SelectInterface */
+    $dateQuery = $this->database->select('node__field_date', 'field_date_data');
+
+    /** @var string */
+    $dateFieldName = $dateQuery->addField(
+      'field_date_data', 'field_date_value', 'date'
+    );
+
+    // This sets up the date field query to only return distinct values, and to
+    // order and group by the date field.
+    $dateQuery
+      ->distinct()
+      ->groupBy($dateFieldName)
+      ->orderBy($dateFieldName);
+
+    /** @var array */
+    $dateResults = $dateQuery->execute()->fetchAll();
+
+    foreach ($dateTypes as $dateType => $includeUnpublished) {
+      // Make sure each date type has an array, to avoid errors if no results
+      // are found.
+      $dates[$dateType] = [];
+
+      foreach ($dateResults as $resultItem) {
+        // Create a clone of the node count query, so that we can run it
+        // multiple times with different date field values without building it
+        // from scratch each time.
+        $localNodeCountQuery = (clone $nodeCountQuery)
+          ->condition(
+            'field_date', $resultItem->$dateFieldName
+          );
+
+        // Limit the query to published nodes if told to do so.
+        if ($includeUnpublished === false) {
+          $localNodeCountQuery->condition('status', 1);
+        }
+
+        $count = $localNodeCountQuery->execute();
+
+        // If one or more nodes are found with this date, add the date to our
+        // array of found dates.
+        if ($count > 0) {
+          $dates[$dateType][] = $resultItem->$dateFieldName;
+        }
+      }
+    }
+
+    // Save to state storage for retrieval in a future response.
+    $this->stateManager->set(
+      self::DEFINED_DATES_STATE_KEY,
+      $dates
+    );
+
+    // Save to our property for quick retrieval within this request.
+    $this->definedDates = $dates;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefinedDates(bool $includeUnpublished = false): array {
+    /** @var string */
+    $dateTypeKey = $includeUnpublished ? 'all' : 'published';
+
+    // If we've already saved the defined dates to the property, return that.
+    if (isset($this->definedDates[$dateTypeKey])) {
+      return $this->definedDates[$dateTypeKey];
+    }
+
+    // Attempt to load defined dates from state storage.
+    /** @var array|null */
+    $stateData = $this->stateManager->get(self::DEFINED_DATES_STATE_KEY);
+
+    // If state storage returned an array instead of null, save it to the
+    // property and return the appropriate data.
+    if (is_array($stateData)) {
+      $this->definedDates = $stateData;
+
+      return $this->definedDates[$dateTypeKey];
+    }
+
+    // If neither the property nor the state data are set, scan content to find
+    // and save the defined dates.
+    $this->findDefinedDates();
+
+    return $this->definedDates[$dateTypeKey];
   }
 
 }

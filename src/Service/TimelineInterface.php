@@ -101,4 +101,36 @@ interface TimelineInterface {
     $date = 'current', string $format = 'long'
   ): string;
 
+  /**
+   * Find all dates defined by content.
+   *
+   * Note that this method always performs a full scan of site content when
+   * invoked so it should only be used when it's certain that content needs to
+   * be rescanned.
+   *
+   * This is accomplished through a combination of a direct database query (to
+   * find all distinct date values) and the entity query system (to find if any
+   * wiki nodes exist with those values and are published/unpublished).
+   *
+   * Once the dates have been found and saved, they can be accessed via
+   * $this->getDefinedDates().
+   *
+   * @see $this->getDefinedDates()
+   *   Returns any defined dates.
+   */
+  public function findDefinedDates(): void;
+
+  /**
+   * Get a list of dates that have content.
+   *
+   * @param bool $includeUnpublished
+   *   Whether to include dates that have only unpublished content. Defaults to
+   *   false.
+   *
+   * @return array
+   *   Zero or more unique dates that have content. Note that this will likely
+   *   vary based on the $includeUnpublished parameter.
+   */
+  public function getDefinedDates(bool $includeUnpublished = false): array;
+
 }
