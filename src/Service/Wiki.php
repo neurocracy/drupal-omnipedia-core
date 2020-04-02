@@ -12,6 +12,16 @@ use Drupal\omnipedia_core\Service\WikiInterface;
 class Wiki implements WikiInterface {
 
   /**
+   * The wiki node type.
+   */
+  protected const WIKI_NODE_TYPE = 'wiki_page';
+
+  /**
+   * The name of the date field on wiki nodes.
+   */
+  protected const WIKI_NODE_DATE_FIELD = 'field_date';
+
+  /**
    * The Drupal entity type plug-in manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -57,11 +67,18 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
+  public function getWikiNodeType(): string {
+    return self::WIKI_NODE_TYPE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isWikiNode($node): bool {
     $node = $this->normalizeNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
-      return $node->getType() === 'wiki_page';
+      return $node->getType() === $this->getWikiNodeType();
 
     } else {
       return false;
@@ -84,6 +101,13 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
+  public function getWikiNodeDateFieldName(): string {
+    return self::WIKI_NODE_DATE_FIELD;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getWikiNodeDate($node) {
     $node = $this->getWikiNode($node);
 
@@ -91,7 +115,7 @@ class Wiki implements WikiInterface {
       return null;
     }
 
-    return $node->get('field_date')[0]->value;
+    return $node->get($this->getWikiNodeDateFieldName())[0]->value;
   }
 
 }

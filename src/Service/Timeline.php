@@ -416,21 +416,32 @@ class Timeline implements TimelineInterface {
     /** @var array */
     $dates = [];
 
+    /** @var string */
+    $wikiNodeType = $this->wiki->getWikiNodeType();
+
+    /** @var string */
+    $wikiNodeFieldDateName = $this->wiki->getWikiNodeDateFieldName();
+
     /** @var \Drupal\Core\Entity\Query\QueryInterface */
     $nodeCountQuery = $this->entityTypeManager->getStorage('node')->getQuery();
 
     // This sets up the node query to limit to the wiki node content type and
     // marks it as a count query rather than returning the actual nodes.
     $nodeCountQuery
-      ->condition('type', 'wiki_page')
+      ->condition('type', $wikiNodeType)
       ->count();
 
+    // This selects the appropriate node field table column.
     /** @var \Drupal\Core\Database\Query\SelectInterface */
-    $dateQuery = $this->database->select('node__field_date', 'field_date_data');
+    $dateQuery = $this->database->select(
+      'node__' . $wikiNodeFieldDateName, $wikiNodeFieldDateName . '_data');
 
+    // This adds the field to the database query and returns the alias to refer
+    // to it by - usually the third parameter, but a number may be appended.
     /** @var string */
     $dateFieldName = $dateQuery->addField(
-      'field_date_data', 'field_date_value', 'date'
+      $wikiNodeFieldDateName . '_data', $wikiNodeFieldDateName . '_value',
+      'date'
     );
 
     // This sets up the date field query to only return distinct values, and to
@@ -453,9 +464,7 @@ class Timeline implements TimelineInterface {
         // multiple times with different date field values without building it
         // from scratch each time.
         $localNodeCountQuery = (clone $nodeCountQuery)
-          ->condition(
-            'field_date', $resultItem->$dateFieldName
-          );
+          ->condition($wikiNodeFieldDateName, $resultItem->$dateFieldName);
 
         // Limit the query to published nodes if told to do so.
         if ($includeUnpublished === false) {

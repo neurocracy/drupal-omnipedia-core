@@ -8,6 +8,14 @@ namespace Drupal\omnipedia_core\Service;
 interface WikiInterface {
 
   /**
+   * Get the wiki node type.
+   *
+   * @return string
+   *   The machine name of the wiki node type.
+   */
+  public function getWikiNodeType(): string;
+
+  /**
    * Determine if a parameter is or equates to a wiki node.
    *
    * @param \Drupal\node\NodeInterface|int|string $node
@@ -33,6 +41,14 @@ interface WikiInterface {
    *   equate to a wiki node's ID, returns null.
    */
   public function getWikiNode($node);
+
+  /**
+   * Get the wiki node date field name.
+   *
+   * @return string
+   *   The machine name of the wiki node date field.
+   */
+  public function getWikiNodeDateFieldName(): string;
 
   /**
    * Get the date value from a provided wiki node, if possible.

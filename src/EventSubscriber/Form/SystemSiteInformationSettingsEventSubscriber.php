@@ -83,7 +83,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
         '@contentLink' => Link::createFromRoute(
           $this->t('an existing wiki page'),
           'view.content.page_1',
-          ['type' => 'wiki_page']
+          ['type' => $this->wiki->getWikiNodeType()]
         )->toString(),
       ]
     );
