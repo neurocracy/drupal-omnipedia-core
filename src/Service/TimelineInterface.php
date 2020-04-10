@@ -80,6 +80,10 @@ interface TimelineInterface {
    *   - 'storage': The date format stored in the database. This is defined by
    *     \Drupal\omnipedia_core\Service\Timeline::DATE_FORMAT_STORAGE.
    *
+   *   - 'html': The date format used when outputting to HTML, usually in a
+   *     <time> element. This is defined by
+   *     \Drupal\omnipedia_core\Service\Timeline::DATE_FORMAT_HTML.
+   *
    *   - 'long': The long user-friendly date output format. This is defined by
    *     \Drupal\omnipedia_core\Service\Timeline::DATE_FORMAT_LONG. This is the
    *     default.

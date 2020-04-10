@@ -27,6 +27,14 @@ class Timeline implements TimelineInterface {
   public const DATE_FORMAT_STORAGE = DateTimeItemInterface::DATE_STORAGE_FORMAT;
 
   /**
+   * The date format for output to HTML, usually a <time> element.
+   *
+   * @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATE_STORAGE_FORMAT
+   *   Currently an alias for this Drupal core constant.
+   */
+  public const DATE_FORMAT_HTML = DateTimeItemInterface::DATE_STORAGE_FORMAT;
+
+  /**
    * The long user-friendly date output format.
    *
    * @see https://www.php.net/manual/en/function.date
@@ -381,6 +389,11 @@ class Timeline implements TimelineInterface {
     switch ($format) {
       case 'storage':
         $formatString = self::DATE_FORMAT_STORAGE;
+
+        break;
+
+      case 'html':
+        $formatString = self::DATE_FORMAT_HTML;
 
         break;
 
