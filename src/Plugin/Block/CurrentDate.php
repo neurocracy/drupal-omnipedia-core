@@ -62,8 +62,6 @@ class CurrentDate extends BlockBase implements BlockPluginInterface, ContainerFa
    * {@inheritdoc}
    */
   public function build() {
-    $dateFormattedStorage = $this->timeline->getDateFormatted('current', 'storage');
-
     return [
       // This needs to be wrapped in its own key so that #attributes doesn't get
       // removed by the render/block system for some reason.
@@ -72,7 +70,8 @@ class CurrentDate extends BlockBase implements BlockPluginInterface, ContainerFa
         '#tag'          => 'time',
         '#attributes'   => [
           'class'         => ['omnipedia-current-date'],
-          'datetime'      => $dateFormattedStorage,
+          'datetime'      => $this->timeline
+            ->getDateFormatted('current', 'html'),
         ],
         '#value'        => $this->timeline->getDateFormatted('current', 'long'),
       ],
@@ -80,7 +79,10 @@ class CurrentDate extends BlockBase implements BlockPluginInterface, ContainerFa
         // This gets cached permanently, varying by the storage-formatted date,
         // i.e. different cache context for each date.
         'contexts'    => ['omnipedia_dates'],
-        'tags'        => ['omnipedia_dates:' . $dateFormattedStorage],
+        'tags'        => [
+          'omnipedia_dates:' . $this->timeline
+            ->getDateFormatted('current', 'storage')
+        ],
         'max-age'     => Cache::PERMANENT,
       ],
     ];
