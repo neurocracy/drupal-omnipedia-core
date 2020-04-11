@@ -63,4 +63,62 @@ interface WikiInterface {
    */
   public function getWikiNodeDate($node);
 
+  /**
+   * Get tracked wiki node data.
+   *
+   * @return array
+   *   An array with saved wiki node data, with the following top level keys:
+   *
+   *   - nodes: an array with keys corresponding to node IDs, with each value
+   *     containing an array with the following:
+   *
+   *     - 'date': the node's date as a string in 'storage' format
+   *
+   *     - 'title': string title of the node
+   *
+   *     - 'published': boolean indicating whether this node is published
+   *
+   *   - dates: an array with dates in the 'storage' format as the keys, each
+   *     containing an array of node IDs
+   *
+   *   - titles: an array whose keys are node IDs and values are their titles
+   */
+  public function getTrackedWikiNodeData(): array;
+
+  /**
+   * Start tracking or update tracking of a wiki node.
+   *
+   * This saves data about a wiki node to be quickly accessed later when loading
+   * the full node would add unnecessary overhead from a performance point of
+   * view.
+   *
+   * This should be called when a wiki node is created or updated.
+   *
+   * @param \Drupal\node\NodeInterface|int|string $node
+   *   Either a node object or a numeric value (integer or string) that equates
+   *   to an existing node ID to load.
+   *
+   * @see $this->untrackWikiNode()
+   *   Stops tracking a wiki node.
+   */
+  public function trackWikiNode($node): void;
+
+  /**
+   * Stop tracking a wiki node.
+   *
+   * This saves data about a wiki node to be quickly accessed later when loading
+   * the full node would add unnecessary overhead from a performance point of
+   * view.
+   *
+   * This should be called when a wiki node is deleted.
+   *
+   * @param \Drupal\node\NodeInterface|int|string $node
+   *   Either a node object or a numeric value (integer or string) that equates
+   *   to an existing node ID to load.
+   *
+   * @see $this->trackWikiNode()
+   *   Starts tracking or updates tracking of a wiki node.
+   */
+  public function untrackWikiNode($node): void;
+
 }

@@ -7,6 +7,9 @@ use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\hook_event_dispatcher\Event\Entity\BaseEntityEvent;
+use Drupal\hook_event_dispatcher\Event\Entity\EntityInsertEvent;
+use Drupal\hook_event_dispatcher\Event\Entity\EntityUpdateEvent;
+use Drupal\hook_event_dispatcher\Event\Entity\EntityDeleteEvent;
 
 /**
  * Updates defined dates on wiki node entity changes.
@@ -64,16 +67,36 @@ class TimelineDefinedDatesUpdateEntityEventSubscriber implements EventSubscriber
    * @see \Drupal\omnipedia_core\Service\WikiInterface::isWikiNode()
    *   This method is used to determine if the entity is a wiki node.
    *
+   * @see \Drupal\omnipedia_core\Service\WikiInterface::trackWikiNode()
+   *   Calls this method to start tracking or update tracking of a wiki node.
+   *
+   * @see \Drupal\omnipedia_core\Service\WikiInterface::untrackWikiNode()
+   *   Calls this method to stop tracking a wiki node.
+   *
    * @see \Drupal\omnipedia_core\Service\TimelineInterface::findDefinedDates()
    *   Calls this method to invoke a rescan of wiki nodes.
    */
   public function updateDefinedDates(BaseEntityEvent $event) {
+    /** @var \Drupal\Core\Entity\EntityInterface */
     $entity = $event->getEntity();
 
     if (!$this->wiki->isWikiNode($entity)) {
       return;
     }
 
+    // If a node was created or updated, update tracking.
+    if (
+      $event instanceof EntityInsertEvent ||
+      $event instanceof EntityUpdateEvent
+    ) {
+      $this->wiki->trackWikiNode($entity);
+
+    // If a node was deleted, stop tracking it.
+    } else if ($event instanceof EntityDeleteEvent) {
+      $this->wiki->untrackWikiNode($entity);
+    }
+
+    // Rescan content to build list of defined dates.
     $this->timeline->findDefinedDates();
   }
 
