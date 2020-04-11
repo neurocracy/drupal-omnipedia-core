@@ -108,13 +108,8 @@ interface TimelineInterface {
   /**
    * Find all dates defined by content.
    *
-   * Note that this method always performs a full scan of site content when
-   * invoked so it should only be used when it's certain that content needs to
-   * be rescanned.
-   *
-   * This is accomplished through a combination of a direct database query (to
-   * find all distinct date values) and the entity query system (to find if any
-   * wiki nodes exist with those values and are published/unpublished).
+   * Note that this method always rebuilds the lists of dates when invoked so it
+   * should only be used when necessary, i.e. content has been updated.
    *
    * Once the dates have been found and saved, they can be accessed via
    * $this->getDefinedDates().
