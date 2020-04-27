@@ -2,6 +2,8 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\node\NodeInterface;
+
 /**
  * The Omnipedia wiki service interface.
  */
@@ -162,5 +164,37 @@ interface WikiInterface {
    * @todo Should this perform access checking?
    */
   public function getWikiNodeRevisions($nodeOrTitle): array;
+
+  /**
+   * Get a wiki node's revision for a specified date.
+   *
+   * Note that this does not do any access checking, so code that calls this is
+   * responsible for not displaying information about nodes the user does not
+   * have access to. For an example of how to accomplish this, see
+   * \Drupal\omnipedia_core\Plugin\Block\PageRevisionHistory::build().
+   *
+   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
+   *   Must be one of the following:
+   *
+   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object
+   *
+   *   - An integer or a numeric string that equates to a node ID
+   *
+   *   - A non-numeric string which is assumed to be a node title to search for
+   *
+   * @param string $date
+   *   A date string in the format stored in a wiki node's date field.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   *   Returns the node object if $nodeOrTitle can be resolved to a wiki node;
+   *   if $nodeOrTitle cannot be resolved to a wiki node, returns null; if
+   *   $nodeOrTitle is a numeric value that doesn'tequate to a wiki node's ID,
+   *   returns null.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown if the $nodeOrTitle parameter is not one of the expected
+   *   values.
+   */
+  public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface;
 
 }

@@ -2,11 +2,12 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * The Omnipedia wiki service.
@@ -377,6 +378,49 @@ class Wiki implements WikiInterface {
     });
 
     return $nodes;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Can this remove duplicate code and use $this->getWikiNodeRevisions()?
+   */
+  public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface {
+    /** @var \Drupal\node\NodeInterface|null */
+    $node = $this->normalizeNode($nodeOrTitle);
+
+    // Attempt to find the title of the node we're trying to resolve to.
+    if ($node instanceof NodeInterface) {
+      /** @var string */
+      $title = $node->getTitle();
+
+    } else if (\is_string($nodeOrTitle)) {
+      /** @var string */
+      $title = $nodeOrTitle;
+
+    } else {
+      throw new \InvalidArgumentException('The $nodeOrTitle parameter must be a node object, an integer node ID, or a node title as a string.');
+    }
+
+    /** @var array */
+    $nodeData = $this->getTrackedWikiNodeData();
+
+    // Get all node IDs of nodes with this title.
+    /** @var array */
+    $nids = \array_keys($nodeData['titles'], $title, true);
+
+    // Loop through all found nodes and return the first one that has the date
+    // we're looking for.
+    foreach ($nids as $nid) {
+      if ($nodeData['nodes'][$nid]['date'] !== $date) {
+        continue;
+      }
+
+      return $this->normalizeNode($nid);
+    }
+
+    // No node with that date found.
+    return null;
   }
 
 }
