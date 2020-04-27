@@ -118,7 +118,7 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNode($node) {
+  public function getWikiNode($node): ?NodeInterface {
     $node = $this->normalizeNode($node);
 
     if ($this->isWikiNode($node)) {
@@ -138,7 +138,7 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNodeDate($node) {
+  public function getWikiNodeDate($node): ?string {
     $node = $this->getWikiNode($node);
 
     if ($node === null) {

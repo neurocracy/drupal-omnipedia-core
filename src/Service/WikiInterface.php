@@ -42,7 +42,7 @@ interface WikiInterface {
    *   a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
-  public function getWikiNode($node);
+  public function getWikiNode($node): ?NodeInterface;
 
   /**
    * Get the wiki node date field name.
@@ -63,7 +63,7 @@ interface WikiInterface {
    *   Returns the string date of $node if it is a wiki node; returns null in
    *   all other cases.
    */
-  public function getWikiNodeDate($node);
+  public function getWikiNodeDate($node): ?string;
 
   /**
    * Get tracked wiki node data.
