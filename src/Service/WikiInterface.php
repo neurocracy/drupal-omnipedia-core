@@ -197,4 +197,16 @@ interface WikiInterface {
    */
   public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface;
 
+  /**
+   * Get the main page node for the specified date.
+   *
+   * @param string $date
+   *   A date string in the format stored in a wiki node's date field.
+   *
+   * @return \Drupal\node\NodeInterface|null
+   *   Returns the main page's node object for the specified date if it can be
+   *   found; returns null otherwise.
+   */
+  public function getMainPage(string $date): ?NodeInterface;
+
 }

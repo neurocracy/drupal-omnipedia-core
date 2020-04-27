@@ -423,4 +423,11 @@ class Wiki implements WikiInterface {
     return null;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPage(string $date): ?NodeInterface {
+    return $this->getWikiNodeRevision('Main Page', $date);
+  }
+
 }
