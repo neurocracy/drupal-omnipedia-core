@@ -316,27 +316,54 @@ class Wiki implements WikiInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Resolve a node or title to all node IDs with the same title.
    *
-   * @todo Move date sorting to when wiki node tracked data is updated, so that
-   *   it doesn't need to be done every time this method is called.
+   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
+   *   Must be one of the following:
+   *
+   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object
+   *
+   *   - An integer or a numeric string that equates to a node ID
+   *
+   *   - A non-numeric string which is assumed to be a node title to search for
+   *
+   * @return array
+   *   An array containing zero or more node IDs as values.
    */
-  public function getWikiNodeRevisions($nodeOrTitle): array {
-    /** @var \Drupal\node\NodeInterface|null */
-    $node = $this->normalizeNode($nodeOrTitle);
-
-    if ($node instanceof NodeInterface) {
-      /** @var string */
-      $title = $node->getTitle();
-
-    } else if (\is_string($nodeOrTitle)) {
+  protected function nodeOrTitleToNids($nodeOrTitle): array {
+    if (\is_string($nodeOrTitle)) {
       /** @var string */
       $title = $nodeOrTitle;
 
     } else {
+      /** @var \Drupal\node\NodeInterface|null */
+      $node = $this->normalizeNode($nodeOrTitle);
+
+      if ($node instanceof NodeInterface) {
+        /** @var string */
+        $title = $node->getTitle();
+      }
+    }
+
+    if (!isset($title)) {
       throw new \InvalidArgumentException('The $nodeOrTitle parameter must be a node object, an integer node ID, or a node title as a string.');
     }
 
+    /** @var array */
+    $nodeData = $this->getTrackedWikiNodeData();
+
+    // Get all node IDs of nodes with this title.
+    return \array_keys($nodeData['titles'], $title, true);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Move date sorting to $this->trackWikiNode() or
+   *   $this->setTrackedWikiNodeData(), so that it doesn't need to be done every
+   *   time this method is called.
+   */
+  public function getWikiNodeRevisions($nodeOrTitle): array {
     /** @var array */
     $nodeData = $this->getTrackedWikiNodeData();
 
@@ -344,7 +371,7 @@ class Wiki implements WikiInterface {
     $nodes = [];
 
     /** @var array */
-    $nids = \array_keys($nodeData['titles'], $title, true);
+    $nids = $this->nodeOrTitleToNids($nodeOrTitle);
 
     foreach ($nids as $nid) {
       // The node's date parsed into an array of date parts. We do this so that
@@ -359,11 +386,11 @@ class Wiki implements WikiInterface {
         // diff() method to sort by date. We later change this back to the
         // formatted string.
         'date'      => DrupalDateTime::createFromArray([
-          'year'  => $dateArray['year'],
-          'month' => $dateArray['month'],
-          'day'   => $dateArray['day'],
+          'year'      => $dateArray['year'],
+          'month'     => $dateArray['month'],
+          'day'       => $dateArray['day'],
         ]),
-        'title'     => $title,
+        'title'     => $nodeData['nodes'][$nid]['title'],
         'published' => $nodeData['nodes'][$nid]['published'],
       ];
     }
@@ -382,32 +409,14 @@ class Wiki implements WikiInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Can this remove duplicate code and use $this->getWikiNodeRevisions()?
    */
   public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface {
-    /** @var \Drupal\node\NodeInterface|null */
-    $node = $this->normalizeNode($nodeOrTitle);
-
-    // Attempt to find the title of the node we're trying to resolve to.
-    if ($node instanceof NodeInterface) {
-      /** @var string */
-      $title = $node->getTitle();
-
-    } else if (\is_string($nodeOrTitle)) {
-      /** @var string */
-      $title = $nodeOrTitle;
-
-    } else {
-      throw new \InvalidArgumentException('The $nodeOrTitle parameter must be a node object, an integer node ID, or a node title as a string.');
-    }
+    // Get all node IDs of nodes with this title.
+    /** @var array */
+    $nids = $this->nodeOrTitleToNids($nodeOrTitle);
 
     /** @var array */
     $nodeData = $this->getTrackedWikiNodeData();
-
-    // Get all node IDs of nodes with this title.
-    /** @var array */
-    $nids = \array_keys($nodeData['titles'], $title, true);
 
     // Loop through all found nodes and return the first one that has the date
     // we're looking for.
