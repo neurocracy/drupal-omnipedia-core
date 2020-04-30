@@ -2,12 +2,10 @@
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
@@ -72,13 +70,6 @@ class Timeline implements TimelineInterface {
    *   Uses this constant to read dates from state storage.
    */
   private const DEFINED_DATES_STATE_KEY = 'omnipedia.defined_dates';
-
-  /**
-   * The Drupal configuration object factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  private $configFactory;
 
   /**
    * The Drupal database connection service.
@@ -175,9 +166,6 @@ class Timeline implements TimelineInterface {
   /**
    * Constructs this service object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The Drupal configuration object factory service.
-   *
    * @param \Drupal\Core\Database\Connection $database
    *   The Drupal database connection service.
    *
@@ -194,7 +182,6 @@ class Timeline implements TimelineInterface {
    *   The Drupal state system manager.
    */
   public function __construct(
-    ConfigFactoryInterface      $configFactory,
     Connection                  $database,
     EntityTypeManagerInterface  $entityTypeManager,
     WikiInterface               $wiki,
@@ -202,7 +189,6 @@ class Timeline implements TimelineInterface {
     StateInterface              $stateManager
   ) {
     // Save dependencies.
-    $this->configFactory      = $configFactory;
     $this->database           = $database;
     $this->entityTypeManager  = $entityTypeManager;
     $this->wiki               = $wiki;
@@ -260,8 +246,8 @@ class Timeline implements TimelineInterface {
    *   Validates and sets the default date.
    *
    * @throws \UnexpectedValueException
-   *   Exception thrown when the configured front page is not a node or a date
-   *   cannot be retrieved from the front page node.
+   *   Exception thrown when a date cannot be retrieved from the front page
+   *   node.
    */
   protected function findDefaultDate(): void {
     // Don't do this twice.
@@ -274,7 +260,7 @@ class Timeline implements TimelineInterface {
 
     // If we got a string instead of null, assume it's a date string, set it,
     // and return.
-    if (is_string($stateString) && !empty($stateString)) {
+    if (\is_string($stateString) && !empty($stateString)) {
       $this->setDefaultDate($stateString);
 
       return;
@@ -283,26 +269,14 @@ class Timeline implements TimelineInterface {
     // If there's no default date set in the site state, we have to try to infer
     // it from the default front page.
 
-    /** @var \Drupal\Core\Url */
-    $urlObject = Url::fromUserInput(
-      $this->configFactory->get('system.site')->get('page.front')
-    );
-
-    /** @var array */
-    $routeParameters = $urlObject->getRouteParameters();
-
-    if (empty($routeParameters['node'])) {
-      throw new \UnexpectedValueException(
-        'The front page does not appear to point to a node.'
-      );
-    }
-
     /** @var string|null */
-    $nodeDate = $this->wiki->getWikiNodeDate($routeParameters['node']);
+    $nodeDate = $this->wiki->getWikiNodeDate(
+      $this->wiki->getMainPage('default')
+    );
 
     if ($nodeDate === null) {
       throw new \UnexpectedValueException(
-        'Could not read the default date from the front page node.'
+        'Could not read the default date from the default main page node.'
       );
     }
 

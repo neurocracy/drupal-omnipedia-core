@@ -3,7 +3,6 @@ services:
   omnipedia.timeline:
     class: \Drupal\omnipedia_core\Service\Timeline
     arguments:
-      - '@config.factory'
       - '@database'
       - '@entity_type.manager'
       - '@omnipedia.wiki'
