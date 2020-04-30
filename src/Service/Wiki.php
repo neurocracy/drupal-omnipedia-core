@@ -2,6 +2,7 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
@@ -40,11 +41,16 @@ class Wiki implements WikiInterface {
   protected const WIKI_NODE_TITLES_STATE_KEY = 'omnipedia.wiki_node_titles';
 
   /**
-   * The Drupal state system manager.
-   *
-   * @var \Drupal\Core\State\StateInterface
+   * The Drupal state key where we store the node ID of the default main page.
    */
-  private $stateManager;
+  protected const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
+
+  /**
+   * The Drupal configuration object factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private $configFactory;
 
   /**
    * The Drupal entity type plug-in manager.
@@ -54,7 +60,17 @@ class Wiki implements WikiInterface {
   private $entityTypeManager;
 
   /**
+   * The Drupal state system manager.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  private $stateManager;
+
+  /**
    * Constructs this service object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The Drupal configuration object factory service.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type plug-in manager.
@@ -63,10 +79,12 @@ class Wiki implements WikiInterface {
    *   The Drupal state system manager.
    */
   public function __construct(
+    ConfigFactoryInterface      $configFactory,
     EntityTypeManagerInterface  $entityTypeManager,
     StateInterface              $stateManager
   ) {
     // Save dependencies.
+    $this->configFactory      = $configFactory;
     $this->entityTypeManager  = $entityTypeManager;
     $this->stateManager       = $stateManager;
   }
@@ -433,10 +451,74 @@ class Wiki implements WikiInterface {
   }
 
   /**
+   * Get the default main page node as configured in the site configuration.
+   *
+   * @return \Drupal\node\NodeInterface
+   *
+   * @throws \UnexpectedValueException
+   *   Exception thrown when the configured front page is not a node or a date
+   *   cannot be retrieved from the front page node.
+   */
+  protected function getDefaultMainPage(): NodeInterface {
+    /** @var \Drupal\node\NodeInterface|null */
+    $node = $this->normalizeNode(
+      $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY)
+    );
+
+    if (\is_null($node)) {
+      /** @var \Drupal\Core\Url */
+      $urlObject = Url::fromUserInput(
+        $this->configFactory->get('system.site')->get('page.front')
+      );
+
+      /** @var array */
+      $routeParameters = $urlObject->getRouteParameters();
+
+      if (empty($routeParameters['node'])) {
+        throw new \UnexpectedValueException(
+          'The front page does not appear to point to a node.'
+        );
+      }
+
+      /** @var \Drupal\node\NodeInterface|null */
+      $node = $this->normalizeNode($routeParameters['node']);
+
+      if (\is_null($node)) {
+        throw new \UnexpectedValueException(
+          'Could not load a valid node from the front page configuration.'
+        );
+      }
+    }
+
+    // Save to state storage.
+    $this->stateManager->set(
+      self::DEFAULT_MAIN_PAGE_STATE_KEY,
+      $node->nid->getString()
+    );
+
+    return $node;
+  }
+
+  /**
    * {@inheritdoc}
+   *
+   * @see $this->getDefaultMainPage()
+   *   Loads the default main page as configured in the site configuration, so
+   *   that we can retrieve its title - this avoids having to hard-code the
+   *   title or any other information about it.
+   *
+   * @see $this->getWikiNodeRevision()
+   *   Loads the indicated revision if the $date parameter is not 'default'.
    */
   public function getMainPage(string $date): ?NodeInterface {
-    return $this->getWikiNodeRevision('Main Page', $date);
+    /** @var \Drupal\node\NodeInterface */
+    $default = $this->getDefaultMainPage();
+
+    if ($date === 'default') {
+      return $default;
+    }
+
+    return $this->getWikiNodeRevision($default, $date);
   }
 
 }

@@ -201,7 +201,12 @@ interface WikiInterface {
    * Get the main page node for the specified date.
    *
    * @param string $date
-   *   A date string in the format stored in a wiki node's date field.
+   *   Must be one of the following:
+   *
+   *   - A date string in the format stored in a wiki node's date field
+   *
+   *   - 'default': alias for the default main page as configured in the site
+   *     configuration
    *
    * @return \Drupal\node\NodeInterface|null
    *   Returns the main page's node object for the specified date if it can be

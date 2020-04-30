@@ -13,7 +13,10 @@ services:
   # Wiki service.
   omnipedia.wiki:
     class: \Drupal\omnipedia_core\Service\Wiki
-    arguments: ['@entity_type.manager', '@state']
+    arguments:
+      - '@config.factory'
+      - '@entity_type.manager'
+      - '@state'
 
   # Dates cache context.
   cache_context.omnipedia_dates:
