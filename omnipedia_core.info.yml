@@ -4,6 +4,24 @@ description: Core module for Omnipedia; provides the timeline service.
 package: Omnipedia
 core: 8.x
 core_version_requirement: ^8 || ^9
+
 dependencies:
   - drupal:datetime
   - hook_event_dispatcher:hook_event_dispatcher
+
+config_devel:
+  install:
+    - node.type.wiki_page
+    - field.field.node.wiki_page.field_hide_from_search
+    - field.field.node.wiki_page.field_date
+    - field.field.node.wiki_page.body
+    - field.storage.node.field_date
+    - field.storage.node.field_hide_from_search
+    - core.entity_view_display.node.wiki_page.teaser
+    - core.entity_view_display.node.wiki_page.search_result
+    - core.entity_view_display.node.wiki_page.search_index
+    - core.entity_view_display.node.wiki_page.default
+    - core.entity_form_display.node.wiki_page.default
+    - core.base_field_override.node.wiki_page.title
+  optional:
+    - pathauto.pattern.node_wiki_page
