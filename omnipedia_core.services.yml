@@ -32,6 +32,14 @@ services:
     tags:
       - { name: cache.context }
 
+  # Event subscriber to remove stored default main page when config is updated.
+  omnipedia_core.system_site_front_page_config_event_subscriber:
+    class: \Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber
+    arguments:
+      - '@state'
+    tags:
+      - { name: 'event_subscriber' }
+
   # Event subscriber to update current date if a wiki page node is being viewed.
   omnipedia_core.timeline_wiki_page_node_kernel_event_subscriber:
     class: \Drupal\omnipedia_core\EventSubscriber\Kernel\TimelineWikiPageNodeEventSubscriber

@@ -42,8 +42,11 @@ class Wiki implements WikiInterface {
 
   /**
    * The Drupal state key where we store the node ID of the default main page.
+   *
+   * @see \Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber::configSave()
+   *   Constant is public so that this event subscriber can access it.
    */
-  protected const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
+  public const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
 
   /**
    * The Drupal configuration object factory service.
