@@ -214,4 +214,27 @@ interface WikiInterface {
    */
   public function getMainPage(string $date): ?NodeInterface;
 
+  /**
+   * Get the main page route name.
+   *
+   * @return string
+   *   The main page route name.
+   */
+  public function getMainPageRouteName(): string;
+
+  /**
+   * Get the main page route parameters.
+   *
+   * @param string $date
+   *   The date to build the route parameters for. See self::getMainPage() for
+   *   format.
+   *
+   * @return array
+   *   The main page route parameters for the given date.
+   *
+   * @see self::getMainPage()
+   *   $date parameter format and options defined here.
+   */
+  public function getMainPageRouteParameters(string $date): array;
+
 }

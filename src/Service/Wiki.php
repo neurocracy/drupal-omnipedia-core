@@ -524,4 +524,25 @@ class Wiki implements WikiInterface {
     return $this->getWikiNodeRevision($default, $date);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPageRouteName(): string {
+    return 'entity.node.canonical';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPageRouteParameters(string $date): array {
+    /** @var \Drupal\node\NodeInterface|null */
+    $node = $this->getMainPage($date);
+
+    if ($node instanceof NodeInterface) {
+      return ['node' => $node->nid->getString()];
+    } else {
+      return [];
+    }
+  }
+
 }
