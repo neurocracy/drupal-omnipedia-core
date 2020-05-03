@@ -20,7 +20,8 @@ services:
   # Dates cache context.
   cache_context.omnipedia_dates:
     class: Drupal\omnipedia_core\Cache\Context\DatesCacheContext
-    arguments: ['@omnipedia.timeline']
+    arguments:
+      - '@omnipedia.timeline'
     tags:
       - { name: cache.context }
 
@@ -40,8 +41,8 @@ services:
       - { name: 'event_subscriber' }
 
   # Event subscriber to update current date if a wiki page node is being viewed.
-  omnipedia_core.timeline_wiki_page_node_kernel_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Kernel\TimelineWikiPageNodeEventSubscriber
+  omnipedia_core.kernel_request_set_current_date_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Kernel\KernelRequestSetCurrentDateEventSubscriber
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
@@ -50,9 +51,11 @@ services:
       - { name: 'event_subscriber' }
 
   # Event subscriber to update defined dates on wiki node entity changes.
-  omnipedia_core.timeline_defined_dates_update_entity_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\TimelineDefinedDatesUpdateEntityEventSubscriber
-    arguments: ['@omnipedia.timeline', '@omnipedia.wiki']
+  omnipedia_core.entity_update_defined_dates_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Entity\EntityUpdateDefinedDatesEventSubscriber
+    arguments:
+      - '@omnipedia.timeline'
+      - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }
 

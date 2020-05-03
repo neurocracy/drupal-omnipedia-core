@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *   in the framework is executed", but if this is still not early enough, there
  *   are other events in that class that we could subscribe to if need be.
  */
-class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
+class KernelRequestSetCurrentDateEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Drupal current route match service.
