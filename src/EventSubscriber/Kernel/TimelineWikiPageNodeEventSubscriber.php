@@ -26,21 +26,21 @@ class TimelineWikiPageNodeEventSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Routing\StackedRouteMatchInterface
    */
-  private $currentRouteMatch;
+  protected $currentRouteMatch;
 
   /**
    * The Omnipedia timeline service.
    *
    * @var \Drupal\omnipedia_core\Service\TimelineInterface
    */
-  private $timeline;
+  protected $timeline;
 
   /**
    * The Omnipedia wiki service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
-  private $wiki;
+  protected $wiki;
 
   /**
    * Event subscriber constructor; saves dependencies.

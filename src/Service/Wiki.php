@@ -53,21 +53,21 @@ class Wiki implements WikiInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  private $configFactory;
+  protected $configFactory;
 
   /**
    * The Drupal entity type plug-in manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  private $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
    * The Drupal state system manager.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private $stateManager;
+  protected $stateManager;
 
   /**
    * Constructs this service object.

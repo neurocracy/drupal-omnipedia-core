@@ -24,7 +24,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
    *
    * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
-  private $wiki;
+  protected $wiki;
 
   /**
    * The Drupal string translation service.

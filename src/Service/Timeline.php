@@ -53,12 +53,12 @@ class Timeline implements TimelineInterface {
    *
    * @see https://symfony.com/doc/3.4/components/http_foundation/sessions.html#namespaced-attributes
    */
-  private const CURRENT_DATE_SESSION_KEY = 'omnipedia/currentDate';
+  protected const CURRENT_DATE_SESSION_KEY = 'omnipedia/currentDate';
 
   /**
    * The Drupal state key where we store the default date.
    */
-  private const DEFAULT_DATE_STATE_KEY = 'omnipedia.default_date';
+  protected const DEFAULT_DATE_STATE_KEY = 'omnipedia.default_date';
 
   /**
    * The Drupal state key where we store the list of dates defined by content.
@@ -69,42 +69,42 @@ class Timeline implements TimelineInterface {
    * @see $this->getDefinedDates()
    *   Uses this constant to read dates from state storage.
    */
-  private const DEFINED_DATES_STATE_KEY = 'omnipedia.defined_dates';
+  protected const DEFINED_DATES_STATE_KEY = 'omnipedia.defined_dates';
 
   /**
    * The Drupal database connection service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  private $database;
+  protected $database;
 
   /**
    * The Drupal entity type plug-in manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  private $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
    * The Omnipedia wiki service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
-  private $wiki;
+  protected $wiki;
 
   /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
    */
-  private $session;
+  protected $session;
 
   /**
    * The Drupal state system manager.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private $stateManager;
+  protected $stateManager;
 
   /**
    * A cache of created date objects.
