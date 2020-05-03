@@ -1,7 +1,7 @@
 services:
   # Timeline service.
   omnipedia.timeline:
-    class: \Drupal\omnipedia_core\Service\Timeline
+    class: Drupal\omnipedia_core\Service\Timeline
     arguments:
       - '@database'
       - '@entity_type.manager'
@@ -11,7 +11,7 @@ services:
 
   # Wiki service.
   omnipedia.wiki:
-    class: \Drupal\omnipedia_core\Service\Wiki
+    class: Drupal\omnipedia_core\Service\Wiki
     arguments:
       - '@config.factory'
       - '@entity_type.manager'
@@ -19,21 +19,21 @@ services:
 
   # Dates cache context.
   cache_context.omnipedia_dates:
-    class: \Drupal\omnipedia_core\Cache\Context\DatesCacheContext
+    class: Drupal\omnipedia_core\Cache\Context\DatesCacheContext
     arguments: ['@omnipedia.timeline']
     tags:
       - { name: cache.context }
 
   # Wiki node cache context.
   cache_context.omnipedia_wiki_node:
-    class: \Drupal\omnipedia_core\Cache\Context\WikiNodeCacheContext
+    class: Drupal\omnipedia_core\Cache\Context\WikiNodeCacheContext
     arguments: ['@current_route_match', '@omnipedia.wiki']
     tags:
       - { name: cache.context }
 
   # Event subscriber to remove stored default main page when config is updated.
   omnipedia_core.system_site_front_page_config_event_subscriber:
-    class: \Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber
+    class: Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber
     arguments:
       - '@state'
     tags:
@@ -41,7 +41,7 @@ services:
 
   # Event subscriber to update current date if a wiki page node is being viewed.
   omnipedia_core.timeline_wiki_page_node_kernel_event_subscriber:
-    class: \Drupal\omnipedia_core\EventSubscriber\Kernel\TimelineWikiPageNodeEventSubscriber
+    class: Drupal\omnipedia_core\EventSubscriber\Kernel\TimelineWikiPageNodeEventSubscriber
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
@@ -51,14 +51,14 @@ services:
 
   # Event subscriber to update defined dates on wiki node entity changes.
   omnipedia_core.timeline_defined_dates_update_entity_event_subscriber:
-    class: \Drupal\omnipedia_core\EventSubscriber\Entity\TimelineDefinedDatesUpdateEntityEventSubscriber
+    class: Drupal\omnipedia_core\EventSubscriber\Entity\TimelineDefinedDatesUpdateEntityEventSubscriber
     arguments: ['@omnipedia.timeline', '@omnipedia.wiki']
     tags:
       - { name: 'event_subscriber' }
 
   # Event subscriber to alter the site settings form.
   omnipedia_core.system_site_information_settings_form_event_subscriber:
-    class: \Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
+    class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
     arguments:
       - '@omnipedia.wiki'
       - '@string_translation'
