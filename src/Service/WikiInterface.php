@@ -198,6 +198,20 @@ interface WikiInterface {
   public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface;
 
   /**
+   * Determine if a parameter is or equates to a main page wiki node.
+   *
+   * @param \Drupal\node\NodeInterface|int|string $node
+   *   Either a node object or a numeric value (integer or string) that equates
+   *   to an existing node ID to load.
+   *
+   * @return boolean
+   *   Returns true if the $node parameter is a main page wiki node or if it is
+   *   a numeric value that equates to the ID of a main page wiki node; returns
+   *   false otherwise.
+   */
+  public function isMainPage($node): bool;
+
+  /**
    * Get the main page node for the specified date.
    *
    * @param string $date

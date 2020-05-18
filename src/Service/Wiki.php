@@ -504,6 +504,24 @@ class Wiki implements WikiInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function isMainPage($node): bool {
+    /** @var \Drupal\node\NodeInterface|null */
+    $node = $this->getWikiNode($node);
+
+    // Return false if this is not a wiki node.
+    if (\is_null($node)) {
+      return false;
+    }
+
+    /** @var array */
+    $mainPageNids = $this->nodeOrTitleToNids($this->getDefaultMainPage());
+
+    return \in_array($node->nid->getString(), $mainPageNids);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @see $this->getDefaultMainPage()
    *   Loads the default main page as configured in the site configuration, so
