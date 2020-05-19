@@ -563,4 +563,32 @@ class Wiki implements WikiInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRandomWikiNodeRouteParameters(string $date): array {
+    /** @var array */
+    $nodeData = $this->getTrackedWikiNodeData();
+
+    /** @var array */
+    $mainPageNids = $this->nodeOrTitleToNids($this->getDefaultMainPage());
+
+    /** @var array */
+    $nids = \array_filter(
+      $nodeData['dates'][$date],
+      function($nid) use ($nodeData, $mainPageNids) {
+        // This filters out unpublished nodes and main pages.
+        return !(
+          !$nodeData['nodes'][$nid]['published'] ||
+          \in_array($nid, $mainPageNids)
+        );
+      }
+    );
+
+    return [
+      // Return a random nid from the available nids.
+      'node' => $nids[\array_rand($nids)]
+    ];
+  }
+
 }

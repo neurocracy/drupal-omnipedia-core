@@ -251,4 +251,18 @@ interface WikiInterface {
    */
   public function getMainPageRouteParameters(string $date): array;
 
+  /**
+   * Get route parameters for a random wiki node.
+   *
+   * @param string $date
+   *   A date string in the format stored in a wiki node's date field to limit
+   *   the randomization to. Only a node with this date will be returned.
+   *
+   * @return array
+   *   An array with a 'node' key that contains an nid for the randomly chosen
+   *   wiki node that has the same date as that which is provided, is published,
+   *   and is not a main page.
+   */
+  public function getRandomWikiNodeRouteParameters(string $date): array;
+
 }
