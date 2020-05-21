@@ -252,6 +252,18 @@ interface WikiInterface {
   public function getMainPageRouteParameters(string $date): array;
 
   /**
+   * Add a wiki node to a user's recently viewed session.
+   *
+   * This is used in self::getRandomWikiNodeRouteParameters() to avoid choosing
+   * a recently viewed wiki node.
+   *
+   * @param \Drupal\node\NodeInterface|int|string $node
+   *   Either a node object or a numeric value (integer or string) that equates
+   *   to an existing node ID to load.
+   */
+  public function addRecentlyViewedWikiNode($node): void;
+
+  /**
    * Get route parameters for a random wiki node.
    *
    * @param string $date
@@ -261,7 +273,7 @@ interface WikiInterface {
    * @return array
    *   An array with a 'node' key that contains an nid for the randomly chosen
    *   wiki node that has the same date as that which is provided, is published,
-   *   and is not a main page.
+   *   is not a main page, and has not been viewed recently by the current user.
    */
   public function getRandomWikiNodeRouteParameters(string $date): array;
 

@@ -15,6 +15,7 @@ services:
     arguments:
       - '@config.factory'
       - '@entity_type.manager'
+      - '@session'
       - '@state'
 
   # Dates cache context.
@@ -46,6 +47,15 @@ services:
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
+      - '@omnipedia.wiki'
+    tags:
+      - { name: 'event_subscriber' }
+
+  # Event subscriber to record the last wiki node viewed.
+  omnipedia_core.kernel_recently_viewed_wiki_node_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Kernel\RecentlyViewedWikiNodeEventSubscriber
+    arguments:
+      - '@current_route_match'
       - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }
