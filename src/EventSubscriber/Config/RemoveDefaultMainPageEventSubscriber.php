@@ -11,7 +11,7 @@ use Drupal\omnipedia_core\Service\Wiki;
 /**
  * Event subscriber to remove stored default main page when config is updated.
  */
-class SystemSiteFrontPageConfigEventSubscriber implements EventSubscriberInterface {
+class RemoveDefaultMainPageEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Drupal state system manager.

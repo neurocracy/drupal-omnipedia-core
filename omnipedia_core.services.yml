@@ -34,16 +34,16 @@ services:
       - { name: cache.context }
 
   # Event subscriber to remove stored default main page when config is updated.
-  omnipedia_core.system_site_front_page_config_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber
+  omnipedia_core.config_remove_default_main_page_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Config\RemoveDefaultMainPageEventSubscriber
     arguments:
       - '@state'
     tags:
       - { name: 'event_subscriber' }
 
   # Event subscriber to update current date if a wiki page node is being viewed.
-  omnipedia_core.kernel_request_set_current_date_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Kernel\KernelRequestSetCurrentDateEventSubscriber
+  omnipedia_core.kernel_set_current_date_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Kernel\SetCurrentDateEventSubscriber
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
@@ -51,9 +51,9 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
-  # Event subscriber to record the last wiki node viewed.
-  omnipedia_core.kernel_recently_viewed_wiki_node_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Kernel\RecentlyViewedWikiNodeEventSubscriber
+  # Event subscriber to record when a wiki node is viewed.
+  omnipedia_core.kernel_wiki_node_viewed_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
     arguments:
       - '@current_route_match'
       - '@omnipedia.wiki'
@@ -62,7 +62,7 @@ services:
 
   # Event subscriber to update defined dates on wiki node entity changes.
   omnipedia_core.entity_update_defined_dates_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\EntityUpdateDefinedDatesEventSubscriber
+    class: Drupal\omnipedia_core\EventSubscriber\Entity\UpdateDefinedDatesEventSubscriber
     arguments:
       - '@omnipedia.timeline'
       - '@omnipedia.wiki'
@@ -70,7 +70,7 @@ services:
       - { name: 'event_subscriber' }
 
   # Event subscriber to alter the site settings form.
-  omnipedia_core.system_site_information_settings_form_event_subscriber:
+  omnipedia_core.form_system_site_information_settings_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
     arguments:
       - '@omnipedia.wiki'

@@ -9,13 +9,13 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Event subscriber to record the last wiki node viewed.
+ * Event subscriber to record when a wiki node is viewed.
  *
  * @see \Symfony\Component\HttpKernel\KernelEvents::RESPONSE
  *   Subscribes to this event to record the last wiki node viewed, if
  *   applicable.
  */
-class RecentlyViewedWikiNodeEventSubscriber implements EventSubscriberInterface {
+class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Drupal current route match service.

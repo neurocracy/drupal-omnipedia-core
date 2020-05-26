@@ -14,7 +14,7 @@ use Drupal\hook_event_dispatcher\Event\Entity\EntityDeleteEvent;
 /**
  * Updates defined dates on wiki node entity changes.
  */
-class EntityUpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
+class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Omnipedia timeline service.
