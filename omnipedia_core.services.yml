@@ -41,6 +41,24 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
+  # Event subscriber to update defined dates on wiki node entity changes.
+  omnipedia_core.entity_update_defined_dates_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Entity\UpdateDefinedDatesEventSubscriber
+    arguments:
+      - '@omnipedia.timeline'
+      - '@omnipedia.wiki'
+    tags:
+      - { name: 'event_subscriber' }
+
+  # Event subscriber to alter the site settings form.
+  omnipedia_core.form_system_site_information_settings_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
+    arguments:
+      - '@omnipedia.wiki'
+      - '@string_translation'
+    tags:
+      - { name: 'event_subscriber' }
+
   # Event subscriber to update current date if a wiki page node is being viewed.
   omnipedia_core.kernel_set_current_date_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Kernel\SetCurrentDateEventSubscriber
@@ -57,23 +75,5 @@ services:
     arguments:
       - '@current_route_match'
       - '@omnipedia.wiki'
-    tags:
-      - { name: 'event_subscriber' }
-
-  # Event subscriber to update defined dates on wiki node entity changes.
-  omnipedia_core.entity_update_defined_dates_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\UpdateDefinedDatesEventSubscriber
-    arguments:
-      - '@omnipedia.timeline'
-      - '@omnipedia.wiki'
-    tags:
-      - { name: 'event_subscriber' }
-
-  # Event subscriber to alter the site settings form.
-  omnipedia_core.form_system_site_information_settings_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
-    arguments:
-      - '@omnipedia.wiki'
-      - '@string_translation'
     tags:
       - { name: 'event_subscriber' }
