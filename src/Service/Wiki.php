@@ -583,11 +583,13 @@ class Wiki implements WikiInterface {
     /** @var \Drupal\node\NodeInterface|null */
     $node = $this->getMainPage($date);
 
-    if ($node instanceof NodeInterface) {
-      return ['node' => $node->nid->getString()];
-    } else {
-      return [];
+    // Fall back to the default main page if this date doesn't have one, to
+    // avoid Drupal throwing an exception if we were to return an empty array.
+    if (!($node instanceof NodeInterface)) {
+      $node = $this->getDefaultMainPage();
     }
+
+    return ['node' => $node->nid->getString()];
   }
 
   /**

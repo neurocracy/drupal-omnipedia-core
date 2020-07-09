@@ -244,7 +244,8 @@ interface WikiInterface {
    *   format.
    *
    * @return array
-   *   The main page route parameters for the given date.
+   *   The main page route parameters for the given date, or for the default
+   *   main page if a main page does not exist for the given date.
    *
    * @see self::getMainPage()
    *   $date parameter format and options defined here.
