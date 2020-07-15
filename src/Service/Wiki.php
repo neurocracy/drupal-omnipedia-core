@@ -8,6 +8,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\omnipedia_core\Entity\Node as WikiNode;
+use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -16,16 +18,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * The Omnipedia wiki service.
  */
 class Wiki implements WikiInterface {
-
-  /**
-   * The wiki node type.
-   */
-  protected const WIKI_NODE_TYPE = 'wiki_page';
-
-  /**
-   * The name of the date field on wiki nodes.
-   */
-  protected const WIKI_NODE_DATE_FIELD = 'field_date';
 
   /**
    * The Drupal state key where we store the node ID of the default main page.
@@ -144,7 +136,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function getWikiNodeType(): string {
-    return self::WIKI_NODE_TYPE;
+    return WikiNode::getWikiNodeType();
   }
 
   /**
@@ -154,8 +146,7 @@ class Wiki implements WikiInterface {
     $node = $this->normalizeNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
-      return $node->getType() === $this->getWikiNodeType();
-
+      return $node->isWikiNode();
     } else {
       return false;
     }
@@ -178,20 +169,20 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function getWikiNodeDateFieldName(): string {
-    return self::WIKI_NODE_DATE_FIELD;
+    return WikiNode::getWikiNodeDateFieldName();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWikiNodeDate($node): ?string {
-    $node = $this->getWikiNode($node);
+    $node = $this->normalizeNode($node);
 
-    if ($node === null) {
+    if ($this->isWikiNode($node)) {
+      return $node->getWikiNodeDate();
+    } else {
       return null;
     }
-
-    return $node->get($this->getWikiNodeDateFieldName())[0]->value;
   }
 
   /**

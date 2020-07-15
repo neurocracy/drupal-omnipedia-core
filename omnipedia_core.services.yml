@@ -57,6 +57,12 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
+  # Event subscriber to replace the core Node class with our own.
+  omnipedia_core.entity_type_replace_node_class_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\EntityType\ReplaceNodeEntityClassEventSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+
   # Event subscriber to alter the site settings form.
   omnipedia_core.form_system_site_information_settings_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
