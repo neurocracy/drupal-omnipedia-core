@@ -123,6 +123,17 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
     /** @var \Drupal\Core\Url */
     $urlObject = Url::fromUserInput($element['#value']);
 
+    // Check that the built URL actually points to a route that exists to avoid
+    // a fatal error when we try to get the parameters to a non-existent route.
+    if (!$urlObject->isRouted()) {
+      $formState->setErrorByName(
+        'site_frontpage',
+        $this->t('This must point to an existing, internal site content.')
+      );
+
+      return;
+    }
+
     /** @var array */
     $routeParameters = $urlObject->getRouteParameters();
 
