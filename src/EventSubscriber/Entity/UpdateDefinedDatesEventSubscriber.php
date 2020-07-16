@@ -6,10 +6,10 @@ use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\hook_event_dispatcher\Event\Entity\BaseEntityEvent;
-use Drupal\hook_event_dispatcher\Event\Entity\EntityInsertEvent;
-use Drupal\hook_event_dispatcher\Event\Entity\EntityUpdateEvent;
-use Drupal\hook_event_dispatcher\Event\Entity\EntityDeleteEvent;
+use Drupal\core_event_dispatcher\Event\Entity\AbstractEntityEvent;
+use Drupal\core_event_dispatcher\Event\Entity\EntityInsertEvent;
+use Drupal\core_event_dispatcher\Event\Entity\EntityUpdateEvent;
+use Drupal\core_event_dispatcher\Event\Entity\EntityDeleteEvent;
 
 /**
  * Updates defined dates on wiki node entity changes.
@@ -61,7 +61,7 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
   /**
    * Update stored defined dates when a wiki node is created/updated/deleted.
    *
-   * @param \Drupal\hook_event_dispatcher\Event\Entity\BaseEntityEvent $event
+   * @param \Drupal\core_event_dispatcher\Event\Entity\AbstractEntityEvent $event
    *   The event object.
    *
    * @see \Drupal\omnipedia_core\Service\WikiInterface::isWikiNode()
@@ -76,7 +76,7 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
    * @see \Drupal\omnipedia_core\Service\TimelineInterface::findDefinedDates()
    *   Calls this method to invoke a rescan of wiki nodes.
    */
-  public function updateDefinedDates(BaseEntityEvent $event) {
+  public function updateDefinedDates(AbstractEntityEvent $event) {
     /** @var \Drupal\Core\Entity\EntityInterface */
     $entity = $event->getEntity();
 

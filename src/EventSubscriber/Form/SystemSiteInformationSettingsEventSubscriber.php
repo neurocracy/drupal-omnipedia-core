@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
-use Drupal\hook_event_dispatcher\Event\Form\FormIdAlterEvent;
+use Drupal\core_event_dispatcher\Event\Form\FormIdAlterEvent;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -62,7 +62,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   /**
    * Alter the 'system_site_information_settings' form.
    *
-   * @param \Drupal\hook_event_dispatcher\Event\Form\FormIdAlterEvent $event
+   * @param \Drupal\core_event_dispatcher\Event\Form\FormIdAlterEvent $event
    *   The event object.
    */
   public function formAlter(FormIdAlterEvent $event): void {

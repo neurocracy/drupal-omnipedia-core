@@ -2,7 +2,7 @@
 
 namespace Drupal\omnipedia_core\EventSubscriber\EntityType;
 
-use Drupal\hook_event_dispatcher\Event\EntityType\EntityTypeBuildEvent;
+use Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,7 +23,7 @@ class ReplaceNodeEntityClassEventSubscriber implements EventSubscriberInterface 
   /**
    * Replace the core Node entity class with our own.
    *
-   * @param \Drupal\hook_event_dispatcher\Event\EntityType\EntityTypeBuildEvent $event
+   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent $event
    *   The event object.
    *
    * @see \Drupal\omnipedia_core\Entity\Node
