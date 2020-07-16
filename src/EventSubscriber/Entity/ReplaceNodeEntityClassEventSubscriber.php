@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\omnipedia_core\EventSubscriber\EntityType;
+namespace Drupal\omnipedia_core\EventSubscriber\Entity;
 
 use Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
