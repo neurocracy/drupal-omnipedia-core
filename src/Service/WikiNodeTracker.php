@@ -2,6 +2,7 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\State\StateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
@@ -98,6 +99,53 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
    *   Returns saved tracked data and describes the format for the $data array.
    */
   protected function setTrackedWikiNodeData(array $data): void {
+    /** @var array */
+    $datesSorted = [];
+
+    // Parse the provided dates into DrupalDateTime objects so that they can be
+    // sorted chronologically.
+    foreach ($data['dates'] as $date => $dateNodes) {
+      // The date parsed into an array of date parts. We do this so that we
+      // don't need to have any knowledge of what format the date is in, just as
+      // long as it can be parsed.
+      /** @var array */
+      $dateArray = \date_parse($date);
+
+      // We need both DrupalDateTime objects and the string date, as \usort()
+      // will re-index the array, removing our keys.
+      $datesSorted[$date] = [
+        'date'      => $date,
+        'datetime'  => DrupalDateTime::createFromArray([
+          'year'  => $dateArray['year'],
+          'month' => $dateArray['month'],
+          'day'   => $dateArray['day'],
+        ]),
+      ];
+    }
+
+    // Sort the array chronologically.
+    \usort($datesSorted, function($a, $b) {
+      // As of PHP 5.2.2, DateTime objects can be compared using comparison
+      // operators, so we do that to sort them chronologically:
+      //
+      // @see https://www.php.net/manual/en/datetime.diff.php
+      return ($a['datetime'] < $b['datetime'] ? 1 : -1) * -1;
+    });
+
+    // Save the unsorted dates as we're going to empty the array.
+    /** @var array */
+    $dateDataUnsorted = $data['dates'];
+
+    /** @var array */
+    $data['dates'] = [];
+
+    // Copy the unsorted date data into the $data array in chronologically
+    // sorted order.
+    foreach ($datesSorted as $dateSorted) {
+      $data['dates'][$dateSorted['date']] =
+        $dateDataUnsorted[$dateSorted['date']];
+    }
+
     foreach ([
       'nodes'   => self::WIKI_NODE_INFO_STATE_KEY,
       'dates'   => self::WIKI_NODE_DATES_STATE_KEY,

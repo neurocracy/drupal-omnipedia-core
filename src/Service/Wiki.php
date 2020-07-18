@@ -269,8 +269,10 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    *
-   * @todo Move date sorting to \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::trackWikiNode()
-   *   so that it doesn't need to be done every time this method is called.
+   * @todo Move array intersection/nids by date stuff to
+   *   \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::trackWikiNode()
+   *   to store the sorted array so that it doesn't need to be done every time
+   *   this method is called.
    */
   public function getWikiNodeRevisions($nodeOrTitle): array {
     /** @var array */
@@ -282,36 +284,29 @@ class Wiki implements WikiInterface {
     /** @var array */
     $nids = $this->nodeOrTitleToNids($nodeOrTitle);
 
-    foreach ($nids as $nid) {
-      // The node's date parsed into an array of date parts. We do this so that
-      // we don't need to have any knowledge of what format the date is in, just
-      // as long as it can be parsed.
+    foreach ($nodeData['dates'] as $date => $nodesForDate) {
+      // Determine if any of the nids are present in this date.
       /** @var array */
-      $dateArray = \date_parse($nodeData['nodes'][$nid]['date']);
+      $intersected = \array_intersect($nodesForDate, $nids);
 
+      // Skip if no nid was found via \array_intersect().
+      if (\count($intersected) === 0) {
+        continue;
+      }
+
+      // Since there should only ever be one nid per date, we can just get the
+      // value of the first index.
+      /** @var int */
+      $nid = (int) \reset($intersected);
+
+      /** @var array */
       $nodes[$nid] = [
         'nid'       => $nid,
-        // We need to build DrupalDateTime objects so that we can use their
-        // diff() method to sort by date. We later change this back to the
-        // formatted string.
-        'date'      => DrupalDateTime::createFromArray([
-          'year'      => $dateArray['year'],
-          'month'     => $dateArray['month'],
-          'day'       => $dateArray['day'],
-        ]),
+        'date'      => $nodeData['nodes'][$nid]['date'],
         'title'     => $nodeData['nodes'][$nid]['title'],
         'published' => $nodeData['nodes'][$nid]['published'],
       ];
     }
-
-    // Sort the array by their dates.
-    \usort($nodes, function($a, $b) {
-      // DrupalDateTime::diff() returns a \DateInterval object, which contains a
-      // 'days' property:
-      //
-      // @see https://www.php.net/manual/en/class.dateinterval.php
-      return $a['date']->diff($b['date'])->days * -1;
-    });
 
     return $nodes;
   }
