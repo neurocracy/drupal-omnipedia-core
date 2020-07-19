@@ -87,6 +87,5 @@ services:
     class: Drupal\omnipedia_core\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
     arguments:
       - '@current_route_match'
-      - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }

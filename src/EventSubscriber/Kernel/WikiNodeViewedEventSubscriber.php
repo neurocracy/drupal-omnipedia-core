@@ -25,27 +25,13 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
   protected $currentRouteMatch;
 
   /**
-   * The Omnipedia wiki service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
-   */
-  protected $wiki;
-
-  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
    *   The Drupal current route match service.
-   *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
    */
-  public function __construct(
-    StackedRouteMatchInterface  $currentRouteMatch,
-    WikiInterface               $wiki
-  ) {
-    $this->currentRouteMatch  = $currentRouteMatch;
-    $this->wiki               = $wiki;
+  public function __construct(StackedRouteMatchInterface $currentRouteMatch) {
+    $this->currentRouteMatch = $currentRouteMatch;
   }
 
   /**
@@ -69,10 +55,14 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $this->wiki->addRecentlyViewedWikiNode(
-      /** @var \Drupal\node\NodeInterface|null */
-      $this->currentRouteMatch->getParameter('node')
-    );
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $node = $this->currentRouteMatch->getParameter('node');
+
+    if ($node === null) {
+      return;
+    }
+
+    $node->addRecentlyViewedWikiNode();
   }
 
 }
