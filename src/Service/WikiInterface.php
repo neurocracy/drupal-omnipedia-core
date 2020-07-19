@@ -3,6 +3,7 @@
 namespace Drupal\omnipedia_core\Service;
 
 use Drupal\node\NodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 
 /**
  * The Omnipedia wiki service interface.
@@ -37,12 +38,12 @@ interface WikiInterface {
    *   Either a node object or a numeric value (integer or string) that equates
    *   to an existing node ID to load.
    *
-   * @return \Drupal\node\NodeInterface|null
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Returns the node object if $node a wiki node; if $node is a node but not
    *   a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
-  public function getWikiNode($node): ?NodeInterface;
+  public function getWikiNode($node): ?WikiNodeInterface;
 
   /**
    * Get the wiki node date field name.
@@ -178,7 +179,7 @@ interface WikiInterface {
    * @param string $date
    *   A date string in the format stored in a wiki node's date field.
    *
-   * @return \Drupal\node\NodeInterface|null
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Returns the node object if $nodeOrTitle can be resolved to a wiki node;
    *   if $nodeOrTitle cannot be resolved to a wiki node, returns null; if
    *   $nodeOrTitle is a numeric value that doesn'tequate to a wiki node's ID,
@@ -188,7 +189,7 @@ interface WikiInterface {
    *   Exception thrown if the $nodeOrTitle parameter is not one of the expected
    *   values.
    */
-  public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface;
+  public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface;
 
   /**
    * Determine if a parameter is or equates to a main page wiki node.
@@ -215,11 +216,11 @@ interface WikiInterface {
    *   - 'default': alias for the default main page as configured in the site
    *     configuration
    *
-   * @return \Drupal\node\NodeInterface|null
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Returns the main page's node object for the specified date if it can be
    *   found; returns null otherwise.
    */
-  public function getMainPage(string $date): ?NodeInterface;
+  public function getMainPage(string $date): ?WikiNodeInterface;
 
   /**
    * Get the main page route name.

@@ -5,6 +5,7 @@ namespace Drupal\omnipedia_core\Entity;
 use Drupal\node\Entity\Node as CoreNode;
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_core\Service\WikiInterface;
 
 /**
  * Omnipedia node entity class.
@@ -30,6 +31,26 @@ class Node extends CoreNode implements NodeInterface {
    * The name of the date field on wiki nodes.
    */
   protected const WIKI_NODE_DATE_FIELD = 'field_date';
+
+  /**
+   * The Omnipedia wiki service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   */
+  protected $wiki;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function injectWikiDependencies(WikiInterface $wiki): void {
+    // Don't do anything if this isn't a wiki node.
+    if (!$this->isWikiNode()) {
+      return;
+    }
+
+    // Save dependencies.
+    $this->wiki = $wiki;
+  }
 
   /**
    * {@inheritdoc}
@@ -61,6 +82,34 @@ class Node extends CoreNode implements NodeInterface {
     } else {
       return null;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWikiNodeRevisions(): array {
+    return $this->wiki->getWikiNodeRevisions($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWikiNodeRevision(string $date): ?NodeInterface {
+    return $this->wiki->getWikiNodeRevision($this, $date);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isMainPage(): bool {
+    return $this->wiki->isMainPage($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addRecentlyViewedWikiNode(): void {
+    $this->wiki->addRecentlyViewedWikiNode($this);
   }
 
 }

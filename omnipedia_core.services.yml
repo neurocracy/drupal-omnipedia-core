@@ -57,9 +57,9 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
-  # Event subscriber to replace the core Node class with our own.
-  omnipedia_core.entity_replace_node_class_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\ReplaceNodeEntityClassEventSubscriber
+  # Event subscriber to replace core Node classes with our own.
+  omnipedia_core.entity_replace_node_classes_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Entity\ReplaceNodeEntityClassesEventSubscriber
     tags:
       - { name: 'event_subscriber' }
 

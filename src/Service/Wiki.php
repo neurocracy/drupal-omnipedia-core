@@ -124,7 +124,7 @@ class Wiki implements WikiInterface {
       return $node;
 
     } else if (\is_numeric($node)) {
-      /** @var \Drupal\node\NodeInterface|null */
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
       return $this->entityTypeManager->getStorage('node')->load($node);
 
     } else {
@@ -143,6 +143,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function isWikiNode($node): bool {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->normalizeNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
@@ -155,7 +156,8 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNode($node): ?NodeInterface {
+  public function getWikiNode($node): ?WikiNodeInterface {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->normalizeNode($node);
 
     if ($this->isWikiNode($node)) {
@@ -176,6 +178,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function getWikiNodeDate($node): ?string {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->normalizeNode($node);
 
     if ($this->isWikiNode($node)) {
@@ -196,7 +199,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function trackWikiNode($node): void {
-    /** @var \Drupal\node\NodeInterface|null */
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getWikiNode($node);
 
     // Bail if no node could be loaded.
@@ -205,7 +208,7 @@ class Wiki implements WikiInterface {
     }
 
     /** @var string */
-    $nodeDate = $this->getWikiNodeDate($node);
+    $nodeDate = $node->getWikiNodeDate();
 
     $this->wikiNodeTracker->trackWikiNode($node, $nodeDate);
   }
@@ -214,7 +217,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function untrackWikiNode($node): void {
-    /** @var \Drupal\node\NodeInterface|null */
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getWikiNode($node);
 
     // Bail if no node could be loaded.
@@ -246,7 +249,7 @@ class Wiki implements WikiInterface {
       $title = $nodeOrTitle;
 
     } else {
-      /** @var \Drupal\node\NodeInterface|null */
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
       $node = $this->normalizeNode($nodeOrTitle);
 
       if ($node instanceof NodeInterface) {
@@ -314,7 +317,7 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNodeRevision($nodeOrTitle, string $date): ?NodeInterface {
+  public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface {
     // Get all node IDs of nodes with this title.
     /** @var array */
     $nids = $this->nodeOrTitleToNids($nodeOrTitle);
@@ -339,14 +342,14 @@ class Wiki implements WikiInterface {
   /**
    * Get the default main page node as configured in the site configuration.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface
    *
    * @throws \UnexpectedValueException
    *   Exception thrown when the configured front page is not a node or a date
    *   cannot be retrieved from the front page node.
    */
-  protected function getDefaultMainPage(): NodeInterface {
-    /** @var \Drupal\node\NodeInterface|null */
+  protected function getDefaultMainPage(): WikiNodeInterface {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->normalizeNode(
       $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY)
     );
@@ -366,7 +369,7 @@ class Wiki implements WikiInterface {
         );
       }
 
-      /** @var \Drupal\node\NodeInterface|null */
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
       $node = $this->normalizeNode($routeParameters['node']);
 
       if (\is_null($node)) {
@@ -389,7 +392,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function isMainPage($node): bool {
-    /** @var \Drupal\node\NodeInterface|null */
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getWikiNode($node);
 
     // Return false if this is not a wiki node.
@@ -414,8 +417,8 @@ class Wiki implements WikiInterface {
    * @see $this->getWikiNodeRevision()
    *   Loads the indicated revision if the $date parameter is not 'default'.
    */
-  public function getMainPage(string $date): ?NodeInterface {
-    /** @var \Drupal\node\NodeInterface */
+  public function getMainPage(string $date): ?WikiNodeInterface {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
     $default = $this->getDefaultMainPage();
 
     if ($date === 'default') {
@@ -436,7 +439,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function getMainPageRouteParameters(string $date): array {
-    /** @var \Drupal\node\NodeInterface|null */
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getMainPage($date);
 
     // Fall back to the default main page if this date doesn't have one, to
@@ -452,7 +455,7 @@ class Wiki implements WikiInterface {
    * {@inheritdoc}
    */
   public function addRecentlyViewedWikiNode($node): void {
-    /** @var \Drupal\node\NodeInterface|null */
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->getWikiNode($node);
 
     // Return if this is not a wiki node.
