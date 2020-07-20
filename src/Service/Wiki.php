@@ -4,13 +4,13 @@ namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -49,13 +49,6 @@ class Wiki implements WikiInterface {
   protected $configFactory;
 
   /**
-   * The Drupal entity type plug-in manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
@@ -70,6 +63,13 @@ class Wiki implements WikiInterface {
   protected $stateManager;
 
   /**
+   * The Omnipedia wiki node resolver service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   */
+  protected $wikiNodeResolver;
+
+  /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
@@ -82,8 +82,8 @@ class Wiki implements WikiInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The Drupal configuration object factory service.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The Drupal entity type plug-in manager.
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
@@ -96,40 +96,17 @@ class Wiki implements WikiInterface {
    */
   public function __construct(
     ConfigFactoryInterface      $configFactory,
-    EntityTypeManagerInterface  $entityTypeManager,
+    WikiNodeResolverInterface   $wikiNodeResolver,
     WikiNodeTrackerInterface    $wikiNodeTracker,
     SessionInterface            $session,
     StateInterface              $stateManager
   ) {
     // Save dependencies.
     $this->configFactory      = $configFactory;
-    $this->entityTypeManager  = $entityTypeManager;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->wikiNodeTracker    = $wikiNodeTracker;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
-  }
-
-  /**
-   * Ensure a provided parameter is a node, loading it if need be.
-   *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
-   *
-   * @return \Drupal\node\NodeInterface|null
-   *   Either a node object, or null if one cannot be loaded.
-   */
-  protected function normalizeNode($node) {
-    if (\is_object($node) && $node instanceof NodeInterface) {
-      return $node;
-
-    } else if (\is_numeric($node)) {
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      return $this->entityTypeManager->getStorage('node')->load($node);
-
-    } else {
-      return null;
-    }
   }
 
   /**
@@ -144,7 +121,7 @@ class Wiki implements WikiInterface {
    */
   public function isWikiNode($node): bool {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->normalizeNode($node);
+    $node = $this->wikiNodeResolver->resolveNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
       return $node->isWikiNode();
@@ -158,7 +135,7 @@ class Wiki implements WikiInterface {
    */
   public function getWikiNode($node): ?WikiNodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->normalizeNode($node);
+    $node = $this->wikiNodeResolver->resolveNode($node);
 
     if ($this->isWikiNode($node)) {
       return $node;
@@ -179,7 +156,7 @@ class Wiki implements WikiInterface {
    */
   public function getWikiNodeDate($node): ?string {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->normalizeNode($node);
+    $node = $this->wikiNodeResolver->resolveNode($node);
 
     if ($this->isWikiNode($node)) {
       return $node->getWikiNodeDate();
@@ -229,47 +206,6 @@ class Wiki implements WikiInterface {
   }
 
   /**
-   * Resolve a node or title to all node IDs with the same title.
-   *
-   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
-   *   Must be one of the following:
-   *
-   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object
-   *
-   *   - An integer or a numeric string that equates to a node ID
-   *
-   *   - A non-numeric string which is assumed to be a node title to search for
-   *
-   * @return array
-   *   An array containing zero or more node IDs as values.
-   */
-  protected function nodeOrTitleToNids($nodeOrTitle): array {
-    if (\is_string($nodeOrTitle)) {
-      /** @var string */
-      $title = $nodeOrTitle;
-
-    } else {
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      $node = $this->normalizeNode($nodeOrTitle);
-
-      if ($node instanceof NodeInterface) {
-        /** @var string */
-        $title = $node->getTitle();
-      }
-    }
-
-    if (!isset($title)) {
-      throw new \InvalidArgumentException('The $nodeOrTitle parameter must be a node object, an integer node ID, or a node title as a string.');
-    }
-
-    /** @var array */
-    $nodeData = $this->getTrackedWikiNodeData();
-
-    // Get all node IDs of nodes with this title.
-    return \array_keys($nodeData['titles'], $title, true);
-  }
-
-  /**
    * {@inheritdoc}
    *
    * @todo Move array intersection/nids by date stuff to
@@ -285,7 +221,7 @@ class Wiki implements WikiInterface {
     $nodes = [];
 
     /** @var array */
-    $nids = $this->nodeOrTitleToNids($nodeOrTitle);
+    $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);
 
     foreach ($nodeData['dates'] as $date => $nodesForDate) {
       // Determine if any of the nids are present in this date.
@@ -320,7 +256,7 @@ class Wiki implements WikiInterface {
   public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface {
     // Get all node IDs of nodes with this title.
     /** @var array */
-    $nids = $this->nodeOrTitleToNids($nodeOrTitle);
+    $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);
 
     /** @var array */
     $nodeData = $this->getTrackedWikiNodeData();
@@ -332,7 +268,7 @@ class Wiki implements WikiInterface {
         continue;
       }
 
-      return $this->normalizeNode($nid);
+      return $this->wikiNodeResolver->resolveNode($nid);
     }
 
     // No node with that date found.
@@ -350,7 +286,7 @@ class Wiki implements WikiInterface {
    */
   protected function getDefaultMainPage(): WikiNodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->normalizeNode(
+    $node = $this->wikiNodeResolver->resolveNode(
       $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY)
     );
 
@@ -370,7 +306,7 @@ class Wiki implements WikiInterface {
       }
 
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      $node = $this->normalizeNode($routeParameters['node']);
+      $node = $this->wikiNodeResolver->resolveNode($routeParameters['node']);
 
       if (\is_null($node)) {
         throw new \UnexpectedValueException(
@@ -401,7 +337,8 @@ class Wiki implements WikiInterface {
     }
 
     /** @var array */
-    $mainPageNids = $this->nodeOrTitleToNids($this->getDefaultMainPage());
+    $mainPageNids = $this->wikiNodeResolver
+      ->nodeOrTitleToNids($this->getDefaultMainPage());
 
     return \in_array($node->nid->getString(), $mainPageNids);
   }
@@ -470,7 +407,8 @@ class Wiki implements WikiInterface {
     $viewedNids = $this->getRecentlyViewedWikiNodes();
 
     /** @var array */
-    $mainPageNids = $this->nodeOrTitleToNids($this->getDefaultMainPage());
+    $mainPageNids = $this->wikiNodeResolver
+      ->nodeOrTitleToNids($this->getDefaultMainPage());
 
     // Bail if the nid is already in the viewed array so that we don't record it
     // twice. This is to guard against erroneously calling this more than once
@@ -523,7 +461,8 @@ class Wiki implements WikiInterface {
     $nodeData = $this->getTrackedWikiNodeData();
 
     /** @var array */
-    $mainPageNids = $this->nodeOrTitleToNids($this->getDefaultMainPage());
+    $mainPageNids = $this->wikiNodeResolver
+      ->nodeOrTitleToNids($this->getDefaultMainPage());
 
     /** @var array */
     $viewedNids = $this->getRecentlyViewedWikiNodes();

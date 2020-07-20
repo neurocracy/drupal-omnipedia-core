@@ -14,10 +14,17 @@ services:
     class: Drupal\omnipedia_core\Service\Wiki
     arguments:
       - '@config.factory'
-      - '@entity_type.manager'
+      - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
+
+  # Wiki node resolver service.
+  omnipedia.wiki_node_resolver:
+    class: Drupal\omnipedia_core\Service\WikiNodeResolver
+    arguments:
+      - '@entity_type.manager'
+      - '@omnipedia.wiki_node_tracker'
 
   # Wiki node tracker service.
   omnipedia.wiki_node_tracker:
