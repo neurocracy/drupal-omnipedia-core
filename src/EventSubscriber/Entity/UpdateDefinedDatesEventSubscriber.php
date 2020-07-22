@@ -4,7 +4,8 @@ namespace Drupal\omnipedia_core\EventSubscriber\Entity;
 
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\core_event_dispatcher\Event\Entity\AbstractEntityEvent;
 use Drupal\core_event_dispatcher\Event\Entity\EntityInsertEvent;
@@ -24,11 +25,18 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
   protected $timeline;
 
   /**
-   * The Omnipedia wiki service.
+   * The Omnipedia wiki node resolver service.
    *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wiki;
+  protected $wikiNodeResolver;
+
+  /**
+   * The Omnipedia wiki node tracker service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
+   */
+  protected $wikiNodeTracker;
 
   /**
    * Event subscriber constructor; saves dependencies.
@@ -36,15 +44,20 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
+   *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    TimelineInterface $timeline,
-    WikiInterface     $wiki
+    TimelineInterface         $timeline,
+    WikiNodeResolverInterface $wikiNodeResolver,
+    WikiNodeTrackerInterface  $wikiNodeTracker
   ) {
-    $this->timeline = $timeline;
-    $this->wiki     = $wiki;
+    $this->timeline         = $timeline;
+    $this->wikiNodeResolver = $wikiNodeResolver;
+    $this->wikiNodeTracker  = $wikiNodeTracker;
   }
 
   /**
@@ -64,13 +77,13 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\core_event_dispatcher\Event\Entity\AbstractEntityEvent $event
    *   The event object.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::isWikiNode()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeResolverInterface::isWikiNode()
    *   This method is used to determine if the entity is a wiki node.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::trackWikiNode()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::trackWikiNode()
    *   Calls this method to start tracking or update tracking of a wiki node.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::untrackWikiNode()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::untrackWikiNode()
    *   Calls this method to stop tracking a wiki node.
    *
    * @see \Drupal\omnipedia_core\Service\TimelineInterface::findDefinedDates()
@@ -80,7 +93,7 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\Core\Entity\EntityInterface */
     $entity = $event->getEntity();
 
-    if (!$this->wiki->isWikiNode($entity)) {
+    if (!$this->wikiNodeResolver->isWikiNode($entity)) {
       return;
     }
 
@@ -89,11 +102,11 @@ class UpdateDefinedDatesEventSubscriber implements EventSubscriberInterface {
       $event instanceof EntityInsertEvent ||
       $event instanceof EntityUpdateEvent
     ) {
-      $this->wiki->trackWikiNode($entity);
+      $this->wikiNodeTracker->trackWikiNode($entity, $entity->getWikiNodeDate());
 
     // If a node was deleted, stop tracking it.
     } else if ($event instanceof EntityDeleteEvent) {
-      $this->wiki->untrackWikiNode($entity);
+      $this->wikiNodeTracker->untrackWikiNode($entity);
     }
 
     // Rescan content to build list of defined dates.

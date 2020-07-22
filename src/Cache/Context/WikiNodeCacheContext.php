@@ -5,7 +5,7 @@ namespace Drupal\omnipedia_core\Cache\Context;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 
 /**
  * Defines the Omnipedia wiki node cache context service.
@@ -25,11 +25,11 @@ class WikiNodeCacheContext implements CalculatedCacheContextInterface {
   protected $currentRouteMatch;
 
   /**
-   * The Omnipedia wiki service.
+   * The Omnipedia wiki node resolver service.
    *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wiki;
+  protected $wikiNodeResolver;
 
   /**
    * Service constructor; saves dependencies.
@@ -37,15 +37,15 @@ class WikiNodeCacheContext implements CalculatedCacheContextInterface {
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
    *   The Drupal current route match service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
    */
   public function __construct(
     StackedRouteMatchInterface  $currentRouteMatch,
-    WikiInterface               $wiki
+    WikiNodeResolverInterface   $wikiNodeResolver
   ) {
     $this->currentRouteMatch  = $currentRouteMatch;
-    $this->wiki               = $wiki;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
   }
 
   /**
@@ -63,7 +63,7 @@ class WikiNodeCacheContext implements CalculatedCacheContextInterface {
     $node = $this->currentRouteMatch->getParameter('node');
 
     // If this isn't a wiki node, return that as the context.
-    if (!$this->wiki->isWikiNode($node)) {
+    if (!$this->wikiNodeResolver->isWikiNode($node)) {
       return 'not_wiki_node';
     }
 

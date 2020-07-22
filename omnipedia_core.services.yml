@@ -51,7 +51,9 @@ services:
   # Wiki node cache context.
   cache_context.omnipedia_wiki_node:
     class: Drupal\omnipedia_core\Cache\Context\WikiNodeCacheContext
-    arguments: ['@current_route_match', '@omnipedia.wiki']
+    arguments:
+      - '@current_route_match'
+      - '@omnipedia.wiki_node_resolver'
     tags:
       - { name: cache.context }
 
@@ -83,6 +85,7 @@ services:
     class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
     arguments:
       - '@omnipedia.wiki'
+      - '@omnipedia.wiki_node_resolver'
       - '@string_translation'
     tags:
       - { name: 'event_subscriber' }

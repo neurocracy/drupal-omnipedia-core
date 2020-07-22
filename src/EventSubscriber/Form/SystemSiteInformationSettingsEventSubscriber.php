@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\core_event_dispatcher\Event\Form\FormIdAlterEvent;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,13 +21,6 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   use StringTranslationTrait;
 
   /**
-   * The Omnipedia wiki service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
-   */
-  protected $wiki;
-
-  /**
    * The Drupal string translation service.
    *
    * @var \Drupal\Core\StringTranslation\TranslationInterface
@@ -34,19 +28,38 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   protected $stringTranslation;
 
   /**
+   * The Omnipedia wiki service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   */
+  protected $wiki;
+
+  /**
+   * The Omnipedia wiki node resolver service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   */
+  protected $wikiNodeResolver;
+
+  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
+   *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The Drupal string translation service.
    */
   public function __construct(
-    WikiInterface         $wiki,
-    TranslationInterface  $stringTranslation
+    WikiInterface             $wiki,
+    WikiNodeResolverInterface $wikiNodeResolver,
+    TranslationInterface      $stringTranslation
   ) {
     $this->wiki               = $wiki;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->stringTranslation  = $stringTranslation;
   }
 
@@ -139,7 +152,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
 
     if (
       empty($routeParameters['node']) ||
-      !$this->wiki->isWikiNode($routeParameters['node'])
+      !$this->wikiNodeResolver->isWikiNode($routeParameters['node'])
     ) {
       $formState->setErrorByName(
         'site_frontpage',

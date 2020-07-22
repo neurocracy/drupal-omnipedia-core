@@ -129,34 +129,6 @@ class Wiki implements WikiInterface {
   /**
    * {@inheritdoc}
    */
-  public function isWikiNode($node): bool {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->resolveNode($node);
-
-    if (\is_object($node) && $node instanceof NodeInterface) {
-      return $node->isWikiNode();
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWikiNode($node): ?WikiNodeInterface {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->resolveNode($node);
-
-    if ($this->isWikiNode($node)) {
-      return $node;
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getWikiNodeDateFieldName(): string {
     return WikiNode::getWikiNodeDateFieldName();
   }
@@ -168,7 +140,7 @@ class Wiki implements WikiInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveNode($node);
 
-    if ($this->isWikiNode($node)) {
+    if ($this->wikiNodeResolver->isWikiNode($node)) {
       return $node->getWikiNodeDate();
     } else {
       return null;
@@ -187,7 +159,7 @@ class Wiki implements WikiInterface {
    */
   public function trackWikiNode($node): void {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->getWikiNode($node);
+    $node = $this->wikiNodeResolver->getWikiNode($node);
 
     // Bail if no node could be loaded.
     if ($node === null) {
@@ -205,7 +177,7 @@ class Wiki implements WikiInterface {
    */
   public function untrackWikiNode($node): void {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->getWikiNode($node);
+    $node = $this->wikiNodeResolver->getWikiNode($node);
 
     // Bail if no node could be loaded.
     if ($node === null) {
@@ -269,7 +241,7 @@ class Wiki implements WikiInterface {
    */
   public function isMainPage($node): bool {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->getWikiNode($node);
+    $node = $this->wikiNodeResolver->getWikiNode($node);
 
     // Return false if this is not a wiki node.
     if (\is_null($node)) {
@@ -342,7 +314,7 @@ class Wiki implements WikiInterface {
    */
   public function addRecentlyViewedWikiNode($node): void {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->getWikiNode($node);
+    $node = $this->wikiNodeResolver->getWikiNode($node);
 
     // Return if this is not a wiki node.
     if (\is_null($node)) {

@@ -90,4 +90,32 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
     return \array_keys($nodeData['titles'], $title, true);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isWikiNode($node): bool {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $node = $this->resolveNode($node);
+
+    if (\is_object($node) && $node instanceof NodeInterface) {
+      return $node->isWikiNode();
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWikiNode($node): ?WikiNodeInterface {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $node = $this->resolveNode($node);
+
+    if ($this->isWikiNode($node)) {
+      return $node;
+    } else {
+      return null;
+    }
+  }
+
 }
