@@ -4,6 +4,7 @@ namespace Drupal\omnipedia_core\Entity;
 
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 
 /**
  * Omnipedia node entity interface.
@@ -23,10 +24,16 @@ interface NodeInterface {
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
+   *   The Omnipedia wiki node revision service.
+   *
    * @see https://www.drupal.org/project/drupal/issues/2142515
    *   Drupal core issue to add dependency injection support to entities.
    */
-  public function injectWikiDependencies(WikiInterface $wiki): void;
+  public function injectWikiDependencies(
+    WikiInterface             $wiki,
+    WikiNodeRevisionInterface $wikiNodeRevision
+  ): void;
 
   /**
    * Get the wiki node type.

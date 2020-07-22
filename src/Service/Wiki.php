@@ -11,6 +11,7 @@ use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -70,6 +71,13 @@ class Wiki implements WikiInterface {
   protected $wikiNodeResolver;
 
   /**
+   * The Omnipedia wiki node revision service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
+   */
+  protected $wikiNodeRevision;
+
+  /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
@@ -85,6 +93,9 @@ class Wiki implements WikiInterface {
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
+   *   The Omnipedia wiki node revision service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
    *
@@ -97,6 +108,7 @@ class Wiki implements WikiInterface {
   public function __construct(
     ConfigFactoryInterface      $configFactory,
     WikiNodeResolverInterface   $wikiNodeResolver,
+    WikiNodeRevisionInterface   $wikiNodeRevision,
     WikiNodeTrackerInterface    $wikiNodeTracker,
     SessionInterface            $session,
     StateInterface              $stateManager
@@ -104,6 +116,7 @@ class Wiki implements WikiInterface {
     // Save dependencies.
     $this->configFactory      = $configFactory;
     $this->wikiNodeResolver   = $wikiNodeResolver;
+    $this->wikiNodeRevision   = $wikiNodeRevision;
     $this->wikiNodeTracker    = $wikiNodeTracker;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
@@ -206,76 +219,6 @@ class Wiki implements WikiInterface {
   }
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Move array intersection/nids by date stuff to
-   *   \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::trackWikiNode()
-   *   to store the sorted array so that it doesn't need to be done every time
-   *   this method is called.
-   */
-  public function getWikiNodeRevisions($nodeOrTitle): array {
-    /** @var array */
-    $nodeData = $this->getTrackedWikiNodeData();
-
-    /** @var array */
-    $nodes = [];
-
-    /** @var array */
-    $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);
-
-    foreach ($nodeData['dates'] as $date => $nodesForDate) {
-      // Determine if any of the nids are present in this date.
-      /** @var array */
-      $intersected = \array_intersect($nodesForDate, $nids);
-
-      // Skip if no nid was found via \array_intersect().
-      if (\count($intersected) === 0) {
-        continue;
-      }
-
-      // Since there should only ever be one nid per date, we can just get the
-      // value of the first index.
-      /** @var int */
-      $nid = (int) \reset($intersected);
-
-      /** @var array */
-      $nodes[$nid] = [
-        'nid'       => $nid,
-        'date'      => $nodeData['nodes'][$nid]['date'],
-        'title'     => $nodeData['nodes'][$nid]['title'],
-        'published' => $nodeData['nodes'][$nid]['published'],
-      ];
-    }
-
-    return $nodes;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface {
-    // Get all node IDs of nodes with this title.
-    /** @var array */
-    $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);
-
-    /** @var array */
-    $nodeData = $this->getTrackedWikiNodeData();
-
-    // Loop through all found nodes and return the first one that has the date
-    // we're looking for.
-    foreach ($nids as $nid) {
-      if ($nodeData['nodes'][$nid]['date'] !== $date) {
-        continue;
-      }
-
-      return $this->wikiNodeResolver->resolveNode($nid);
-    }
-
-    // No node with that date found.
-    return null;
-  }
-
-  /**
    * Get the default main page node as configured in the site configuration.
    *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface
@@ -351,7 +294,7 @@ class Wiki implements WikiInterface {
    *   that we can retrieve its title - this avoids having to hard-code the
    *   title or any other information about it.
    *
-   * @see $this->getWikiNodeRevision()
+   * @see \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface::getWikiNodeRevision()
    *   Loads the indicated revision if the $date parameter is not 'default'.
    */
   public function getMainPage(string $date): ?WikiNodeInterface {
@@ -362,7 +305,7 @@ class Wiki implements WikiInterface {
       return $default;
     }
 
-    return $this->getWikiNodeRevision($default, $date);
+    return $this->wikiNodeRevision->getWikiNodeRevision($default, $date);
   }
 
   /**

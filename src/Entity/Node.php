@@ -6,6 +6,7 @@ use Drupal\node\Entity\Node as CoreNode;
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 
 /**
  * Omnipedia node entity class.
@@ -40,16 +41,27 @@ class Node extends CoreNode implements NodeInterface {
   protected $wiki;
 
   /**
+   * The Omnipedia wiki node revision service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
+   */
+  protected $wikiNodeRevision;
+
+  /**
    * {@inheritdoc}
    */
-  public function injectWikiDependencies(WikiInterface $wiki): void {
+  public function injectWikiDependencies(
+    WikiInterface             $wiki,
+    WikiNodeRevisionInterface $wikiNodeRevision
+  ): void {
     // Don't do anything if this isn't a wiki node.
     if (!$this->isWikiNode()) {
       return;
     }
 
     // Save dependencies.
-    $this->wiki = $wiki;
+    $this->wiki             = $wiki;
+    $this->wikiNodeRevision = $wikiNodeRevision;
   }
 
   /**
@@ -88,14 +100,14 @@ class Node extends CoreNode implements NodeInterface {
    * {@inheritdoc}
    */
   public function getWikiNodeRevisions(): array {
-    return $this->wiki->getWikiNodeRevisions($this);
+    return $this->wikiNodeRevision->getWikiNodeRevisions($this);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWikiNodeRevision(string $date): ?NodeInterface {
-    return $this->wiki->getWikiNodeRevision($this, $date);
+    return $this->wikiNodeRevision->getWikiNodeRevision($this, $date);
   }
 
   /**

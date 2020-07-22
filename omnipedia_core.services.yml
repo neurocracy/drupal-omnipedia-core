@@ -15,6 +15,7 @@ services:
     arguments:
       - '@config.factory'
       - '@omnipedia.wiki_node_resolver'
+      - '@omnipedia.wiki_node_revision'
       - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
@@ -24,6 +25,13 @@ services:
     class: Drupal\omnipedia_core\Service\WikiNodeResolver
     arguments:
       - '@entity_type.manager'
+      - '@omnipedia.wiki_node_tracker'
+
+  # Wiki node revision service.
+  omnipedia.wiki_node_revision:
+    class: Drupal\omnipedia_core\Service\WikiNodeRevision
+    arguments:
+      - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_tracker'
 
   # Wiki node tracker service.

@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\node\NodeStorage as CoreNodeStorage;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,6 +37,13 @@ class NodeStorage extends CoreNodeStorage {
    * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
   protected $wiki;
+
+  /**
+   * The Omnipedia wiki node revision service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
+   */
+  protected $wikiNodeRevision;
 
   /**
    * Instantiates a new instance of this entity handler.
@@ -70,7 +78,8 @@ class NodeStorage extends CoreNodeStorage {
       $container->get('entity.memory_cache'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity_type.manager'),
-      $container->get('omnipedia.wiki')
+      $container->get('omnipedia.wiki'),
+      $container->get('omnipedia.wiki_node_revision')
     );
   }
 
@@ -104,19 +113,23 @@ class NodeStorage extends CoreNodeStorage {
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
+   *   The Omnipedia wiki node revision service.
+   *
    * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::__construct()
    *   Documentation copied from this; altered to use camel case for parameters.
    */
   public function __construct(
-    EntityTypeInterface $entityType,
-    Connection $database,
-    EntityFieldManagerInterface $entityFieldManager,
-    CacheBackendInterface $cache,
-    LanguageManagerInterface $languageManager,
-    MemoryCacheInterface $memoryCache = null,
+    EntityTypeInterface           $entityType,
+    Connection                    $database,
+    EntityFieldManagerInterface   $entityFieldManager,
+    CacheBackendInterface         $cache,
+    LanguageManagerInterface      $languageManager,
+    MemoryCacheInterface          $memoryCache = null,
     EntityTypeBundleInfoInterface $entityTypeBundleInfo = null,
-    EntityTypeManagerInterface $entityTypeManager = null,
-    WikiInterface $wiki
+    EntityTypeManagerInterface    $entityTypeManager = null,
+    WikiInterface                 $wiki,
+    WikiNodeRevisionInterface     $wikiNodeRevision
   ) {
     parent::__construct(
       $entityType, $database, $entityFieldManager, $cache, $languageManager,
@@ -124,7 +137,8 @@ class NodeStorage extends CoreNodeStorage {
     );
 
     // Save dependencies.
-    $this->wiki = $wiki;
+    $this->wiki             = $wiki;
+    $this->wikiNodeRevision = $wikiNodeRevision;
   }
 
   /**
@@ -148,7 +162,10 @@ class NodeStorage extends CoreNodeStorage {
 
     // Inject dependencies for wiki nodes.
     foreach ($entities as $key => $node) {
-      $node->injectWikiDependencies($this->wiki);
+      $node->injectWikiDependencies(
+        $this->wiki,
+        $this->wikiNodeRevision
+      );
     }
 
     return $entities;
