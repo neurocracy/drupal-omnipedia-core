@@ -55,11 +55,11 @@ services:
     tags:
       - { name: cache.context }
 
-  # Event subscriber to remove stored default main page when config is updated.
-  omnipedia_core.config_remove_default_main_page_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Config\RemoveDefaultMainPageEventSubscriber
+  # Event subscriber to update stored default main page when config is updated.
+  omnipedia_core.config_update_default_main_page_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Config\UpdateDefaultMainPageEventSubscriber
     arguments:
-      - '@state'
+      - '@omnipedia.wiki'
     tags:
       - { name: 'event_subscriber' }
 

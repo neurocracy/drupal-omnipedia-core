@@ -6,30 +6,30 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\omnipedia_core\Service\Wiki;
+use Drupal\omnipedia_core\Service\WikiInterface;
 
 /**
- * Event subscriber to remove stored default main page when config is updated.
+ * Event subscriber to update stored default main page when config is updated.
  */
-class RemoveDefaultMainPageEventSubscriber implements EventSubscriberInterface {
+class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The Drupal state system manager.
+   * The Omnipedia wiki service.
    *
-   * @var \Drupal\Core\State\StateInterface
+   * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
-  protected $stateManager;
+  protected $wiki;
 
   /**
    * Event subscriber constructor; saves dependencies.
    *
-   * @param \Drupal\Core\State\StateInterface $stateManager
-   *   The Drupal state system manager.
+   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
+   *   The Omnipedia wiki service.
    */
   public function __construct(
-    StateInterface $stateManager
+    WikiInterface $wiki
   ) {
-    $this->stateManager = $stateManager;
+    $this->wiki = $wiki;
   }
 
   /**
@@ -62,10 +62,6 @@ class RemoveDefaultMainPageEventSubscriber implements EventSubscriberInterface {
    * @todo Since this isn't intended to be run via a hook_update_N(), is there
    *   some sort of check we can have to bail if this is invoked during a
    *   hook_update_N()?
-   *
-   * @todo Can we use the omnipedia.wiki service directly via dependency
-   *   injection and add a method to delete the stored default main page so that
-   *   this handler doesn't have to know about the constant?
    */
   public function configSave(ConfigCrudEvent $event): void {
     // Bail if this wasn't the system.site config that changed or this is
@@ -77,7 +73,7 @@ class RemoveDefaultMainPageEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $this->stateManager->delete(Wiki::DEFAULT_MAIN_PAGE_STATE_KEY);
+    $this->wiki->updateDefaultMainPage();
   }
 
 }

@@ -132,6 +132,15 @@ interface WikiInterface {
   public function isMainPage($node): bool;
 
   /**
+   * Update the default main page.
+   *
+   * This is intended to be called whenever the site front page has been
+   * changed, so that any stored data about the default main page can also be
+   * updated.
+   */
+  public function updateDefaultMainPage(): void;
+
+  /**
    * Get the main page node for the specified date.
    *
    * @param string $date

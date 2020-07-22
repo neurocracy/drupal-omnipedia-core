@@ -22,11 +22,8 @@ class Wiki implements WikiInterface {
 
   /**
    * The Drupal state key where we store the node ID of the default main page.
-   *
-   * @see \Drupal\omnipedia_core\EventSubscriber\Config\SystemSiteFrontPageConfigEventSubscriber::configSave()
-   *   Constant is public so that this event subscriber can access it.
    */
-  public const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
+  protected const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
 
   /**
    * The Symfony session attribute key where we store the recently viewed nodes.
@@ -284,6 +281,15 @@ class Wiki implements WikiInterface {
       ->nodeOrTitleToNids($this->getDefaultMainPage());
 
     return \in_array($node->nid->getString(), $mainPageNids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateDefaultMainPage(): void {
+    // This just deletes the existing state data, so that it's recreated next
+    // time the default main page is fetched.
+    $this->stateManager->delete(self::DEFAULT_MAIN_PAGE_STATE_KEY);
   }
 
   /**
