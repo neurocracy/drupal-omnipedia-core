@@ -134,7 +134,7 @@ interface NodeInterface {
   /**
    * Add this wiki node to a user's recently viewed session.
    *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::getRandomWikiNodeRouteParameters()
+   * @see \Drupal\omnipedia_menu\Controller\RandomPageController::view()
    *   Used by this to avoid choosing a recently viewed wiki node.
    */
   public function addRecentlyViewedWikiNode(): void;

@@ -93,27 +93,25 @@ interface WikiInterface {
   /**
    * Add a wiki node to a user's recently viewed session.
    *
-   * This is used in self::getRandomWikiNodeRouteParameters() to avoid choosing
-   * a recently viewed wiki node.
-   *
    * @param \Drupal\node\NodeInterface|int|string $node
    *   Either a node object or a numeric value (integer or string) that equates
    *   to an existing node ID to load.
+   *
+   * @see \Drupal\omnipedia_menu\Controller\RandomPageController::view()
+   *   Used by this to avoid choosing a recently viewed wiki node.
    */
   public function addRecentlyViewedWikiNode($node): void;
 
   /**
-   * Get route parameters for a random wiki node.
-   *
-   * @param string $date
-   *   A date string in the format stored in a wiki node's date field to limit
-   *   the randomization to. Only a node with this date will be returned.
+   * Get the most recent wiki nodes viewed by the current user, if any.
    *
    * @return array
-   *   An array with a 'node' key that contains an nid for the randomly chosen
-   *   wiki node that has the same date as that which is provided, is published,
-   *   is not a main page, and has not been viewed recently by the current user.
+   *   An array of nids, or an empty array if no recent wiki nodes were found in
+   *   the user's session.
+   *
+   * @see self::addRecentlyViewedWikiNode()
+   *   Nodes are added to the user's session via this method.
    */
-  public function getRandomWikiNodeRouteParameters(string $date): array;
+  public function getRecentlyViewedWikiNodes(): array;
 
 }

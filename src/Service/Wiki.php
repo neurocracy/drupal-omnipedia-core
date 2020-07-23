@@ -237,58 +237,17 @@ class Wiki implements WikiInterface {
   }
 
   /**
-   * Get the most recent wiki nodes viewed by the current user, if any.
-   *
-   * @return array
-   *   An array of nids, or an empty array if no recent wiki nodes were found in
-   *   the user's session.
+   * {@inheritdoc}
    *
    * @see self::RECENT_WIKI_NODES_SESSION_KEY
    *   Session key where array is stored.
-   *
-   * @see $this->addRecentlyViewedWikiNode()
-   *   Nodes are added to the user's session via this method.
    */
-  protected function getRecentlyViewedWikiNodes(): array {
+  public function getRecentlyViewedWikiNodes(): array {
     if ($this->session->has(self::RECENT_WIKI_NODES_SESSION_KEY)) {
       return $this->session->get(self::RECENT_WIKI_NODES_SESSION_KEY);
     } else {
       return [];
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRandomWikiNodeRouteParameters(string $date): array {
-    /** @var array */
-    $nodeData = $this->getTrackedWikiNodeData();
-
-    /** @var array */
-    $mainPageNids = $this->wikiNodeResolver
-      ->nodeOrTitleToNids($this->wikiNodeMainPage->getMainPage('default'));
-
-    /** @var array */
-    $viewedNids = $this->getRecentlyViewedWikiNodes();
-
-    /** @var array */
-    $nids = \array_filter(
-      $nodeData['dates'][$date],
-      function($nid) use ($nodeData, $mainPageNids, $viewedNids) {
-        // This filters out unpublished nodes, main page nodes, and recently
-        // viewed wiki nodes.
-        return !(
-          !$nodeData['nodes'][$nid]['published'] ||
-          \in_array($nid, $mainPageNids) ||
-          \in_array($nid, $viewedNids)
-        );
-      }
-    );
-
-    return [
-      // Return a random nid from the available nids.
-      'node' => $nids[\array_rand($nids)]
-    ];
   }
 
 }
