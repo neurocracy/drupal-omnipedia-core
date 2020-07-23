@@ -49,16 +49,13 @@ interface WikiNodeTrackerInterface {
    * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
-   * @param string $nodeDate
-   *   The providded node's date as a string in the 'storage' format.
-   *
    * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::getTrackedWikiNodeData()
    *   Returns tracked wiki node data.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::untrackWikiNode()
    *   Stops tracking a wiki node.
    */
-  public function trackWikiNode(NodeInterface $node, string $nodeDate): void;
+  public function trackWikiNode(NodeInterface $node): void;
 
   /**
    * Stop tracking a wiki node.

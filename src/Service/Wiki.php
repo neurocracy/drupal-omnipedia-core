@@ -174,10 +174,7 @@ class Wiki implements WikiInterface {
       return;
     }
 
-    /** @var string */
-    $nodeDate = $node->getWikiNodeDate();
-
-    $this->wikiNodeTracker->trackWikiNode($node, $nodeDate);
+    $this->wikiNodeTracker->trackWikiNode($node);
   }
 
   /**

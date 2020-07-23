@@ -159,7 +159,7 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
   /**
    * {@inheritdoc}
    */
-  public function trackWikiNode(NodeInterface $node, string $nodeDate): void {
+  public function trackWikiNode(NodeInterface $node): void {
     /** @var array */
     $data = $this->getTrackedWikiNodeData();
 
@@ -191,6 +191,9 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
 
     /** @var string */
     $nodeTitle = $node->getTitle();
+
+    /** @var string */
+    $nodeDate = $node->getWikiNodeDate();
 
     $data['nodes'][$nid] = [
       'date'      => $nodeDate,
