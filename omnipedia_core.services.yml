@@ -81,7 +81,8 @@ services:
     class: Drupal\omnipedia_core\EventSubscriber\Entity\UpdateDefinedDatesEventSubscriber
     arguments:
       - '@omnipedia.timeline'
-      - '@omnipedia.wiki'
+      - '@omnipedia.wiki_node_resolver'
+      - '@omnipedia.wiki_node_tracker'
     tags:
       - { name: 'event_subscriber' }
 
