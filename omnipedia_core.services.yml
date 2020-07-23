@@ -72,6 +72,7 @@ services:
   omnipedia_core.config_update_default_main_page_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Config\UpdateDefaultMainPageEventSubscriber
     arguments:
+      - '@omnipedia.timeline'
       - '@omnipedia.wiki_node_main_page'
     tags:
       - { name: 'event_subscriber' }
