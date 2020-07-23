@@ -63,11 +63,6 @@ class Node extends CoreNode implements NodeInterface {
     WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeRevisionInterface $wikiNodeRevision
   ): void {
-    // Don't do anything if this isn't a wiki node.
-    if (!$this->isWikiNode()) {
-      return;
-    }
-
     // Save dependencies.
     $this->wiki             = $wiki;
     $this->wikiNodeMainPage = $wikiNodeMainPage;
