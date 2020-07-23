@@ -4,6 +4,7 @@ namespace Drupal\omnipedia_core\Entity;
 
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 
 /**
@@ -24,6 +25,9 @@ interface NodeInterface {
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
@@ -32,6 +36,7 @@ interface NodeInterface {
    */
   public function injectWikiDependencies(
     WikiInterface             $wiki,
+    WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeRevisionInterface $wikiNodeRevision
   ): void;
 

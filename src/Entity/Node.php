@@ -6,6 +6,7 @@ use Drupal\node\Entity\Node as CoreNode;
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 
 /**
@@ -41,6 +42,13 @@ class Node extends CoreNode implements NodeInterface {
   protected $wiki;
 
   /**
+   * The Omnipedia wiki node main page service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
+   */
+  protected $wikiNodeMainPage;
+
+  /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
@@ -52,6 +60,7 @@ class Node extends CoreNode implements NodeInterface {
    */
   public function injectWikiDependencies(
     WikiInterface             $wiki,
+    WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeRevisionInterface $wikiNodeRevision
   ): void {
     // Don't do anything if this isn't a wiki node.
@@ -61,6 +70,7 @@ class Node extends CoreNode implements NodeInterface {
 
     // Save dependencies.
     $this->wiki             = $wiki;
+    $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeRevision = $wikiNodeRevision;
   }
 
@@ -114,7 +124,7 @@ class Node extends CoreNode implements NodeInterface {
    * {@inheritdoc}
    */
   public function isMainPage(): bool {
-    return $this->wiki->isMainPage($this);
+    return $this->wikiNodeMainPage->isMainPage($this);
   }
 
   /**

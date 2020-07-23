@@ -9,6 +9,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -93,6 +94,13 @@ class Timeline implements TimelineInterface {
   protected $wiki;
 
   /**
+   * The Omnipedia wiki node main page service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
+   */
+  protected $wikiNodeMainPage;
+
+  /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
@@ -175,6 +183,9 @@ class Timeline implements TimelineInterface {
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The Symfony session service.
    *
@@ -185,6 +196,7 @@ class Timeline implements TimelineInterface {
     Connection                  $database,
     EntityTypeManagerInterface  $entityTypeManager,
     WikiInterface               $wiki,
+    WikiNodeMainPageInterface   $wikiNodeMainPage,
     SessionInterface            $session,
     StateInterface              $stateManager
   ) {
@@ -192,6 +204,7 @@ class Timeline implements TimelineInterface {
     $this->database           = $database;
     $this->entityTypeManager  = $entityTypeManager;
     $this->wiki               = $wiki;
+    $this->wikiNodeMainPage   = $wikiNodeMainPage;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
   }
@@ -271,7 +284,7 @@ class Timeline implements TimelineInterface {
 
     /** @var string|null */
     $nodeDate = $this->wiki->getWikiNodeDate(
-      $this->wiki->getMainPage('default')
+      $this->wikiNodeMainPage->getMainPage('default')
     );
 
     if ($nodeDate === null) {

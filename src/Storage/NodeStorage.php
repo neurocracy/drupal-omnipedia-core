@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\node\NodeStorage as CoreNodeStorage;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -37,6 +38,13 @@ class NodeStorage extends CoreNodeStorage {
    * @var \Drupal\omnipedia_core\Service\WikiInterface
    */
   protected $wiki;
+
+  /**
+   * The Omnipedia wiki node main page service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
+   */
+  protected $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node revision service.
@@ -79,6 +87,7 @@ class NodeStorage extends CoreNodeStorage {
       $container->get('entity_type.bundle.info'),
       $container->get('entity_type.manager'),
       $container->get('omnipedia.wiki'),
+      $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_revision')
     );
   }
@@ -113,6 +122,9 @@ class NodeStorage extends CoreNodeStorage {
    * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
    *   The Omnipedia wiki service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
@@ -129,6 +141,7 @@ class NodeStorage extends CoreNodeStorage {
     EntityTypeBundleInfoInterface $entityTypeBundleInfo = null,
     EntityTypeManagerInterface    $entityTypeManager = null,
     WikiInterface                 $wiki,
+    WikiNodeMainPageInterface     $wikiNodeMainPage,
     WikiNodeRevisionInterface     $wikiNodeRevision
   ) {
     parent::__construct(
@@ -138,6 +151,7 @@ class NodeStorage extends CoreNodeStorage {
 
     // Save dependencies.
     $this->wiki             = $wiki;
+    $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeRevision = $wikiNodeRevision;
   }
 
@@ -164,6 +178,7 @@ class NodeStorage extends CoreNodeStorage {
     foreach ($entities as $key => $node) {
       $node->injectWikiDependencies(
         $this->wiki,
+        $this->wikiNodeMainPage,
         $this->wikiNodeRevision
       );
     }

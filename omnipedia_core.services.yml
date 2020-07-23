@@ -6,6 +6,7 @@ services:
       - '@database'
       - '@entity_type.manager'
       - '@omnipedia.wiki'
+      - '@omnipedia.wiki_node_main_page'
       - '@session'
       - '@state'
 
@@ -14,10 +15,20 @@ services:
     class: Drupal\omnipedia_core\Service\Wiki
     arguments:
       - '@config.factory'
+      - '@omnipedia.wiki_node_main_page'
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_revision'
       - '@omnipedia.wiki_node_tracker'
       - '@session'
+      - '@state'
+
+  # Wiki node main page service.
+  omnipedia.wiki_node_main_page:
+    class: Drupal\omnipedia_core\Service\WikiNodeMainPage
+    arguments:
+      - '@config.factory'
+      - '@omnipedia.wiki_node_resolver'
+      - '@omnipedia.wiki_node_revision'
       - '@state'
 
   # Wiki node resolver service.
@@ -61,7 +72,7 @@ services:
   omnipedia_core.config_update_default_main_page_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Config\UpdateDefaultMainPageEventSubscriber
     arguments:
-      - '@omnipedia.wiki'
+      - '@omnipedia.wiki_node_main_page'
     tags:
       - { name: 'event_subscriber' }
 
