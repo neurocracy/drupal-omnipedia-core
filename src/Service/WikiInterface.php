@@ -40,57 +40,6 @@ interface WikiInterface {
   public function getWikiNodeDate($node): ?string;
 
   /**
-   * Get tracked wiki node data.
-   *
-   * @return array
-   *   An array with saved wiki node data. See \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::getTrackedWikiNodeData()
-   *   for structure.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::getTrackedWikiNodeData()
-   *   Returns tracked wiki node data.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::getTrackedWikiNodeData()
-   *   Describes returned array structure.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::trackWikiNode()
-   *   Starts tracking or updates tracking of a wiki node.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::untrackWikiNode()
-   *   Stops tracking a wiki node.
-   */
-  public function getTrackedWikiNodeData(): array;
-
-  /**
-   * Start tracking or update tracking of a wiki node.
-   *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::getTrackedWikiNodeData()
-   *   Returns tracked wiki node data.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::untrackWikiNode()
-   *   Stops tracking a wiki node.
-   */
-  public function trackWikiNode($node): void;
-
-  /**
-   * Stop tracking a wiki node.
-   *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::getTrackedWikiNodeData()
-   *   Returns tracked wiki node data.
-   *
-   * @see \Drupal\omnipedia_core\Service\WikiInterface::trackWikiNode()
-   *   Starts tracking or updates tracking of a wiki node.
-   */
-  public function untrackWikiNode($node): void;
-
-  /**
    * Add a wiki node to a user's recently viewed session.
    *
    * @param \Drupal\node\NodeInterface|int|string $node

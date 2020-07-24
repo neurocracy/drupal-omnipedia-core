@@ -13,7 +13,6 @@ use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
-use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -78,13 +77,6 @@ class Wiki implements WikiInterface {
   protected $wikiNodeRevision;
 
   /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected $wikiNodeTracker;
-
-  /**
    * Constructs this service object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
@@ -99,9 +91,6 @@ class Wiki implements WikiInterface {
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
-   *   The Omnipedia wiki node tracker service.
-   *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The Symfony session service.
    *
@@ -113,7 +102,6 @@ class Wiki implements WikiInterface {
     WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeResolverInterface $wikiNodeResolver,
     WikiNodeRevisionInterface $wikiNodeRevision,
-    WikiNodeTrackerInterface  $wikiNodeTracker,
     SessionInterface          $session,
     StateInterface            $stateManager
   ) {
@@ -122,7 +110,6 @@ class Wiki implements WikiInterface {
     $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeResolver = $wikiNodeResolver;
     $this->wikiNodeRevision = $wikiNodeRevision;
-    $this->wikiNodeTracker  = $wikiNodeTracker;
     $this->session          = $session;
     $this->stateManager     = $stateManager;
   }
@@ -153,43 +140,6 @@ class Wiki implements WikiInterface {
     } else {
       return null;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTrackedWikiNodeData(): array {
-    return $this->wikiNodeTracker->getTrackedWikiNodeData();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function trackWikiNode($node): void {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->getWikiNode($node);
-
-    // Bail if no node could be loaded.
-    if ($node === null) {
-      return;
-    }
-
-    $this->wikiNodeTracker->trackWikiNode($node);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function untrackWikiNode($node): void {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->getWikiNode($node);
-
-    // Bail if no node could be loaded.
-    if ($node === null) {
-      return;
-    }
-
-    $this->wikiNodeTracker->untrackWikiNode($node);
   }
 
   /**

@@ -7,6 +7,7 @@ services:
       - '@entity_type.manager'
       - '@omnipedia.wiki'
       - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
 
@@ -18,7 +19,6 @@ services:
       - '@omnipedia.wiki_node_main_page'
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_revision'
-      - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
 

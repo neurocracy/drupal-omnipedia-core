@@ -10,6 +10,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
+use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -101,6 +102,13 @@ class Timeline implements TimelineInterface {
   protected $wikiNodeMainPage;
 
   /**
+   * The Omnipedia wiki node tracker service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
+   */
+  protected $wikiNodeTracker;
+
+  /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
@@ -186,6 +194,9 @@ class Timeline implements TimelineInterface {
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
+   *   The Omnipedia wiki node tracker service.
+   *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The Symfony session service.
    *
@@ -197,6 +208,7 @@ class Timeline implements TimelineInterface {
     EntityTypeManagerInterface  $entityTypeManager,
     WikiInterface               $wiki,
     WikiNodeMainPageInterface   $wikiNodeMainPage,
+    WikiNodeTrackerInterface    $wikiNodeTracker,
     SessionInterface            $session,
     StateInterface              $stateManager
   ) {
@@ -205,6 +217,7 @@ class Timeline implements TimelineInterface {
     $this->entityTypeManager  = $entityTypeManager;
     $this->wiki               = $wiki;
     $this->wikiNodeMainPage   = $wikiNodeMainPage;
+    $this->wikiNodeTracker    = $wikiNodeTracker;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
   }
@@ -417,7 +430,7 @@ class Timeline implements TimelineInterface {
     $dates = [];
 
     /** @var array */
-    $nodeData = $this->wiki->getTrackedWikiNodeData();
+    $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
 
     foreach ($dateTypes as $dateType => $includeUnpublished) {
       // Make sure each date type has an array, to avoid errors if no results
