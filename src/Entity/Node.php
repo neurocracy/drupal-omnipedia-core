@@ -5,9 +5,9 @@ namespace Drupal\omnipedia_core\Entity;
 use Drupal\node\Entity\Node as CoreNode;
 use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
+use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 
 /**
  * Omnipedia node entity class.
@@ -35,13 +35,6 @@ class Node extends CoreNode implements NodeInterface {
   protected const WIKI_NODE_DATE_FIELD = 'field_date';
 
   /**
-   * The Omnipedia wiki service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
-   */
-  protected $wiki;
-
-  /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
@@ -56,17 +49,24 @@ class Node extends CoreNode implements NodeInterface {
   protected $wikiNodeRevision;
 
   /**
+   * The Omnipedia wiki node viewed service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
+   */
+  protected $wikiNodeViewed;
+
+  /**
    * {@inheritdoc}
    */
   public function injectWikiDependencies(
-    WikiInterface             $wiki,
     WikiNodeMainPageInterface $wikiNodeMainPage,
-    WikiNodeRevisionInterface $wikiNodeRevision
+    WikiNodeRevisionInterface $wikiNodeRevision,
+    WikiNodeViewedInterface   $wikiNodeViewed
   ): void {
     // Save dependencies.
-    $this->wiki             = $wiki;
     $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeRevision = $wikiNodeRevision;
+    $this->wikiNodeViewed   = $wikiNodeViewed;
   }
 
   /**
@@ -126,7 +126,7 @@ class Node extends CoreNode implements NodeInterface {
    * {@inheritdoc}
    */
   public function addRecentlyViewedWikiNode(): void {
-    $this->wiki->addRecentlyViewedWikiNode($this);
+    $this->wikiNodeViewed->addNode($this);
   }
 
 }

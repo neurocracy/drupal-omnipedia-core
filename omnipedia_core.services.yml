@@ -15,12 +15,7 @@ services:
   omnipedia.wiki:
     class: Drupal\omnipedia_core\Service\Wiki
     arguments:
-      - '@config.factory'
-      - '@omnipedia.wiki_node_main_page'
       - '@omnipedia.wiki_node_resolver'
-      - '@omnipedia.wiki_node_revision'
-      - '@session'
-      - '@state'
 
   # Wiki node main page service.
   omnipedia.wiki_node_main_page:
@@ -50,6 +45,14 @@ services:
     class: Drupal\omnipedia_core\Service\WikiNodeTracker
     arguments:
       - '@state'
+
+  # Wiki node viewed service.
+  omnipedia.wiki_node_viewed:
+    class: Drupal\omnipedia_core\Service\WikiNodeViewed
+    arguments:
+      - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia.wiki_node_resolver'
+      - '@session'
 
   # Dates cache context.
   cache_context.omnipedia_dates:

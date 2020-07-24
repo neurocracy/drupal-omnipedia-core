@@ -3,9 +3,9 @@
 namespace Drupal\omnipedia_core\Entity;
 
 use Drupal\node\NodeInterface as CoreNodeInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
+use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 
 /**
  * Omnipedia node entity interface.
@@ -22,22 +22,22 @@ interface NodeInterface {
    * around is to use a custom method that's called by a Node storage class when
    * a node is loaded from storage, which is what this method accomplishes.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeViewedInterface $wikiNodeViewed
+   *   The Omnipedia wiki node viewed service.
+   *
    * @see https://www.drupal.org/project/drupal/issues/2142515
    *   Drupal core issue to add dependency injection support to entities.
    */
   public function injectWikiDependencies(
-    WikiInterface             $wiki,
     WikiNodeMainPageInterface $wikiNodeMainPage,
-    WikiNodeRevisionInterface $wikiNodeRevision
+    WikiNodeRevisionInterface $wikiNodeRevision,
+    WikiNodeViewedInterface   $wikiNodeViewed
   ): void;
 
   /**
