@@ -5,17 +5,11 @@ services:
     arguments:
       - '@database'
       - '@entity_type.manager'
-      - '@omnipedia.wiki'
       - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
-
-  # Wiki service.
-  omnipedia.wiki:
-    class: Drupal\omnipedia_core\Service\Wiki
-    arguments:
-      - '@omnipedia.wiki_node_resolver'
 
   # Wiki node main page service.
   omnipedia.wiki_node_main_page:
@@ -100,7 +94,6 @@ services:
   omnipedia_core.form_system_site_information_settings_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
     arguments:
-      - '@omnipedia.wiki'
       - '@omnipedia.wiki_node_resolver'
       - '@string_translation'
     tags:
@@ -112,7 +105,7 @@ services:
     arguments:
       - '@current_route_match'
       - '@omnipedia.timeline'
-      - '@omnipedia.wiki'
+      - '@omnipedia.wiki_node_resolver'
     tags:
       - { name: 'event_subscriber' }
 

@@ -4,7 +4,7 @@ namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -36,11 +36,11 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
   protected $timeline;
 
   /**
-   * The Omnipedia wiki service.
+   * The Omnipedia wiki node resolver service.
    *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wiki;
+  protected $wikiNodeResolver;
 
   /**
    * Event subscriber constructor; saves dependencies.
@@ -51,17 +51,17 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
    */
   public function __construct(
     StackedRouteMatchInterface  $currentRouteMatch,
     TimelineInterface           $timeline,
-    WikiInterface               $wiki
+    WikiNodeResolverInterface   $wikiNodeResolver
   ) {
     $this->currentRouteMatch  = $currentRouteMatch;
     $this->timeline           = $timeline;
-    $this->wiki               = $wiki;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
   }
 
   /**
@@ -83,8 +83,12 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\node\NodeInterface|null */
     $node = $this->currentRouteMatch->getParameter('node');
 
+    if (!$this->wikiNodeResolver->isWikiNode($node)) {
+      return;
+    }
+
     /** @var string|null */
-    $currentDate = $this->wiki->getWikiNodeDate($node);
+    $currentDate = $node->getWikiNodeDate();
 
     // Bail if the date couldn't be found.
     if ($currentDate === null) {

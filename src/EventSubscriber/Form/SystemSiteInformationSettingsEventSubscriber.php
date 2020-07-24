@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\core_event_dispatcher\Event\Form\FormIdAlterEvent;
-use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -28,13 +28,6 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   protected $stringTranslation;
 
   /**
-   * The Omnipedia wiki service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiInterface
-   */
-  protected $wiki;
-
-  /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
@@ -44,9 +37,6 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   /**
    * Event subscriber constructor; saves dependencies.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    *
@@ -54,11 +44,9 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
    *   The Drupal string translation service.
    */
   public function __construct(
-    WikiInterface             $wiki,
     WikiNodeResolverInterface $wikiNodeResolver,
     TranslationInterface      $stringTranslation
   ) {
-    $this->wiki               = $wiki;
     $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->stringTranslation  = $stringTranslation;
   }
@@ -96,7 +84,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
         '@contentLink' => Link::createFromRoute(
           $this->t('an existing wiki page'),
           'view.content.page_1',
-          ['type' => $this->wiki->getWikiNodeType()]
+          ['type' => WikiNode::getWikiNodeType()]
         )->toString(),
       ]
     );

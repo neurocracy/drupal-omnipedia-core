@@ -10,6 +10,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -102,6 +103,13 @@ class Timeline implements TimelineInterface {
   protected $wikiNodeMainPage;
 
   /**
+   * The Omnipedia wiki node resolver service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   */
+  protected $wikiNodeResolver;
+
+  /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
@@ -188,11 +196,11 @@ class Timeline implements TimelineInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type plug-in manager.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiInterface $wiki
-   *   The Omnipedia wiki service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface $wikiNodeTracker
    *   The Omnipedia wiki node tracker service.
@@ -206,8 +214,8 @@ class Timeline implements TimelineInterface {
   public function __construct(
     Connection                  $database,
     EntityTypeManagerInterface  $entityTypeManager,
-    WikiInterface               $wiki,
     WikiNodeMainPageInterface   $wikiNodeMainPage,
+    WikiNodeResolverInterface   $wikiNodeResolver,
     WikiNodeTrackerInterface    $wikiNodeTracker,
     SessionInterface            $session,
     StateInterface              $stateManager
@@ -215,8 +223,8 @@ class Timeline implements TimelineInterface {
     // Save dependencies.
     $this->database           = $database;
     $this->entityTypeManager  = $entityTypeManager;
-    $this->wiki               = $wiki;
     $this->wikiNodeMainPage   = $wikiNodeMainPage;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->wikiNodeTracker    = $wikiNodeTracker;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
@@ -295,10 +303,17 @@ class Timeline implements TimelineInterface {
     // If there's no default date set in the site state, we have to try to infer
     // it from the default front page.
 
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $defaultMainPage = $this->wikiNodeMainPage->getMainPage('default');
+
+    if (!$this->wikiNodeResolver->isWikiNode($defaultMainPage)) {
+      throw new \UnexpectedValueException(
+        'The default front page configured in the site settings does not appear to be a wiki page node.'
+      );
+    }
+
     /** @var string|null */
-    $nodeDate = $this->wiki->getWikiNodeDate(
-      $this->wikiNodeMainPage->getMainPage('default')
-    );
+    $nodeDate = $defaultMainPage->getWikiNodeDate();
 
     if ($nodeDate === null) {
       throw new \UnexpectedValueException(
