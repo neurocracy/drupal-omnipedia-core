@@ -117,6 +117,12 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
+  # Event subscriber to output a 404 not found instead of a 403 access denied.
+  omnipedia_core.response_access_denied_to_not_found_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Response\AccessDeniedToNotFoundEventSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+
   # Event subscriber to replace the 'system.403' route controller.
   omnipedia_core.routing_alter_system_403_content_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Routing\ReplaceSystem403ControllerEventSubscriber
