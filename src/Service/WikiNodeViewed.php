@@ -2,7 +2,6 @@
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -34,13 +33,6 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
   protected $session;
 
   /**
-   * The Omnipedia wiki node main page service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
-   */
-  protected $wikiNodeMainPage;
-
-  /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
@@ -50,9 +42,6 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
   /**
    * Constructs this service object.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    *
@@ -60,12 +49,10 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
    *   The Symfony session service.
    */
   public function __construct(
-    WikiNodeMainPageInterface $wikiNodeMainPage,
     WikiNodeResolverInterface $wikiNodeResolver,
     SessionInterface          $session
   ) {
     // Save dependencies.
-    $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeResolver = $wikiNodeResolver;
     $this->session          = $session;
   }
@@ -88,15 +75,10 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
     /** @var array */
     $viewedNids = $this->getNodes();
 
-    /** @var array */
-    $mainPageNids = $this->wikiNodeResolver
-      ->nodeOrTitleToNids($this->wikiNodeMainPage->getMainPage('default'));
-
-    // Bail if the nid is already in the viewed array so that we don't record it
-    // twice. This is to guard against erroneously calling this more than once
-    // during a redirect or similar situation. Additionally, do not record main
-    // page nids.
-    if (\in_array($nid, $viewedNids) || \in_array($nid, $mainPageNids)) {
+    // Bail if the nid is already the most recent in the viewed array so that we
+    // don't record it twice. This is to guard against erroneously calling this
+    // more than once during a redirect or similar situation.
+    if (\end($viewedNids) === $nid) {
       return;
     }
 
