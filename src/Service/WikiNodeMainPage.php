@@ -2,6 +2,8 @@
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
@@ -19,6 +21,18 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * The Drupal state key where we store the node ID of the default main page.
    */
   protected const DEFAULT_MAIN_PAGE_STATE_KEY = 'omnipedia.default_main_page';
+
+  /**
+   * The Drupal cache ID where we store their computed cache IDs. (So meta.)
+   */
+  protected const MAIN_PAGES_CACHE_TAGS_ID = 'omnipedia.main_pages_tags';
+
+  /**
+   * The default Drupal cache bin.
+   *
+   * @var Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
 
   /**
    * The Drupal configuration object factory service.
@@ -51,6 +65,9 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   /**
    * Constructs this service object.
    *
+   * @param Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The default Drupal cache bin.
+   *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The Drupal configuration object factory service.
    *
@@ -64,12 +81,14 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *   The Drupal state system manager.
    */
   public function __construct(
+    CacheBackendInterface     $cache,
     ConfigFactoryInterface    $configFactory,
     WikiNodeResolverInterface $wikiNodeResolver,
     WikiNodeRevisionInterface $wikiNodeRevision,
     StateInterface            $stateManager
   ) {
     // Save dependencies.
+    $this->cache            = $cache;
     $this->configFactory    = $configFactory;
     $this->wikiNodeResolver = $wikiNodeResolver;
     $this->wikiNodeRevision = $wikiNodeRevision;
@@ -196,6 +215,52 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
     }
 
     return ['node' => $node->nid->getString()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPagesCacheTags(): array {
+    /** @var object|false */
+    $cache = $this->cache->get(self::MAIN_PAGES_CACHE_TAGS_ID);
+
+    // If the computed tags are available in the cache, return those.
+    if ($cache !== false) {
+      return $cache->data;
+    }
+
+    /** @var array */
+    $nids = $this->wikiNodeResolver->nodeOrTitleToNids(
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $this->getDefaultMainPage()
+    );
+
+    // Initial tags array containing the front page config tag.
+    /** @var array */
+    $tags = ['config:system.site.page.front'];
+
+    foreach ($nids as $nid) {
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      $node = $this->wikiNodeResolver->resolveNode($nid);
+
+      if ($node === null) {
+        continue;
+      }
+
+      /** @var array */
+      $tags = Cache::mergeTags($tags, $node->getCacheTags());
+    }
+
+    // Save the computed tags into the cache. We also use the tags as their own
+    // cache tags, which is super meta.
+    $this->cache->set(
+      self::MAIN_PAGES_CACHE_TAGS_ID,
+      $tags,
+      CacheBackendInterface::CACHE_PERMANENT,
+      $tags
+    );
+
+    return $tags;
   }
 
 }

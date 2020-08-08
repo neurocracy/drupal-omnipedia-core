@@ -73,4 +73,12 @@ interface WikiNodeMainPageInterface {
    */
   public function getMainPageRouteParameters(string $date): array;
 
+  /**
+   * Get cache tags for all main pages.
+   *
+   * @return array
+   *   Cache tags for all main pages and any additional data related to them.
+   */
+  public function getMainPagesCacheTags(): array;
+
 }
