@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: omnipedia_short
+label: 'Omnipedia short'
+locked: true
+pattern: Y/m/d
