@@ -21,13 +21,6 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   use StringTranslationTrait;
 
   /**
-   * The Drupal string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $stringTranslation;
-
-  /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
