@@ -14,9 +14,11 @@ config_devel:
   install:
     - node.type.wiki_page
     - field.field.node.wiki_page.field_hide_from_search
+    - field.field.node.wiki_page.field_episode_tier
     - field.field.node.wiki_page.field_date
     - field.field.node.wiki_page.body
     - field.storage.node.field_date
+    - field.storage.node.field_episode_tier
     - field.storage.node.field_hide_from_search
     - core.entity_view_display.node.wiki_page.teaser
     - core.entity_view_display.node.wiki_page.search_result
@@ -26,5 +28,6 @@ config_devel:
     - core.base_field_override.node.wiki_page.title
     - core.date_format.omnipedia_long
     - core.date_format.omnipedia_short
+    - taxonomy.vocabulary.episode_tiers
   optional:
     - pathauto.pattern.node_wiki_page
