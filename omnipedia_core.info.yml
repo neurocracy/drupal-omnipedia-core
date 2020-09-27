@@ -8,7 +8,7 @@ core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:datetime
   - drupal:node
-  - hook_event_dispatcher:hook_event_dispatcher
+  - hook_event_dispatcher:core_event_dispatcher
 
 config_devel:
   install:
