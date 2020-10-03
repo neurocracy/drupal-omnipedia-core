@@ -242,6 +242,9 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Add a tag that gets invalidated when a main page is added or deleted,
+   *   as this doesn't currently account for the former.
    */
   public function getMainPagesCacheTags(): array {
     /** @var object|false */
