@@ -5,6 +5,7 @@ namespace Drupal\omnipedia_core\Service;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -42,6 +43,13 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   protected $configFactory;
 
   /**
+   * The Drupal current route match service.
+   *
+   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * The Drupal state system manager.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -71,6 +79,9 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The Drupal configuration object factory service.
    *
+   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
+   *   The Drupal current route match service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    *
@@ -81,18 +92,20 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *   The Drupal state system manager.
    */
   public function __construct(
-    CacheBackendInterface     $cache,
-    ConfigFactoryInterface    $configFactory,
-    WikiNodeResolverInterface $wikiNodeResolver,
-    WikiNodeRevisionInterface $wikiNodeRevision,
-    StateInterface            $stateManager
+    CacheBackendInterface       $cache,
+    ConfigFactoryInterface      $configFactory,
+    StackedRouteMatchInterface  $currentRouteMatch,
+    WikiNodeResolverInterface   $wikiNodeResolver,
+    WikiNodeRevisionInterface   $wikiNodeRevision,
+    StateInterface              $stateManager
   ) {
     // Save dependencies.
-    $this->cache            = $cache;
-    $this->configFactory    = $configFactory;
-    $this->wikiNodeResolver = $wikiNodeResolver;
-    $this->wikiNodeRevision = $wikiNodeRevision;
-    $this->stateManager     = $stateManager;
+    $this->cache              = $cache;
+    $this->configFactory      = $configFactory;
+    $this->currentRouteMatch  = $currentRouteMatch;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
+    $this->wikiNodeRevision   = $wikiNodeRevision;
+    $this->stateManager       = $stateManager;
   }
 
   /**
@@ -112,6 +125,16 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
       ->nodeOrTitleToNids($this->getDefaultMainPage());
 
     return \in_array($node->nid->getString(), $mainPageNids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCurrentRouteMainPage(): bool {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $node = $this->currentRouteMatch->getParameter('node');
+
+    return $this->isMainPage($node);
   }
 
   /**

@@ -17,6 +17,7 @@ services:
     arguments:
       - '@cache.default'
       - '@config.factory'
+      - '@current_route_match'
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_revision'
       - '@state'

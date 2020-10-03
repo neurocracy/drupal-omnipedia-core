@@ -24,6 +24,14 @@ interface WikiNodeMainPageInterface {
   public function isMainPage($node): bool;
 
   /**
+   * Determine if the current route is a main page wiki node.
+   *
+   * @return boolean
+   *   True if the current route is a main page wiki node or false otherwise.
+   */
+  public function isCurrentRouteMainPage(): bool;
+
+  /**
    * Update the default main page.
    *
    * This is intended to be called whenever the site front page has been
