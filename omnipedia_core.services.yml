@@ -57,6 +57,14 @@ services:
     tags:
       - { name: cache.context }
 
+  # Is wiki main page cache context.
+  cache_context.omnipedia_is_wiki_main_page:
+    class: Drupal\omnipedia_core\Cache\Context\IsWikiMainPageCacheContext
+    arguments:
+      - '@omnipedia.wiki_node_main_page'
+    tags:
+      - { name: cache.context }
+
   # Wiki node cache context.
   cache_context.omnipedia_wiki_node:
     class: Drupal\omnipedia_core\Cache\Context\WikiNodeCacheContext
