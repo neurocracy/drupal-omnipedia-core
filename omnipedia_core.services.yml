@@ -10,6 +10,7 @@ services:
       - '@omnipedia.wiki_node_tracker'
       - '@session'
       - '@state'
+      - '@string_translation'
 
   # Wiki node main page service.
   omnipedia.wiki_node_main_page:

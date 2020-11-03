@@ -67,6 +67,12 @@ interface TimelineInterface {
    *   - 'current': Indicates the current date is to be used. This is the
    *     default.
    *
+   *   - 'first': Indicates that a localized string representing the first
+   *     available date should be returned.
+   *
+   *   - 'first': Indicates that a localized string representing the last
+   *     available date should be returned.
+   *
    *   - 'default': Indicates the default date is to be used.
    *
    *   - A string that can be parsed by \Drupal\Core\Datetime\DrupalDateTime
@@ -91,12 +97,19 @@ interface TimelineInterface {
    *   - 'short': The short user-friendly date output format. This is defined by
    *     \Drupal\omnipedia_core\Service\Timeline::DATE_FORMAT_SHORT.
    *
+   *   Note that this parameter is ignored if $date is 'first' or 'last'.
+   *
    * @return string
-   *   The provided $date as a string, formatted according to $format.
+   *   The provided $date as a string, formatted according to $format, or
+   *   localized text if $date is 'first' or 'last'.
    *
    * @see $this->getDateObject()
    *   $date is passed to this to ensure a date object is retrieved/created to
    *   format from.
+   *
+   * @todo Should the 'first' and 'last' options be moved to their own method or
+   *   does it make more sense to have them here so that code that calls this
+   *   doesn't have to care about whether they're passing a date or a keyword?
    *
    * @throws \InvalidArgumentException
    *   Exception thrown when the $format parameter isn't an expected value.

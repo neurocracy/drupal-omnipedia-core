@@ -6,6 +6,8 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
@@ -18,6 +20,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * The Omnipedia timeline service.
  */
 class Timeline implements TimelineInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The date format stored in the database.
@@ -210,6 +214,9 @@ class Timeline implements TimelineInterface {
    *
    * @param \Drupal\Core\State\StateInterface $stateManager
    *   The Drupal state system manager.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
+   *   The Drupal string translation service.
    */
   public function __construct(
     Connection                  $database,
@@ -218,7 +225,8 @@ class Timeline implements TimelineInterface {
     WikiNodeResolverInterface   $wikiNodeResolver,
     WikiNodeTrackerInterface    $wikiNodeTracker,
     SessionInterface            $session,
-    StateInterface              $stateManager
+    StateInterface              $stateManager,
+    TranslationInterface        $stringTranslation
   ) {
     // Save dependencies.
     $this->database           = $database;
@@ -228,6 +236,7 @@ class Timeline implements TimelineInterface {
     $this->wikiNodeTracker    = $wikiNodeTracker;
     $this->session            = $session;
     $this->stateManager       = $stateManager;
+    $this->stringTranslation  = $stringTranslation;
   }
 
   /**
@@ -401,6 +410,13 @@ class Timeline implements TimelineInterface {
   public function getDateFormatted(
     $date = 'current', string $format = 'long'
   ): string {
+    if ($date === 'first') {
+      return $this->t('First date');
+    }
+    if ($date === 'last') {
+      return $this->t('Last date');
+    }
+
     switch ($format) {
       case 'storage':
         $formatString = self::DATE_FORMAT_STORAGE;
