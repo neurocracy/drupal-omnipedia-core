@@ -129,6 +129,35 @@ interface TimelineInterface {
   ): string;
 
   /**
+   * Determine if a given date is between/within a given range.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $date
+   *   The date or date keyword to test.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $startDate
+   *   The start date or date keyword to use as the earliest date that $date can
+   *   be.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $endDate
+   *   The end date or date keyword to use as the latest date that $date can be.
+   *
+   * @param bool $includeUnpublished
+   *   Whether to include dates that have only unpublished content. This is used
+   *   if $startDate is 'first' or $endDate is 'last'. Defaults to false.
+   *
+   * @return boolean
+   *   True if $date is after or the same as $startDate and that it is before or
+   *   the same as $endDate, or false if those conditions are not met.
+   *
+   * @see $this->getDateObject()
+   *   $date, $startDate, and $endDate are passed to this to parse and create
+   *   date objects for the comparison.
+   */
+  public function isDateBetween(
+    $date, $startDate, $endDate, bool $includeUnpublished = false
+  ): bool;
+
+  /**
    * Find all dates defined by content.
    *
    * Note that this method always rebuilds the lists of dates when invoked so it

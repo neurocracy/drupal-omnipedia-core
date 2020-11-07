@@ -461,6 +461,32 @@ class Timeline implements TimelineInterface {
   /**
    * {@inheritdoc}
    */
+  public function isDateBetween(
+    $date, $startDate, $endDate, bool $includeUnpublished = false
+  ): bool {
+    if (empty($date)) {
+      return true;
+    }
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $dateObject = $this->getDateObject($date, $includeUnpublished);
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $startDateObject = $this->getDateObject($startDate, $includeUnpublished);
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $endDateObject = $this->getDateObject($endDate, $includeUnpublished);
+
+    // As of PHP 5.2.2, DateTime objects can be compared using comparison
+    // operators:
+    //
+    // @see https://www.php.net/manual/en/datetime.diff.php
+    return $startDateObject <= $dateObject && $dateObject <= $endDateObject;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function findDefinedDates(): void {
     // This defines the keys used to store dates, while the values determine if
     // the key should include unpublished wiki nodes.
