@@ -38,6 +38,10 @@ interface TimelineInterface {
    *
    *   - 'default': Indicates the default date is to be used.
    *
+   *   - 'first': Indicates that the first defined date is to be used.
+   *
+   *   - 'last': Indicates that the last defined date is to be used.
+   *
    *   - A string that can be parsed by \Drupal\Core\Datetime\DrupalDateTime
    *     without errors.
    *
@@ -45,6 +49,10 @@ interface TimelineInterface {
    *     redundant checks for whether you have a string or a DrupalDateTime
    *     object, as passing either into this method with normalize to a
    *     DrupalDateTime object.
+   *
+   * @param bool $includeUnpublished
+   *   Whether to include dates that have only unpublished content. This is used
+   *   if $date is 'first' or 'last'. Defaults to false.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime
    *   A date object representing $date. If $date was provided as a date object,
@@ -56,7 +64,9 @@ interface TimelineInterface {
    *   when the $date parameter is neither a string nor an instance of the date
    *   object class.
    */
-  public function getDateObject($date = 'current'): DrupalDateTime;
+  public function getDateObject(
+    $date = 'current', bool $includeUnpublished = false
+  ): DrupalDateTime;
 
   /**
    * Get a formatted date.

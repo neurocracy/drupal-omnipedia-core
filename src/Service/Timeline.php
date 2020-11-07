@@ -353,7 +353,9 @@ class Timeline implements TimelineInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDateObject($date = 'current'): DrupalDateTime {
+  public function getDateObject(
+    $date = 'current', bool $includeUnpublished = false
+  ): DrupalDateTime {
     if (is_string($date)) {
       if ($date === 'current') {
         $this->findCurrentDate();
@@ -364,6 +366,17 @@ class Timeline implements TimelineInterface {
         $this->findDefaultDate();
 
         return $this->defaultDateObject;
+      }
+
+      if ($date === 'first' || $date === 'last') {
+        /** @var array */
+        $definedDates = $this->getDefinedDates($includeUnpublished);
+
+        if ($date === 'first') {
+          $date = $definedDates[0];
+        } else if ($date === 'last') {
+          $date = \end($definedDates);
+        }
       }
 
       // If a valid and error-free date object already exists in the cache for
