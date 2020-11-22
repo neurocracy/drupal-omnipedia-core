@@ -356,7 +356,7 @@ class Timeline implements TimelineInterface {
   public function getDateObject(
     $date = 'current', bool $includeUnpublished = false
   ): DrupalDateTime {
-    if (is_string($date)) {
+    if (\is_string($date)) {
       if ($date === 'current') {
         $this->findCurrentDate();
 
@@ -374,6 +374,7 @@ class Timeline implements TimelineInterface {
 
         if ($date === 'first') {
           $date = $definedDates[0];
+
         } else if ($date === 'last') {
           $date = \end($definedDates);
         }
@@ -393,7 +394,7 @@ class Timeline implements TimelineInterface {
       if ($dateObject->hasErrors()) {
         throw new \InvalidArgumentException(
           'There were one or more errors in constructing a \Drupal\Core\Datetime\DrupalDateTime object:' .
-          "\n" . implode("\n", $dateObject->getErrors())
+          "\n" . \implode("\n", $dateObject->getErrors())
         );
       }
 
@@ -406,7 +407,7 @@ class Timeline implements TimelineInterface {
       if ($date->hasErrors()) {
         throw new \InvalidArgumentException(
           'There are one or more errors with the provided \Drupal\Core\Datetime\DrupalDateTime object:' .
-          "\n" . implode("\n", $date->getErrors())
+          "\n" . \implode("\n", $date->getErrors())
         );
       }
 
