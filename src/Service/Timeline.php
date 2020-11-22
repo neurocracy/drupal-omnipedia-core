@@ -366,9 +366,8 @@ class Timeline implements TimelineInterface {
         $this->findDefaultDate();
 
         return $this->defaultDateObject;
-      }
 
-      if ($date === 'first' || $date === 'last') {
+      } else if ($date === 'first' || $date === 'last') {
         /** @var array */
         $definedDates = $this->getDefinedDates($includeUnpublished);
 
