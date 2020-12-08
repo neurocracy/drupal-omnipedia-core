@@ -487,6 +487,72 @@ class Timeline implements TimelineInterface {
   /**
    * {@inheritdoc}
    */
+  public function doDateRangesOverlap(
+    $startDate1, $endDate1, $startDate2, $endDate2,
+    bool $includeUnpublished = false
+  ): bool {
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $startDate1Object = $this->getDateObject(
+      $startDate1, $includeUnpublished
+    );
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $endDate1Object = $this->getDateObject(
+      $endDate1, $includeUnpublished
+    );
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $startDate2Object = $this->getDateObject(
+      $startDate2, $includeUnpublished
+    );
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime */
+    $endDate2Object = $this->getDateObject(
+      $endDate2, $includeUnpublished
+    );
+
+    // Does the first date range's start date fall between the second date
+    // range's start and end dates?
+    //
+    //   |----| <-- Date range 1
+    // |----|   <-- Date range 2
+    if (
+      $startDate1Object >= $startDate2Object &&
+      $startDate1Object <= $endDate2Object
+    ) {
+      return true;
+    }
+
+    // Does the first date range's end date fall between the second date range's
+    // start and end dates?
+    //
+    // |----|   <-- Date range 1
+    //   |----| <-- Date range 2
+    if (
+      $endDate1Object >= $startDate2Object &&
+      $endDate1Object <= $endDate2Object
+    ) {
+      return true;
+    }
+
+    // Does the first date range span across the entirety of the second date
+    // range?
+    //
+    // |-------|  <-- Date range 1
+    //   |---|    <-- Date range 2
+    if (
+      $startDate1Object <= $startDate2Object &&
+      $endDate1Object   >= $endDate2Object
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function findDefinedDates(): void {
     // This defines the keys used to store dates, while the values determine if
     // the key should include unpublished wiki nodes.

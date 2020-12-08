@@ -158,6 +158,40 @@ interface TimelineInterface {
   ): bool;
 
   /**
+   * Determine if two date ranges overlap.
+   *
+   * The two date ranges are considered to be overlapping if any of their days
+   * occur on the same date. This means, for example, that if the end date for
+   * one range and the start date for the other are on the same date, that will
+   * be considered as overlapping; in that case, the start date should be moved
+   * to next date to not be considered as overlapping.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $startDate1
+   *   The date or date keyword to use as the start of the first date range.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $endDate1
+   *   The date or date keyword to use as the end of the first date range.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $startDate2
+   *   The date or date keyword to use as the start of the second date range.
+   *
+   * @param string|\Drupal\Core\Datetime\DrupalDateTime $endDate2
+   *   The date or date keyword to use as the end of the second date range.
+   *
+   * @param bool $includeUnpublished
+   *   Whether to include dates that have only unpublished content when
+   *   resolving date keywords such as 'first' or 'last'. Defaults to false.
+   *
+   * @return bool
+   *   True if there is an overlap between the two date ranges, or false if they
+   *   don't overlap.
+   */
+  public function doDateRangesOverlap(
+    $startDate1, $endDate1, $startDate2, $endDate2,
+    bool $includeUnpublished = false
+  ): bool;
+
+  /**
    * Find all dates defined by content.
    *
    * Note that this method always rebuilds the lists of dates when invoked so it
