@@ -31,7 +31,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   /**
    * The default Drupal cache bin.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
