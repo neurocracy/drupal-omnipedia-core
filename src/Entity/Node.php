@@ -35,6 +35,11 @@ class Node extends CoreNode implements NodeInterface {
   protected const WIKI_NODE_DATE_FIELD = 'field_date';
 
   /**
+   * The name of the hide from search flag field on wiki nodes.
+   */
+  protected const WIKI_NODE_HIDDEN_FROM_SEARCH_FIELD = 'field_hide_from_search';
+
+  /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
@@ -120,6 +125,22 @@ class Node extends CoreNode implements NodeInterface {
    */
   public function isMainPage(): bool {
     return $this->wikiNodeMainPage->isMainPage($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isHiddenFromSearch(): bool {
+    if ($this->isWikiNode()) {
+      // Main pages are always hidden from search.
+      if ($this->isMainPage()) {
+        return true;
+      } else {
+        return $this->get(self::WIKI_NODE_HIDDEN_FROM_SEARCH_FIELD)[0]->value;
+      }
+    } else {
+      return false;
+    }
   }
 
   /**

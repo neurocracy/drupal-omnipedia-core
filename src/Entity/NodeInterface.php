@@ -132,6 +132,22 @@ interface NodeInterface {
   public function isMainPage(): bool;
 
   /**
+   * Whether this wiki node should be hidden from search results.
+   *
+   * This will return true in the following conditions:
+   *
+   * - This is a wiki node with the hide from search field set to true.
+   *
+   * - This is a wiki node that's also a main page; this will always return
+   *   true, ignoring the hide from search field.
+   *
+   * @return boolean
+   *   True if this wiki node should be hidden from search results, false
+   *   otherwise.
+   */
+  public function isHiddenFromSearch(): bool;
+
+  /**
    * Add this wiki node to a user's recently viewed session.
    *
    * @see \Drupal\omnipedia_menu\Controller\RandomPageController::view()
