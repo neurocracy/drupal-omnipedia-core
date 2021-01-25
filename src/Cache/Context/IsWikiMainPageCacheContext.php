@@ -3,7 +3,6 @@
 namespace Drupal\omnipedia_core\Cache\Context;
 
 use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
-use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 
 /**
