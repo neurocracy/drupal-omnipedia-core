@@ -27,7 +27,7 @@ interface WikiNodeMainPageInterface {
    * Determine if the current route is a main page wiki node.
    *
    * @return boolean
-   *   True if the current route is a main page wiki node or false otherwise.
+   *   True if the current route is a main page wiki node; false otherwise.
    */
   public function isCurrentRouteMainPage(): bool;
 
