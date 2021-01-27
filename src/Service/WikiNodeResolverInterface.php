@@ -60,8 +60,8 @@ interface WikiNodeResolverInterface {
    *   to an existing node ID to load.
    *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
-   *   Returns the node object if $node a wiki node; if $node is a node but not
-   *   a wiki node, returns null; if $node is a numeric value that doesn't
+   *   Returns the node object if $node is a wiki node; if $node is a node but
+   *   not a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
   public function getWikiNode($node): ?WikiNodeInterface;
