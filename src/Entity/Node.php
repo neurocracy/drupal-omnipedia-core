@@ -123,6 +123,53 @@ class Node extends CoreNode implements NodeInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasPreviousWikiNodeRevision(): bool {
+    return \is_object($this->getPreviousWikiNodeRevision());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreviousWikiNodeRevision(): ?NodeInterface {
+    // Bail if this is not a wiki node.
+    if (!$this->isWikiNode()) {
+      return null;
+    }
+
+    /** @var array */
+    $revisions = $this->getWikiNodeRevisions();
+
+    /** @var int */
+    $nid = (int) $this->nid->getString();
+
+    // If there's only one revision or this node is the first revision, there is
+    // no previous revision.
+    if (
+      count($revisions) === 1 ||
+      \reset($revisions)['nid'] === $nid
+    ) {
+      return null;
+    }
+
+    foreach ($revisions as $data) {
+      if ($data['nid'] !== $nid) {
+        \next($revisions);
+
+        continue;
+      }
+
+      /** @var array */
+      $previousNodeData = \prev($revisions);
+
+      return $this->getWikiNodeRevision($previousNodeData['date']);
+    }
+
+    return null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isMainPage(): bool {
     return $this->wikiNodeMainPage->isMainPage($this);
   }

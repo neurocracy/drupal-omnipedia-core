@@ -124,6 +124,22 @@ interface NodeInterface {
   public function getWikiNodeRevision(string $date): ?NodeInterface;
 
   /**
+   * Whether this wiki node has a previous revision.
+   *
+   * @return boolean
+   *   True if there is a previous revision or false otherwise.
+   */
+  public function hasPreviousWikiNodeRevision(): bool;
+
+  /**
+   * Get the previous wiki node revision of this node if one exists.
+   *
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
+   *   The node object of the previous revision if it exists or null otherwise.
+   */
+  public function getPreviousWikiNodeRevision(): ?NodeInterface;
+
+  /**
    * Determine if this node is a main page wiki node.
    *
    * @return boolean
