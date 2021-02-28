@@ -134,6 +134,11 @@ interface NodeInterface {
   /**
    * Get the previous wiki node revision of this node if one exists.
    *
+   * Note that this doesn't do any access checking, so code that calls this is
+   * responsible for not displaying information about nodes the user does not
+   * have access to. For an example of how to accomplish this, see
+   * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
+   *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   The node object of the previous revision if it exists or null otherwise.
    */
