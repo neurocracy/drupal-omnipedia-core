@@ -61,6 +61,19 @@ class Node extends CoreNode implements NodeInterface {
   protected $wikiNodeViewed;
 
   /**
+   * This wiki node's previous revision, if one exists.
+   *
+   * This begins as false, and is populated with a wiki node if the current
+   * node is a wiki node and it has a previous revision. If the current node is
+   * not a wiki node or it is but has no previous revision, this is set to null.
+   *
+   * @var boolean|null|\Drupal\omnipedia_core\Entity\NodeInterface
+   *
+   * @see $this->getPreviousWikiNodeRevision()
+   */
+  protected $previousWikiNodeRevision = false;
+
+  /**
    * {@inheritdoc}
    */
   public function injectWikiDependencies(
@@ -131,9 +144,16 @@ class Node extends CoreNode implements NodeInterface {
    * {@inheritdoc}
    */
   public function getPreviousWikiNodeRevision(): ?NodeInterface {
+
+    if ($this->previousWikiNodeRevision !== false) {
+      return $this->previousWikiNodeRevision;
+    }
+
     // Bail if this is not a wiki node.
     if (!$this->isWikiNode()) {
-      return null;
+      $this->previousWikiNodeRevision = null;
+
+      return $this->previousWikiNodeRevision;
     }
 
     /** @var array */
@@ -148,7 +168,9 @@ class Node extends CoreNode implements NodeInterface {
       count($revisions) === 1 ||
       \reset($revisions)['nid'] === $nid
     ) {
-      return null;
+      $this->previousWikiNodeRevision = null;
+
+      return $this->previousWikiNodeRevision;
     }
 
     foreach ($revisions as $data) {
@@ -161,10 +183,17 @@ class Node extends CoreNode implements NodeInterface {
       /** @var array */
       $previousNodeData = \prev($revisions);
 
-      return $this->getWikiNodeRevision($previousNodeData['date']);
+      $this->previousWikiNodeRevision = $this->getWikiNodeRevision(
+        $previousNodeData['date']
+      );
+
+      return $this->previousWikiNodeRevision;
     }
 
-    return null;
+    $this->previousWikiNodeRevision = null;
+
+    return $this->previousWikiNodeRevision;
+
   }
 
   /**
