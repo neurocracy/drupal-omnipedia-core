@@ -37,6 +37,10 @@ services:
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_tracker'
 
+  # Wiki node route service.
+  omnipedia.wiki_node_route:
+    class: Drupal\omnipedia_core\Service\WikiNodeRoute
+
   # Wiki node tracker service.
   omnipedia.wiki_node_tracker:
     class: Drupal\omnipedia_core\Service\WikiNodeTracker
