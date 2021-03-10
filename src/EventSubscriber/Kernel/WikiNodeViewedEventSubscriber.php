@@ -4,6 +4,7 @@ namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\WikiInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -25,13 +26,27 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
   protected $currentRouteMatch;
 
   /**
+   * The Omnipedia wiki node route service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
+   */
+  protected $wikiNodeRoute;
+
+  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
    *   The Drupal current route match service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRouteInterface $wikiNodeRoute
+   *   The Omnipedia wiki node route service.
    */
-  public function __construct(StackedRouteMatchInterface $currentRouteMatch) {
-    $this->currentRouteMatch = $currentRouteMatch;
+  public function __construct(
+    StackedRouteMatchInterface  $currentRouteMatch,
+    WikiNodeRouteInterface      $wikiNodeRoute
+  ) {
+    $this->currentRouteMatch  = $currentRouteMatch;
+    $this->wikiNodeRoute      = $wikiNodeRoute;
   }
 
   /**
@@ -51,7 +66,9 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    */
   public function kernelResponse(FilterResponseEvent $event): void {
     // Bail if this is not a node page to avoid false positives.
-    if ($this->currentRouteMatch->getRouteName() !== 'entity.node.canonical') {
+    if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
+      $this->currentRouteMatch->getRouteName()
+    )) {
       return;
     }
 

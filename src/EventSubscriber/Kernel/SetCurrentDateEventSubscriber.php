@@ -5,6 +5,7 @@ namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -43,6 +44,13 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
   protected $wikiNodeResolver;
 
   /**
+   * The Omnipedia wiki node route service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
+   */
+  protected $wikiNodeRoute;
+
+  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
@@ -53,15 +61,20 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRouteInterface $wikiNodeRoute
+   *   The Omnipedia wiki node route service.
    */
   public function __construct(
     StackedRouteMatchInterface  $currentRouteMatch,
     TimelineInterface           $timeline,
-    WikiNodeResolverInterface   $wikiNodeResolver
+    WikiNodeResolverInterface   $wikiNodeResolver,
+    WikiNodeRouteInterface      $wikiNodeRoute
   ) {
     $this->currentRouteMatch  = $currentRouteMatch;
     $this->timeline           = $timeline;
     $this->wikiNodeResolver   = $wikiNodeResolver;
+    $this->wikiNodeRoute      = $wikiNodeRoute;
   }
 
   /**
@@ -80,6 +93,13 @@ class SetCurrentDateEventSubscriber implements EventSubscriberInterface {
    *   Symfony response event object.
    */
   public function kernelRequest(GetResponseEvent $event): void {
+    // Bail if this is not a node page to avoid false positives.
+    if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
+      $this->currentRouteMatch->getRouteName()
+    )) {
+      return;
+    }
+
     /** @var \Drupal\node\NodeInterface|null */
     $node = $this->currentRouteMatch->getParameter('node');
 

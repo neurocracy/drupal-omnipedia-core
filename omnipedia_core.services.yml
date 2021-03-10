@@ -120,6 +120,7 @@ services:
       - '@current_route_match'
       - '@omnipedia.timeline'
       - '@omnipedia.wiki_node_resolver'
+      - '@omnipedia.wiki_node_route'
     tags:
       - { name: 'event_subscriber' }
 
@@ -128,6 +129,7 @@ services:
     class: Drupal\omnipedia_core\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
     arguments:
       - '@current_route_match'
+      - '@omnipedia.wiki_node_route'
     tags:
       - { name: 'event_subscriber' }
 
