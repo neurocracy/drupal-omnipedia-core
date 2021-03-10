@@ -3,7 +3,6 @@
 namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Drupal\omnipedia_core\Service\WikiInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
