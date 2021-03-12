@@ -22,7 +22,11 @@ class WikiNodeRoute implements WikiNodeRouteInterface {
   /**
    * {@inheritdoc}
    */
-  public function isWikiNodeViewRouteName(string $routeName): bool {
+  public function isWikiNodeViewRouteName(?string $routeName): bool {
+    if ($routeName === null) {
+      return false;
+    }
+
     return \in_array($routeName, $this->wikiNodeViewRouteNames);
   }
 

@@ -10,13 +10,13 @@ interface WikiNodeRouteInterface {
   /**
    * Determine if the provided route name is considered viewing a wiki node.
    *
-   * @param string $routeName
+   * @param string|null $routeName
    *   The route name to check.
    *
    * @return boolean
    *   True if the route name is considered viewing a wiki node, or false
    *   otherwise.
    */
-  public function isWikiNodeViewRouteName(string $routeName): bool;
+  public function isWikiNodeViewRouteName(?string $routeName): bool;
 
 }
