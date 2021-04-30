@@ -3,6 +3,7 @@
 namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -25,6 +26,13 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
   protected $currentRouteMatch;
 
   /**
+   * The Omnipedia wiki node resolver service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   */
+  protected $wikiNodeResolver;
+
+  /**
    * The Omnipedia wiki node route service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
@@ -42,9 +50,11 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     StackedRouteMatchInterface  $currentRouteMatch,
+    WikiNodeResolverInterface   $wikiNodeResolver,
     WikiNodeRouteInterface      $wikiNodeRoute
   ) {
     $this->currentRouteMatch  = $currentRouteMatch;
+    $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->wikiNodeRoute      = $wikiNodeRoute;
   }
 
@@ -71,8 +81,13 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
+    // If there's a 'node' route parameter, attempt to resolve it to a wiki
+    // node. Note that the 'node' parameter is not upcast into a Node object if
+    // viewing a (Drupal) revision other than the currently published one.
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->currentRouteMatch->getParameter('node');
+    $node = $this->wikiNodeResolver->resolveNode(
+      $this->currentRouteMatch->getParameter('node')
+    );
 
     if ($node === null) {
       return;
