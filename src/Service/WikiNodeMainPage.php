@@ -143,8 +143,9 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * @return \Drupal\omnipedia_core\Entity\NodeInterface
    *
    * @throws \UnexpectedValueException
-   *   Exception thrown when the configured front page is not a node or a date
-   *   cannot be retrieved from the front page node.
+   *   Exception thrown when the configured front page is not a wiki node, if
+   *   Url::fromUserInput() returns a non-routed URL, or if a date cannot be
+   *   retrieved from the front page node.
    */
   protected function getDefaultMainPage(): WikiNodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
@@ -157,6 +158,12 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
       $urlObject = Url::fromUserInput(
         $this->configFactory->get('system.site')->get('page.front')
       );
+
+      if (!$urlObject->isRouted()) {
+        throw new \UnexpectedValueException(
+          'The front page does not appear to point to an internal, routed URL.'
+        );
+      }
 
       /** @var array */
       $routeParameters = $urlObject->getRouteParameters();
@@ -207,8 +214,13 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *   Loads the indicated revision if the $date parameter is not 'default'.
    */
   public function getMainPage(string $date): ?WikiNodeInterface {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
-    $default = $this->getDefaultMainPage();
+    try {
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $default = $this->getDefaultMainPage();
+
+    } catch (\Exception $exception) {
+      return null;
+    }
 
     if ($date === 'default') {
       return $default;
