@@ -16,6 +16,7 @@ class WikiNodeRoute implements WikiNodeRouteInterface {
    */
   protected $wikiNodeViewRouteNames = [
     'entity.node.canonical',
+    'entity.node.preview',
     'entity.node.omnipedia_changes',
   ];
 
