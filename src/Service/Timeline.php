@@ -252,8 +252,9 @@ class Timeline implements TimelineInterface {
     }
 
     // Retrieve the current date from session storage, if available, falling
-    // back to the default date if not found.
-    if ($this->session->has(self::CURRENT_DATE_SESSION_KEY)) {
+    // back to the default date if not found. Note that we have to check if
+    // headers have already been sent to avoid Symfony throwing an error.
+    if (!\headers_sent() && $this->session->has(self::CURRENT_DATE_SESSION_KEY)) {
       $date = $this->session->get(self::CURRENT_DATE_SESSION_KEY);
 
     } else {
@@ -273,11 +274,14 @@ class Timeline implements TimelineInterface {
 
     $this->currentDateString = $this->getDateFormatted($dateObject, 'storage');
 
-    // Save to session storage.
-    $this->session->set(
-      self::CURRENT_DATE_SESSION_KEY,
-      $this->currentDateString
-    );
+    // Save to session storage if headers haven't been sent yet - checking this
+    // is necessary to avoid Symfony throwing an error.
+    if (!\headers_sent()) {
+      $this->session->set(
+        self::CURRENT_DATE_SESSION_KEY,
+        $this->currentDateString
+      );
+    }
 
     $this->currentDateObject = $dateObject;
   }
