@@ -12,6 +12,14 @@ services:
       - '@state'
       - '@string_translation'
 
+  # Wiki node access service.
+  omnipedia.wiki_node_access:
+    class: Drupal\omnipedia_core\Service\WikiNodeAccess
+    arguments:
+      - '@account_switcher'
+      - '@current_user'
+      - '@entity_type.manager'
+
   # Wiki node main page service.
   omnipedia.wiki_node_main_page:
     class: Drupal\omnipedia_core\Service\WikiNodeMainPage
