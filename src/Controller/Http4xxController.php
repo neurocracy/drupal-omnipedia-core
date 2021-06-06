@@ -3,6 +3,7 @@
 namespace Drupal\omnipedia_core\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,6 +12,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Controller for HTTP 4xx responses.
  */
 class Http4xxController extends ControllerBase {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
 
   /**
    * The Drupal link generator service.
@@ -22,11 +30,20 @@ class Http4xxController extends ControllerBase {
   /**
    * Controller constructor; saves dependencies.
    *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   *
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
    *   The Drupal link generator service.
    */
-  public function __construct(LinkGeneratorInterface $linkGenerator) {
-    $this->linkGenerator = $linkGenerator;
+  public function __construct(
+    AccountInterface        $currentUser,
+    LinkGeneratorInterface  $linkGenerator
+  ) {
+
+    $this->currentUser    = $currentUser;
+    $this->linkGenerator  = $linkGenerator;
+
   }
 
   /**
@@ -34,6 +51,7 @@ class Http4xxController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('current_user'),
       $container->get('link_generator')
     );
   }
@@ -51,17 +69,29 @@ class Http4xxController extends ControllerBase {
    *   Replaces the 'system.403' route controller method with this one.
    */
   public function on403() {
+
+    // If the user is anonymous, offer a log in link.
+    if ($this->currentUser->isAnonymous()) {
+
+      return [
+        '#markup' => $this->t(
+          'You are not authorised to access this page. Would you like to try @loggingin?',
+          [
+            '@loggingin' => $this->linkGenerator->generate(
+              $this->t('logging in'),
+              Url::fromRoute('user.login')
+            ),
+          ]
+        ),
+      ];
+
+    }
+
+    // If the user is authenticated, just provide the access denied message.
     return [
-      '#markup' => $this->t(
-        'You are not authorised to access this page. Would you like to try @loggingin?',
-        [
-          '@loggingin' => $this->linkGenerator->generate(
-            $this->t('logging in'),
-            Url::fromRoute('user.login')
-          ),
-        ]
-      ),
+      '#markup' => $this->t('You are not authorised to access this page.'),
     ];
+
   }
 
 }
