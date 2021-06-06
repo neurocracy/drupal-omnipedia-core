@@ -3,7 +3,9 @@
 namespace Drupal\omnipedia_core\EventSubscriber\Response;
 
 use Drupal\Core\EventSubscriber\HttpExceptionSubscriberBase;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -13,6 +15,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   Loosely based on this Drupal Answers answer.
  */
 class AccessDeniedToNotFoundEventSubscriber extends HttpExceptionSubscriberBase {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs this event subscriber; saves dependencies.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   */
+  public function __construct(AccountInterface $currentUser) {
+    $this->currentUser = $currentUser;
+  }
 
   /**
    * {@inheritdoc}
@@ -31,6 +50,15 @@ class AccessDeniedToNotFoundEventSubscriber extends HttpExceptionSubscriberBase 
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
+
+    if ($this->currentUser->hasPermission('bypass node access')) {
+
+      $event->setException(new AccessDeniedHttpException());
+
+      return;
+
+    }
+
     /** @var \Symfony\Component\HttpFoundation\Request */
     $request = $event->getRequest();
 
@@ -43,6 +71,7 @@ class AccessDeniedToNotFoundEventSubscriber extends HttpExceptionSubscriberBase 
     if ($request->getPathInfo() !== '/') {
       $event->setException(new NotFoundHttpException());
     }
+
   }
 
 }
