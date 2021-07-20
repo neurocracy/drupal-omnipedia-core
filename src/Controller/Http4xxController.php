@@ -75,10 +75,10 @@ class Http4xxController extends ControllerBase {
 
       return [
         '#markup' => $this->t(
-          'You are not authorised to access this page. Would you like to try @loggingin?',
+          'You are not authorised to access this page. If you have an account, you can @login.',
           [
-            '@loggingin' => $this->linkGenerator->generate(
-              $this->t('logging in'),
+            '@login' => $this->linkGenerator->generate(
+              $this->t('log in'),
               Url::fromRoute('user.login')
             ),
           ]
