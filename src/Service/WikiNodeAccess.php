@@ -59,29 +59,43 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo This needs to be properly reworked to account for Permissions by
+   *   Term and other node access checks.
    */
   public function canUserAccessAnyWikiNode(
     ?AccountInterface $user = null
   ): bool {
 
-    // Switch over to the provided user account for access checking.
-    if (\is_object($user)) {
-      $this->accountSwitcher->switchTo($user);
+    // Return false if we didn't get a user account to check.
+    if (!\is_object($user)) {
+      return false;
     }
+
+    // If the user does not have the access content permission, just return
+    // false here. This saves some work and also catches cases that the entity
+    // query does not.
+    if (!$user->hasPermission('access content')) {
+      return false;
+    }
+
+    // Switch over to the provided user account for access checking.
+    $this->accountSwitcher->switchTo($user);
 
     /** @var \Drupal\Core\Entity\Query\QueryInterface The node count query; note that this obeys access checking for the current user. */
     $query = ($this->nodeStorage->getQuery())
       ->condition('type', Node::getWikiNodeType())
       ->count();
 
+    /** @var int */
+    $count = (int) $query->execute();
+
     /** @var bool True if the count query returned at least one result and false otherwise. */
-    $return = (int) $query->execute() > 0;
+    $return = $count > 0;
 
     // Switch back to the current user if we were provided a user to test access
     // for.
-    if (\is_object($user)) {
-      $this->accountSwitcher->switchBack();
-    }
+    $this->accountSwitcher->switchBack();
 
     return $return;
 
