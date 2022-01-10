@@ -2,7 +2,7 @@ name: Omnipedia - Core
 type: module
 description: Provides wiki node and timeline functionality for Omnipedia.
 package: Omnipedia
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9
 
 dependencies:
   - drupal:datetime
