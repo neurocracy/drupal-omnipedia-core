@@ -3,7 +3,7 @@
 namespace Drupal\omnipedia_core\EventSubscriber\Response;
 
 use Drupal\Core\EventSubscriber\HttpExceptionSubscriberBase;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -17,19 +17,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AccessDeniedToNotFoundEventSubscriber extends HttpExceptionSubscriberBase {
 
   /**
-   * The current user.
+   * The current user proxy service.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
   /**
    * Constructs this event subscriber; saves dependencies.
    *
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user proxy service.
    */
-  public function __construct(AccountInterface $currentUser) {
+  public function __construct(AccountProxyInterface $currentUser) {
     $this->currentUser = $currentUser;
   }
 

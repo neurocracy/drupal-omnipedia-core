@@ -3,7 +3,7 @@
 namespace Drupal\omnipedia_core\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,9 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Http4xxController extends ControllerBase {
 
   /**
-   * The current user.
+   * The current user proxy service.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
@@ -30,14 +30,14 @@ class Http4xxController extends ControllerBase {
   /**
    * Controller constructor; saves dependencies.
    *
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user proxy service.
    *
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
    *   The Drupal link generator service.
    */
   public function __construct(
-    AccountInterface        $currentUser,
+    AccountProxyInterface   $currentUser,
     LinkGeneratorInterface  $linkGenerator
   ) {
 
