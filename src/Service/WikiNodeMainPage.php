@@ -12,6 +12,7 @@ use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 
 /**
  * The Omnipedia wiki node main page service.
@@ -71,6 +72,13 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   protected $wikiNodeRevision;
 
   /**
+   * The Omnipedia wiki node route service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
+   */
+  protected $wikiNodeRoute;
+
+  /**
    * Constructs this service object.
    *
    * @param Drupal\Core\Cache\CacheBackendInterface $cache
@@ -88,6 +96,9 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRouteInterface $wikiNodeRoute
+   *   The Omnipedia wiki node route service.
+   *
    * @param \Drupal\Core\State\StateInterface $stateManager
    *   The Drupal state system manager.
    */
@@ -97,6 +108,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
     StackedRouteMatchInterface  $currentRouteMatch,
     WikiNodeResolverInterface   $wikiNodeResolver,
     WikiNodeRevisionInterface   $wikiNodeRevision,
+    WikiNodeRouteInterface      $wikiNodeRoute,
     StateInterface              $stateManager
   ) {
     // Save dependencies.
@@ -105,6 +117,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
     $this->currentRouteMatch  = $currentRouteMatch;
     $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->wikiNodeRevision   = $wikiNodeRevision;
+    $this->wikiNodeRoute      = $wikiNodeRoute;
     $this->stateManager       = $stateManager;
   }
 
@@ -131,10 +144,19 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * {@inheritdoc}
    */
   public function isCurrentRouteMainPage(): bool {
+
+    // Return false if this route is not considered viewing a wiki node.
+    if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
+      $this->currentRouteMatch->getRouteName()
+    )) {
+      return false;
+    }
+
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->currentRouteMatch->getParameter('node');
 
     return $this->isMainPage($node);
+
   }
 
   /**

@@ -29,6 +29,7 @@ services:
       - '@current_route_match'
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_revision'
+      - '@omnipedia.wiki_node_route'
       - '@state'
 
   # Wiki node resolver service.
