@@ -12,7 +12,5 @@
   ],
   "require": {
     "drupal/hook_event_dispatcher": "^2.0"
-  },
-  "require-dev": {
   }
 }
