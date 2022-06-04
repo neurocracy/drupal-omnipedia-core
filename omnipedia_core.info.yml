@@ -1,6 +1,6 @@
 name: Omnipedia - Core
 type: module
-description: Provides wiki node and timeline functionality for Omnipedia.
+description: Provides core functionality for Omnipedia.
 package: Omnipedia
 core_version_requirement: ^9
 
