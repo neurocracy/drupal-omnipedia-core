@@ -1,7 +1,7 @@
 {
   "name": "drupal/omnipedia_core",
   "description": "Omnipedia - Core",
-  "type": "project",
+  "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
