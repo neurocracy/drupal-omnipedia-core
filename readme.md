@@ -22,3 +22,48 @@ part of this codebase is useful or will inspire someone out there.
 * PHP 8
 
 * [Composer](https://getcomposer.org/)
+
+----
+
+# Installation
+
+Ensure that you have your Drupal installation set up with the correct Composer
+installer types such as those provided by [the ```drupal\recommended-project```
+template](https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates#s-drupalrecommended-project).
+If you're starting from scratch, simply requiring that template and following
+[the Drupal.org Composer
+documentation](https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates)
+should get you up and running.
+
+Then, in your root ```composer.json```, add the following to the
+```"repositories"``` section:
+
+```
+{
+  "type": "vcs",
+  "url": "https://github.com/neurocracy/drupal-omnipedia-core.git"
+}
+```
+
+Then, in your project's root, run ```composer require
+"drupal/omnipedia_core:3.x-dev@dev"``` to have Composer install the module
+and its required dependencies for you.
+
+----
+
+# Description
+
+This contains the core framework for Omnipedia, which contains various services
+for handling our simulated date system, a custom Drupal Node class with some of
+those services injected, several custom cache contexts, and several event
+subscribers related to our simulated date system and the custom Node class.
+
+----
+
+# Planned improvements
+
+* Move the `omnipedia.wiki_node_access` service to `omnipedia_access`?
+
+* Move the `field_hide_from_search` configuration to `omnipedia_search` if possible.
+
+* Refactor the Node class as a [bundle class (introduced in Drupal core 9.3)](https://www.drupal.org/node/3191609).
