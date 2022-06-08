@@ -62,8 +62,8 @@ subscribers related to our simulated date system and the custom Node class.
 
 # Planned improvements
 
-* Move the `omnipedia.wiki_node_access` service to `omnipedia_access`?
+* Move the `omnipedia.wiki_node_access` service to the `omnipedia_access` module?
 
-* Move the `field_hide_from_search` configuration to `omnipedia_search` if possible.
+* Move the `field_hide_from_search` configuration to the `omnipedia_search` module if possible.
 
 * Refactor the Node class as a [bundle class (introduced in Drupal core 9.3)](https://www.drupal.org/node/3191609).
