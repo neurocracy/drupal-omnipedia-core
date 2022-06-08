@@ -142,11 +142,3 @@ services:
       - '@omnipedia.wiki_node_route'
     tags:
       - { name: 'event_subscriber' }
-
-  # Event subscriber to output a 404 not found instead of a 403 access denied.
-  omnipedia_core.response_access_denied_to_not_found_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Response\AccessDeniedToNotFoundEventSubscriber
-    arguments:
-      - '@current_user'
-    tags:
-      - { name: 'event_subscriber' }
