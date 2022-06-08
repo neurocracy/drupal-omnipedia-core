@@ -17,7 +17,7 @@ use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Node storage handler with Omnipedia; injects dependencies into Node objects.
+ * Node storage handler for Omnipedia; injects dependencies into Node objects.
  *
  * @see \Drupal\node\NodeStorage
  *   Core node storage class this extends.
