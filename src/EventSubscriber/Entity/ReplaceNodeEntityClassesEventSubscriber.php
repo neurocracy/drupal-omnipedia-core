@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_core\EventSubscriber\Entity;
 
 use Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_core\Cache\Context;
 
 use Drupal\Core\Cache\CacheableMetadata;

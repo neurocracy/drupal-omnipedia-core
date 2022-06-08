@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_core\EventSubscriber\Kernel;
 
 use Drupal\Core\Routing\StackedRouteMatchInterface;
