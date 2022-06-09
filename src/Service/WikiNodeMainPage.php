@@ -36,49 +36,49 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $cache;
+  protected CacheBackendInterface $cache;
 
   /**
    * The Drupal configuration object factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * The Drupal current route match service.
    *
    * @var \Drupal\Core\Routing\StackedRouteMatchInterface
    */
-  protected $currentRouteMatch;
+  protected StackedRouteMatchInterface $currentRouteMatch;
 
   /**
    * The Drupal state system manager.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected $stateManager;
+  protected StateInterface $stateManager;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
    */
-  protected $wikiNodeRevision;
+  protected WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * The Omnipedia wiki node route service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
    */
-  protected $wikiNodeRoute;
+  protected WikiNodeRouteInterface $wikiNodeRoute;
 
   /**
    * Constructs this service object.
@@ -126,7 +126,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   /**
    * {@inheritdoc}
    */
-  public function isMainPage($node): bool {
+  public function isMainPage(mixed $node): bool {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->getWikiNode($node);
 

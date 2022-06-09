@@ -25,21 +25,21 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Routing\StackedRouteMatchInterface
    */
-  protected $currentRouteMatch;
+  protected StackedRouteMatchInterface $currentRouteMatch;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node route service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
    */
-  protected $wikiNodeRoute;
+  protected WikiNodeRouteInterface $wikiNodeRoute;
 
   /**
    * Event subscriber constructor; saves dependencies.

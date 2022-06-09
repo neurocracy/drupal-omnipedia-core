@@ -18,7 +18,7 @@ interface TimelineInterface {
    *   Either a string that can be parsed by
    *   \Drupal\Core\Datetime\DrupalDateTime or an instance of said class.
    */
-  public function setCurrentDate($date): void;
+  public function setCurrentDate(string|DrupalDateTime $date): void;
 
   /**
    * Validate and set the default date.
@@ -27,7 +27,7 @@ interface TimelineInterface {
    *   Either a string that can be parsed by
    *   \Drupal\Core\Datetime\DrupalDateTime or an instance of said class.
    */
-  public function setDefaultDate($date): void;
+  public function setDefaultDate(string|DrupalDateTime $date): void;
 
   /**
    * Get a date object for a date.
@@ -67,7 +67,7 @@ interface TimelineInterface {
    *   object class.
    */
   public function getDateObject(
-    $date = 'current', bool $includeUnpublished = false
+    string|DrupalDateTime $date = 'current', bool $includeUnpublished = false
   ): DrupalDateTime;
 
   /**
@@ -127,7 +127,7 @@ interface TimelineInterface {
    *   Exception thrown when the $format parameter isn't an expected value.
    */
   public function getDateFormatted(
-    $date = 'current', string $format = 'long'
+    string|DrupalDateTime $date = 'current', string $format = 'long'
   ): string;
 
   /**
@@ -156,7 +156,10 @@ interface TimelineInterface {
    *   date objects for the comparison.
    */
   public function isDateBetween(
-    $date, $startDate, $endDate, bool $includeUnpublished = false
+    string|DrupalDateTime $date,
+    string|DrupalDateTime $startDate,
+    string|DrupalDateTime $endDate,
+    bool $includeUnpublished = false
   ): bool;
 
   /**
@@ -189,7 +192,10 @@ interface TimelineInterface {
    *   don't overlap.
    */
   public function doDateRangesOverlap(
-    $startDate1, $endDate1, $startDate2, $endDate2,
+    string|DrupalDateTime $startDate1,
+    string|DrupalDateTime $endDate1,
+    string|DrupalDateTime $startDate2,
+    string|DrupalDateTime $endDate2,
     bool $includeUnpublished = false
   ): bool;
 

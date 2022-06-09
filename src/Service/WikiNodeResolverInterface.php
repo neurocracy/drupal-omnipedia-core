@@ -15,14 +15,14 @@ interface WikiNodeResolverInterface {
   /**
    * Resolve a provided parameter to a node, loading it if need be.
    *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing nid to load.
+   * @param mixed $node
+   *   A node entity object or a numeric value (integer or string) that equates
+   *   to an existing node ID (nid) to load. Any other value will return null.
    *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Either a node object, or null if one cannot be loaded.
    */
-  public function resolveNode($node): ?WikiNodeInterface;
+  public function resolveNode(mixed $node): ?WikiNodeInterface;
 
   /**
    * Resolve a node or title to all nids with the same title.
@@ -39,33 +39,35 @@ interface WikiNodeResolverInterface {
    * @return array
    *   An array containing zero or more nids as values.
    */
-  public function nodeOrTitleToNids($nodeOrTitle): array;
+  public function nodeOrTitleToNids(
+    WikiNodeInterface|int|string $nodeOrTitle
+  ): array;
 
   /**
    * Determine if a parameter is or equates to a wiki node.
    *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
+   * @param mixed $node
+   *   A node entity object or a numeric value (integer or string) that equates
+   *   to an existing node ID (nid) to load. Any other value will return false.
    *
    * @return boolean
    *   Returns true if the $node parameter is a wiki node or if it is a numeric
    *   value that equates to the ID of a wiki node; returns false otherwise.
    */
-  public function isWikiNode($node): bool;
+  public function isWikiNode(mixed $node): bool;
 
   /**
    * Get a wiki node from the passed parameter, if possible.
    *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
+   * @param mixed $node
+   *   A node entity object or a numeric value (integer or string) that equates
+   *   to an existing node ID (nid) to load. Any other value will return null.
    *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Returns the node object if $node is a wiki node; if $node is a node but
    *   not a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
-  public function getWikiNode($node): ?WikiNodeInterface;
+  public function getWikiNode(mixed $node): ?WikiNodeInterface;
 
 }

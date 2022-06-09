@@ -51,7 +51,9 @@ interface WikiNodeRevisionInterface {
    *
    * @todo Should this perform access checking?
    */
-  public function getWikiNodeRevisions($nodeOrTitle): array;
+  public function getWikiNodeRevisions(
+    WikiNodeInterface|int|string $nodeOrTitle
+  ): array;
 
   /**
    * Get a wiki node's revision for a specified date.
@@ -83,6 +85,8 @@ interface WikiNodeRevisionInterface {
    *   Exception thrown if the $nodeOrTitle parameter is not one of the expected
    *   values.
    */
-  public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface;
+  public function getWikiNodeRevision(
+    WikiNodeInterface|int|string $nodeOrTitle, string $date
+  ): ?WikiNodeInterface;
 
 }

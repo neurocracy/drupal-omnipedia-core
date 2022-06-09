@@ -20,14 +20,14 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * Constructs this service object.
@@ -50,7 +50,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function resolveNode($node): ?WikiNodeInterface {
+  public function resolveNode(mixed $node): ?WikiNodeInterface {
     if (\is_object($node) && $node instanceof NodeInterface) {
       return $node;
 
@@ -66,7 +66,9 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function nodeOrTitleToNids($nodeOrTitle): array {
+  public function nodeOrTitleToNids(
+    WikiNodeInterface|int|string $nodeOrTitle
+  ): array {
     if (\is_string($nodeOrTitle)) {
       /** @var string */
       $title = $nodeOrTitle;
@@ -95,7 +97,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function isWikiNode($node): bool {
+  public function isWikiNode(mixed $node): bool {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->resolveNode($node);
 
@@ -109,7 +111,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNode($node): ?WikiNodeInterface {
+  public function getWikiNode(mixed $node): ?WikiNodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->resolveNode($node);
 

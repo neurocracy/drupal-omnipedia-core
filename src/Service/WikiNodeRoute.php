@@ -21,7 +21,7 @@ class WikiNodeRoute implements WikiNodeRouteInterface {
    *
    * @var array
    */
-  protected $wikiNodeViewRouteNames = [
+  protected array $wikiNodeViewRouteNames = [
     'entity.node.canonical',
     'entity.node.preview',
     'entity.node.edit_form',

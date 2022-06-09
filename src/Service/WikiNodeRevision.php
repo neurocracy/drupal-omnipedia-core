@@ -19,14 +19,14 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * Constructs this service object.
@@ -54,7 +54,9 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
    *   to store the sorted array so that it doesn't need to be done every time
    *   this method is called.
    */
-  public function getWikiNodeRevisions($nodeOrTitle): array {
+  public function getWikiNodeRevisions(
+    WikiNodeInterface|int|string $nodeOrTitle
+  ): array {
     /** @var array */
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
 
@@ -94,7 +96,9 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNodeRevision($nodeOrTitle, string $date): ?WikiNodeInterface {
+  public function getWikiNodeRevision(
+    WikiNodeInterface|int|string $nodeOrTitle, string $date
+  ): ?WikiNodeInterface {
     // Get all node IDs of nodes with this title.
     /** @var array */
     $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);

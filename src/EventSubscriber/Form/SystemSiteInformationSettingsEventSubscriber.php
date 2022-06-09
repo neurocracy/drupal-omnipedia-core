@@ -27,7 +27,7 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * Event subscriber constructor; saves dependencies.

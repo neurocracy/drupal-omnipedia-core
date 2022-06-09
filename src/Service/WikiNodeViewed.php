@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -32,14 +33,14 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
    */
-  protected $session;
+  protected SessionInterface $session;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * Constructs this service object.
@@ -62,7 +63,7 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
   /**
    * {@inheritdoc}
    */
-  public function addNode($node): void {
+  public function addNode(NodeInterface|int|string $node): void {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->getWikiNode($node);
 

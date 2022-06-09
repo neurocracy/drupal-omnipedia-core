@@ -39,21 +39,21 @@ class NodeStorage extends CoreNodeStorage {
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
    */
-  protected $wikiNodeRevision;
+  protected WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * The Omnipedia wiki node viewed service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
    */
-  protected $wikiNodeViewed;
+  protected WikiNodeViewedInterface $wikiNodeViewed;
 
   /**
    * Instantiates a new instance of this entity handler.

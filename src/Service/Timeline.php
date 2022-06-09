@@ -84,49 +84,49 @@ class Timeline implements TimelineInterface {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The Drupal entity type plug-in manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node resolver service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
-  protected $wikiNodeResolver;
+  protected WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected $wikiNodeTracker;
+  protected WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * The Symfony session service.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
    */
-  protected $session;
+  protected SessionInterface $session;
 
   /**
    * The Drupal state system manager.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected $stateManager;
+  protected StateInterface $stateManager;
 
   /**
    * A cache of created date objects.
@@ -135,35 +135,35 @@ class Timeline implements TimelineInterface {
    *
    * @var array
    */
-  protected $dateObjectCache = [];
+  protected array $dateObjectCache = [];
 
   /**
    * The current date as a string.
    *
    * @var string
    */
-  protected $currentDateString;
+  protected string $currentDateString = '';
 
   /**
    * The current date as a DrupalDateTime object.
    *
    * @var \Drupal\Core\Datetime\DrupalDateTime
    */
-  protected $currentDateObject;
+  protected DrupalDateTime $currentDateObject;
 
   /**
    * The default date as a string.
    *
    * @var string
    */
-  protected $defaultDateString;
+  protected string $defaultDateString = '';
 
   /**
    * The default date as a DrupalDateTime object.
    *
    * @var \Drupal\Core\Datetime\DrupalDateTime
    */
-  protected $defaultDateObject;
+  protected DrupalDateTime $defaultDateObject;
 
   /**
    * Dates defined by content.
@@ -183,7 +183,7 @@ class Timeline implements TimelineInterface {
    * @see self::DEFINED_DATES_STATE_KEY
    *   Drupal state key where dates are stored persistently between requests.
    */
-  protected $definedDates;
+  protected array $definedDates;
 
   /**
    * Constructs this service object.
@@ -263,7 +263,7 @@ class Timeline implements TimelineInterface {
   /**
    * {@inheritdoc}
    */
-  public function setCurrentDate($date): void {
+  public function setCurrentDate(string|DrupalDateTime $date): void {
     $dateObject = $this->getDateObject($date);
 
     $this->currentDateString = $this->getDateFormatted($dateObject, 'storage');
@@ -334,7 +334,7 @@ class Timeline implements TimelineInterface {
   /**
    * {@inheritdoc}
    */
-  public function setDefaultDate($date): void {
+  public function setDefaultDate(string|DrupalDateTime $date): void {
     $dateObject = $this->getDateObject($date);
 
     $this->defaultDateString = $this->getDateFormatted($dateObject, 'storage');
@@ -352,7 +352,7 @@ class Timeline implements TimelineInterface {
    * {@inheritdoc}
    */
   public function getDateObject(
-    $date = 'current', bool $includeUnpublished = false
+    string|DrupalDateTime $date = 'current', bool $includeUnpublished = false
   ): DrupalDateTime {
     if (\is_string($date)) {
       if ($date === 'current') {
@@ -419,7 +419,7 @@ class Timeline implements TimelineInterface {
    * {@inheritdoc}
    */
   public function getDateFormatted(
-    $date = 'current', string $format = 'long'
+    string|DrupalDateTime $date = 'current', string $format = 'long'
   ): string {
     if ($date === 'first') {
       return $this->t('First date');
@@ -460,7 +460,10 @@ class Timeline implements TimelineInterface {
    * {@inheritdoc}
    */
   public function isDateBetween(
-    $date, $startDate, $endDate, bool $includeUnpublished = false
+    string|DrupalDateTime $date,
+    string|DrupalDateTime $startDate,
+    string|DrupalDateTime $endDate,
+    bool $includeUnpublished = false
   ): bool {
     if (empty($date)) {
       return true;
@@ -486,7 +489,10 @@ class Timeline implements TimelineInterface {
    * {@inheritdoc}
    */
   public function doDateRangesOverlap(
-    $startDate1, $endDate1, $startDate2, $endDate2,
+    string|DrupalDateTime $startDate1,
+    string|DrupalDateTime $endDate1,
+    string|DrupalDateTime $startDate2,
+    string|DrupalDateTime $endDate2,
     bool $includeUnpublished = false
   ): bool {
     /** @var \Drupal\Core\Datetime\DrupalDateTime */

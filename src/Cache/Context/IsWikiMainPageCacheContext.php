@@ -22,7 +22,7 @@ class IsWikiMainPageCacheContext implements CalculatedCacheContextInterface {
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * Service constructor; saves dependencies.

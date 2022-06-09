@@ -21,14 +21,14 @@ class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\omnipedia_core\Service\TimelineInterface
    */
-  protected $timeline;
+  protected TimelineInterface $timeline;
 
   /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * Event subscriber constructor; saves dependencies.

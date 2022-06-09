@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
+use Drupal\node\NodeInterface;
+
 /**
  * The Omnipedia wiki node viewed service interface.
  */
@@ -19,7 +21,7 @@ interface WikiNodeViewedInterface {
    * @see \Drupal\omnipedia_menu\Controller\RandomPageController::view()
    *   Used by this to avoid choosing a recently viewed wiki node.
    */
-  public function addNode($node): void;
+  public function addNode(NodeInterface|int|string $node): void;
 
   /**
    * Get the most recent wiki nodes viewed by the current user, if any.

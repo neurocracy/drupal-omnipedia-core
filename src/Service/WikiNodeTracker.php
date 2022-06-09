@@ -34,7 +34,7 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected $stateManager;
+  protected StateInterface $stateManager;
 
   /**
    * Constructs this service object.

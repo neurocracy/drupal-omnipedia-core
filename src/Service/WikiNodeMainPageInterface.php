@@ -14,16 +14,16 @@ interface WikiNodeMainPageInterface {
   /**
    * Determine if a parameter is or equates to a main page wiki node.
    *
-   * @param \Drupal\node\NodeInterface|int|string $node
-   *   Either a node object or a numeric value (integer or string) that equates
-   *   to an existing node ID to load.
+   * @param mixed $node
+   *   A node entity object or a numeric value (integer or string) that equates
+   *   to an existing node ID (nid) to load. Any other value will return false.
    *
    * @return boolean
    *   Returns true if the $node parameter is a main page wiki node or if it is
    *   a numeric value that equates to the ID of a main page wiki node; returns
    *   false otherwise.
    */
-  public function isMainPage($node): bool;
+  public function isMainPage(mixed $node): bool;
 
   /**
    * Determine if the current route is a main page wiki node.

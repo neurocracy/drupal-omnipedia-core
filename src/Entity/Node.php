@@ -47,21 +47,21 @@ class Node extends CoreNode implements NodeInterface {
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected $wikiNodeMainPage;
+  protected WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node revision service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
    */
-  protected $wikiNodeRevision;
+  protected WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * The Omnipedia wiki node viewed service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
    */
-  protected $wikiNodeViewed;
+  protected WikiNodeViewedInterface $wikiNodeViewed;
 
   /**
    * This wiki node's previous revision, if one exists.
@@ -74,7 +74,7 @@ class Node extends CoreNode implements NodeInterface {
    *
    * @see $this->getPreviousWikiNodeRevision()
    */
-  protected $previousWikiNodeRevision = false;
+  protected bool|null|NodeInterface $previousWikiNodeRevision = false;
 
   /**
    * {@inheritdoc}
