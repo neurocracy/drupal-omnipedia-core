@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Entity;
 
-use Drupal\node\NodeInterface as CoreNodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
