@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 
 /**
