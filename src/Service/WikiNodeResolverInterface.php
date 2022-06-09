@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node resolver service interface.
@@ -21,15 +21,16 @@ interface WikiNodeResolverInterface {
    * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
    *   Either a node object, or null if one cannot be loaded.
    */
-  public function resolveNode(mixed $node): ?WikiNodeInterface;
+  public function resolveNode(mixed $node): ?NodeInterface;
 
   /**
    * Resolve a node or title to all nids with the same title.
    *
-   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $nodeOrTitle
    *   Must be one of the following:
    *
-   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object.
+   *   - An instance of \Drupal\omnipedia_core\Entity\NodeInterface, i.e. a node
+   *     object.
    *
    *   - An integer or a numeric string that equates to an nid.
    *
@@ -39,7 +40,7 @@ interface WikiNodeResolverInterface {
    *   An array containing zero or more nids as values.
    */
   public function nodeOrTitleToNids(
-    WikiNodeInterface|int|string $nodeOrTitle
+    NodeInterface|int|string $nodeOrTitle
   ): array;
 
   /**
@@ -67,6 +68,6 @@ interface WikiNodeResolverInterface {
    *   not a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
-  public function getWikiNode(mixed $node): ?WikiNodeInterface;
+  public function getWikiNode(mixed $node): ?NodeInterface;
 
 }

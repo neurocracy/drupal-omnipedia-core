@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node revision service interface.
@@ -19,10 +19,11 @@ interface WikiNodeRevisionInterface {
    * have access to. For an example of how to accomplish this, see
    * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
    *
-   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $nodeOrTitle
    *   Must be one of the following:
    *
-   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object.
+   *   - An instance of \Drupal\omnipedia_core\Entity\NodeInterface, i.e. a node
+   *     object.
    *
    *   - An integer or a numeric string that equates to a node ID (nid).
    *
@@ -52,7 +53,7 @@ interface WikiNodeRevisionInterface {
    * @todo Should this perform access checking?
    */
   public function getWikiNodeRevisions(
-    WikiNodeInterface|int|string $nodeOrTitle
+    NodeInterface|int|string $nodeOrTitle
   ): array;
 
   /**
@@ -63,10 +64,11 @@ interface WikiNodeRevisionInterface {
    * have access to. For an example of how to accomplish this, see
    * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
    *
-   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $nodeOrTitle
    *   Must be one of the following:
    *
-   *   - An instance of \Drupal\node\NodeInterface, i.e. a node object.
+   *   - An instance of \Drupal\omnipedia_core\Entity\NodeInterface, i.e. a node
+   *     object.
    *
    *   - An integer or a numeric string that equates to an node ID (nid).
    *
@@ -86,7 +88,7 @@ interface WikiNodeRevisionInterface {
    *   values.
    */
   public function getWikiNodeRevision(
-    WikiNodeInterface|int|string $nodeOrTitle, string $date
-  ): ?WikiNodeInterface;
+    NodeInterface|int|string $nodeOrTitle, string $date
+  ): ?NodeInterface;
 
 }

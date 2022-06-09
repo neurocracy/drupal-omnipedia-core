@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\node\NodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node tracker service interface.
@@ -48,7 +48,7 @@ interface WikiNodeTrackerInterface {
    *
    * This should be called when a wiki node is created or updated.
    *
-   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
    *   A node object.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::getTrackedWikiNodeData()
@@ -68,7 +68,7 @@ interface WikiNodeTrackerInterface {
    *
    * This should be called when a wiki node is deleted.
    *
-   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
    *   A node object.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface::getTrackedWikiNodeData()

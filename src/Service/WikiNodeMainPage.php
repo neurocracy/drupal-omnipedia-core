@@ -10,8 +10,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
@@ -171,7 +170,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *   Url::fromUserInput() returns a non-routed URL, or if a date cannot be
    *   retrieved from the front page node.
    */
-  protected function getDefaultMainPage(): WikiNodeInterface {
+  protected function getDefaultMainPage(): NodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveNode(
       $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY)
@@ -237,7 +236,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * @see \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface::getWikiNodeRevision()
    *   Loads the indicated revision if the $date parameter is not 'default'.
    */
-  public function getMainPage(string $date): ?WikiNodeInterface {
+  public function getMainPage(string $date): ?NodeInterface {
     try {
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
       $default = $this->getDefaultMainPage();

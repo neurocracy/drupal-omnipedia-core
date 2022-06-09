@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\node\NodeInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 
@@ -50,7 +49,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function resolveNode(mixed $node): ?WikiNodeInterface {
+  public function resolveNode(mixed $node): ?NodeInterface {
     if (\is_object($node) && $node instanceof NodeInterface) {
       return $node;
 
@@ -67,7 +66,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
    * {@inheritdoc}
    */
   public function nodeOrTitleToNids(
-    WikiNodeInterface|int|string $nodeOrTitle
+    NodeInterface|int|string $nodeOrTitle
   ): array {
     if (\is_string($nodeOrTitle)) {
       /** @var string */
@@ -111,7 +110,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNode(mixed $node): ?WikiNodeInterface {
+  public function getWikiNode(mixed $node): ?NodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->resolveNode($node);
 

@@ -6,7 +6,7 @@ namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\State\StateInterface;
-use Drupal\node\NodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 
 /**

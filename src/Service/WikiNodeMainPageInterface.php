@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node main page service interface.
@@ -57,7 +57,7 @@ interface WikiNodeMainPageInterface {
    *   Returns the main page's node object for the specified date if it can be
    *   found; returns null otherwise.
    */
-  public function getMainPage(string $date): ?WikiNodeInterface;
+  public function getMainPage(string $date): ?NodeInterface;
 
   /**
    * Get the main page route name.

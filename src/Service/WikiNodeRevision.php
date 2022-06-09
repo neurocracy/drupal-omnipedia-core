@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
@@ -55,7 +55,7 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
    *   this method is called.
    */
   public function getWikiNodeRevisions(
-    WikiNodeInterface|int|string $nodeOrTitle
+    NodeInterface|int|string $nodeOrTitle
   ): array {
     /** @var array */
     $nodeData = $this->wikiNodeTracker->getTrackedWikiNodeData();
@@ -97,8 +97,8 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
    * {@inheritdoc}
    */
   public function getWikiNodeRevision(
-    WikiNodeInterface|int|string $nodeOrTitle, string $date
-  ): ?WikiNodeInterface {
+    NodeInterface|int|string $nodeOrTitle, string $date
+  ): ?NodeInterface {
     // Get all node IDs of nodes with this title.
     /** @var array */
     $nids = $this->wikiNodeResolver->nodeOrTitleToNids($nodeOrTitle);
