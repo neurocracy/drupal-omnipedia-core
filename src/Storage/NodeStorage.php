@@ -139,9 +139,9 @@ class NodeStorage extends CoreNodeStorage {
     EntityFieldManagerInterface   $entityFieldManager,
     CacheBackendInterface         $cache,
     LanguageManagerInterface      $languageManager,
-    MemoryCacheInterface          $memoryCache = null,
-    EntityTypeBundleInfoInterface $entityTypeBundleInfo = null,
-    EntityTypeManagerInterface    $entityTypeManager = null,
+    MemoryCacheInterface          $memoryCache,
+    EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    EntityTypeManagerInterface    $entityTypeManager,
     WikiNodeMainPageInterface     $wikiNodeMainPage,
     WikiNodeRevisionInterface     $wikiNodeRevision,
     WikiNodeViewedInterface       $wikiNodeViewed
