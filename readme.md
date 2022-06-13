@@ -1,5 +1,5 @@
-This contains the source files for the "[Omnipedia](https://omnipedia.app/) -
-Core" Drupal module.
+This contains the source files for the "*Omnipedia - Core*" Drupal module, which
+provides core functionality for [Omnipedia](https://omnipedia.app/).
 
 ⚠️⚠️⚠️ ***Here be potential spoilers. Proceed at your own risk.*** ⚠️⚠️⚠️
 
