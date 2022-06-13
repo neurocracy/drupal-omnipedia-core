@@ -62,6 +62,8 @@ subscribers related to our simulated date system and the custom Node class.
 
 # Planned improvements
 
+* [Refactor out Timeline date object building, comparison, and formatting](https://github.com/neurocracy/drupal-omnipedia-core/issues/1).
+
 * [Move the `omnipedia.wiki_node_access` service to the `omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-core/issues/3).
 
 * [Move the `field_hide_from_search` configuration to the `omnipedia_search` module if possible](https://github.com/neurocracy/drupal-omnipedia-core/issues/2).
