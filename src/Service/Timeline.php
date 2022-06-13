@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -78,20 +76,6 @@ class Timeline implements TimelineInterface {
    *   Uses this constant to read dates from state storage.
    */
   protected const DEFINED_DATES_STATE_KEY = 'omnipedia.defined_dates';
-
-  /**
-   * The Drupal database connection service.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected Connection $database;
-
-  /**
-   * The Drupal entity type plug-in manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia wiki node main page service.
@@ -188,12 +172,6 @@ class Timeline implements TimelineInterface {
   /**
    * Constructs this service object.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The Drupal database connection service.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The Drupal entity type plug-in manager.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
@@ -213,18 +191,14 @@ class Timeline implements TimelineInterface {
    *   The Drupal string translation service.
    */
   public function __construct(
-    Connection                  $database,
-    EntityTypeManagerInterface  $entityTypeManager,
-    WikiNodeMainPageInterface   $wikiNodeMainPage,
-    WikiNodeResolverInterface   $wikiNodeResolver,
-    WikiNodeTrackerInterface    $wikiNodeTracker,
-    SessionInterface            $session,
-    StateInterface              $stateManager,
-    TranslationInterface        $stringTranslation
+    WikiNodeMainPageInterface $wikiNodeMainPage,
+    WikiNodeResolverInterface $wikiNodeResolver,
+    WikiNodeTrackerInterface  $wikiNodeTracker,
+    SessionInterface          $session,
+    StateInterface            $stateManager,
+    TranslationInterface      $stringTranslation
   ) {
     // Save dependencies.
-    $this->database           = $database;
-    $this->entityTypeManager  = $entityTypeManager;
     $this->wikiNodeMainPage   = $wikiNodeMainPage;
     $this->wikiNodeResolver   = $wikiNodeResolver;
     $this->wikiNodeTracker    = $wikiNodeTracker;
