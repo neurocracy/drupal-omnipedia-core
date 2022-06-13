@@ -450,7 +450,7 @@ class Timeline implements TimelineInterface {
         break;
 
       default:
-        throw new \InvalidArgumentException('The $format parameter must one of "storage", "long", or "short".');
+        throw new \InvalidArgumentException('The $format parameter must be one of "storage", "long", or "short".');
     }
 
     return $this->getDateObject($date)->format($formatString);
