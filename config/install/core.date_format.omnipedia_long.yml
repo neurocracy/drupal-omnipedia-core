@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: omnipedia_long
-label: 'Omnipedia long'
-locked: true
-pattern: 'F jS Y'
