@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * The Omnipedia timeline service interface.
@@ -111,7 +112,7 @@ interface TimelineInterface {
    *
    *   Note that this parameter is ignored if $date is 'first' or 'last'.
    *
-   * @return string
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The provided $date as a string, formatted according to $format, or
    *   localized text if $date is 'first' or 'last'.
    *
@@ -128,7 +129,7 @@ interface TimelineInterface {
    */
   public function getDateFormatted(
     string|DrupalDateTime $date = 'current', string $format = 'long'
-  ): string;
+  ): string|TranslatableMarkup;
 
   /**
    * Determine if a given date is between/within a given range.

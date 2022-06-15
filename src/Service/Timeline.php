@@ -7,6 +7,7 @@ namespace Drupal\omnipedia_core\Service;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\omnipedia_core\Service\TimelineInterface;
@@ -394,7 +395,7 @@ class Timeline implements TimelineInterface {
    */
   public function getDateFormatted(
     string|DrupalDateTime $date = 'current', string $format = 'long'
-  ): string {
+  ): string|TranslatableMarkup {
     if ($date === 'first') {
       return $this->t('First date');
     }
