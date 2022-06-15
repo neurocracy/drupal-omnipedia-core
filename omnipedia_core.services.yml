@@ -1,14 +1,4 @@
 services:
-  # Timeline service.
-  omnipedia.timeline:
-    class: Drupal\omnipedia_core\Service\Timeline
-    arguments:
-      - '@omnipedia.wiki_node_main_page'
-      - '@omnipedia.wiki_node_resolver'
-      - '@omnipedia.wiki_node_tracker'
-      - '@session'
-      - '@state'
-      - '@string_translation'
 
   # Wiki node access service.
   omnipedia.wiki_node_access:
@@ -61,14 +51,6 @@ services:
       - '@omnipedia.wiki_node_resolver'
       - '@session'
 
-  # Dates cache context.
-  cache_context.omnipedia_dates:
-    class: Drupal\omnipedia_core\Cache\Context\DatesCacheContext
-    arguments:
-      - '@omnipedia.timeline'
-    tags:
-      - { name: cache.context }
-
   # Is wiki main page cache context.
   cache_context.omnipedia_is_wiki_main_page:
     class: Drupal\omnipedia_core\Cache\Context\IsWikiMainPageCacheContext
@@ -90,18 +72,7 @@ services:
   omnipedia_core.config_update_default_main_page_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Config\UpdateDefaultMainPageEventSubscriber
     arguments:
-      - '@omnipedia.timeline'
       - '@omnipedia.wiki_node_main_page'
-    tags:
-      - { name: 'event_subscriber' }
-
-  # Event subscriber to update defined dates on wiki node entity changes.
-  omnipedia_core.entity_update_defined_dates_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\UpdateDefinedDatesEventSubscriber
-    arguments:
-      - '@omnipedia.timeline'
-      - '@omnipedia.wiki_node_resolver'
-      - '@omnipedia.wiki_node_tracker'
     tags:
       - { name: 'event_subscriber' }
 
@@ -117,17 +88,6 @@ services:
     arguments:
       - '@omnipedia.wiki_node_resolver'
       - '@string_translation'
-    tags:
-      - { name: 'event_subscriber' }
-
-  # Event subscriber to update current date if a wiki page node is being viewed.
-  omnipedia_core.kernel_set_current_date_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Kernel\SetCurrentDateEventSubscriber
-    arguments:
-      - '@current_route_match'
-      - '@omnipedia.timeline'
-      - '@omnipedia.wiki_node_resolver'
-      - '@omnipedia.wiki_node_route'
     tags:
       - { name: 'event_subscriber' }
 

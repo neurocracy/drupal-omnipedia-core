@@ -8,20 +8,12 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\omnipedia_core\Service\TimelineInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 
 /**
  * Event subscriber to update stored default main page when config is updated.
  */
 class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The Omnipedia timeline service.
-   *
-   * @var \Drupal\omnipedia_core\Service\TimelineInterface
-   */
-  protected TimelineInterface $timeline;
 
   /**
    * The Omnipedia wiki node main page service.
@@ -33,18 +25,13 @@ class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
   /**
    * Event subscriber constructor; saves dependencies.
    *
-   * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
-   *   The Omnipedia timeline service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    */
   public function __construct(
-    TimelineInterface         $timeline,
     WikiNodeMainPageInterface $wikiNodeMainPage
   ) {
     $this->wikiNodeMainPage = $wikiNodeMainPage;
-    $this->timeline         = $timeline;
   }
 
   /**
@@ -57,10 +44,7 @@ class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * This deletes the stored default main page when system.site is updated.
-   *
-   * The wiki service will rebuild the value upon failing to read it from the
-   * site state when it's next asked to fetch it.
+   * This updates the stored default main page when system.site is updated.
    *
    * Note that this has been successfully tested with configuration import via
    * Drush, but may not work as expected if system.site is changed via a
@@ -90,15 +74,6 @@ class UpdateDefaultMainPageEventSubscriber implements EventSubscriberInterface {
 
     $this->wikiNodeMainPage->updateDefaultMainPage();
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $defaultMainPage = $this->wikiNodeMainPage->getMainPage('default');
-
-    if ($defaultMainPage === null) {
-      return;
-    }
-
-    // Update the default date with the new default main page's date.
-    $this->timeline->setDefaultDate($defaultMainPage->getWikiNodeDate());
   }
 
 }

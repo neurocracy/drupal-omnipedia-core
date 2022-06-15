@@ -25,8 +25,6 @@ config_devel:
     - core.entity_view_display.node.wiki_page.default
     - core.entity_form_display.node.wiki_page.default
     - core.base_field_override.node.wiki_page.title
-    - core.date_format.omnipedia_long
-    - core.date_format.omnipedia_short
     - taxonomy.vocabulary.episode_tiers
   optional:
     - pathauto.pattern.node_wiki_page
