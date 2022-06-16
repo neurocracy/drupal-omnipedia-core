@@ -53,10 +53,15 @@ and its required dependencies for you.
 
 # Description
 
-This contains the core framework for Omnipedia, which contains various services
-for handling our simulated date system, a custom Drupal Node class with some of
-those services injected, several custom cache contexts, and several event
-subscribers related to our simulated date system and the custom Node class.
+This contains the framework for managing our simulated wiki pages (Drupal nodes)
+and their revisions. This includes various services to find and interact with
+them, and to query and track what simulated revisions they have (one per
+in-universe day). It provides a custom Drupal node class that we extend with
+various convenience methods, and related event subscribers and cache contexts.
+
+Note that this does not contain the framework to manage the simulated date
+system itself; that's found in the [`omnipedia_date`
+module](https://github.com/neurocracy/drupal-omnipedia-date).
 
 ----
 
