@@ -60,7 +60,7 @@ in-universe day). It provides a custom Drupal node class that we extend with
 various convenience methods, and related event subscribers and cache contexts.
 
 Note that this does not contain the framework to manage the simulated date
-system itself; that's found in the [`omnipedia_date`
+system itself; that can be found in the [`omnipedia_date`
 module](https://github.com/neurocracy/drupal-omnipedia-date).
 
 This module is named `omnipedia_core` for historical reasons, as it used to
