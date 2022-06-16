@@ -63,6 +63,11 @@ Note that this does not contain the framework to manage the simulated date
 system itself; that's found in the [`omnipedia_date`
 module](https://github.com/neurocracy/drupal-omnipedia-date).
 
+This module is named `omnipedia_core` for historical reasons, as it used to
+contain more than the wiki node framework. In the future, this module may be
+discontinued in favour of a more accurately named module, e.g.
+`omnipedia_node`, or `omnipedia_wiki_node`, etc.
+
 ----
 
 # Planned improvements
