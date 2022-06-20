@@ -110,7 +110,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getWikiNode(mixed $node): ?NodeInterface {
+  public function resolveWikiNode(mixed $node): ?NodeInterface {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->resolveNode($node);
 

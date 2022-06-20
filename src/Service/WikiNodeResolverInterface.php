@@ -57,7 +57,7 @@ interface WikiNodeResolverInterface {
   public function isWikiNode(mixed $node): bool;
 
   /**
-   * Get a wiki node from the passed parameter, if possible.
+   * Resolve a provided parameter to a wiki node, loading it if need be.
    *
    * @param mixed $node
    *   A node entity object or a numeric value (integer or string) that equates
@@ -68,6 +68,6 @@ interface WikiNodeResolverInterface {
    *   not a wiki node, returns null; if $node is a numeric value that doesn't
    *   equate to a wiki node's ID, returns null.
    */
-  public function getWikiNode(mixed $node): ?NodeInterface;
+  public function resolveWikiNode(mixed $node): ?NodeInterface;
 
 }

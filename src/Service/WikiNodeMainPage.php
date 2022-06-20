@@ -128,7 +128,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    */
   public function isMainPage(mixed $node): bool {
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->getWikiNode($node);
+    $node = $this->wikiNodeResolver->resolveWikiNode($node);
 
     // Return false if this is not a wiki node.
     if (\is_null($node)) {
