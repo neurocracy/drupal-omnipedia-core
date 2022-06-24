@@ -215,7 +215,9 @@ class Node extends CoreNode implements NodeInterface {
       if ($this->isMainPage()) {
         return true;
       } else {
-        return $this->get(self::WIKI_NODE_HIDDEN_FROM_SEARCH_FIELD)[0]->value;
+        return ($this->get(
+          self::WIKI_NODE_HIDDEN_FROM_SEARCH_FIELD
+        )[0]->value === '1' ? true : false);
       }
     } else {
       return false;
