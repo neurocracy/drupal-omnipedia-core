@@ -76,6 +76,7 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    *   Symfony filter response event object.
    */
   public function kernelResponse(ResponseEvent $event): void {
+
     // Bail if this is not a node page to avoid false positives.
     if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
       $this->currentRouteMatch->getRouteName()
@@ -96,6 +97,7 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
     }
 
     $node->addRecentlyViewedWikiNode();
+
   }
 
 }
