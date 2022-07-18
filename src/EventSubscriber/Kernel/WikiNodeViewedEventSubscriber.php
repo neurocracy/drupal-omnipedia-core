@@ -47,6 +47,9 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
    *   The Drupal current route match service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
+   *   The Omnipedia wiki node resolver service.
+   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRouteInterface $wikiNodeRoute
    *   The Omnipedia wiki node route service.
    */
