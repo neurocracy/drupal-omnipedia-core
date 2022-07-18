@@ -8,7 +8,7 @@ use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRouteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -72,10 +72,10 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
   /**
    * Record the last wiki node viewed.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   Symfony filter response event object.
    */
-  public function kernelResponse(FilterResponseEvent $event): void {
+  public function kernelResponse(ResponseEvent $event): void {
     // Bail if this is not a node page to avoid false positives.
     if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
       $this->currentRouteMatch->getRouteName()
