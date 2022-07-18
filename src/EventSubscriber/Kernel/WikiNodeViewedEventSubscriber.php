@@ -65,7 +65,7 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      KernelEvents::RESPONSE => 'kernelResponse',
+      KernelEvents::RESPONSE => 'onKernelResponse',
     ];
   }
 
@@ -75,7 +75,7 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   Symfony filter response event object.
    */
-  public function kernelResponse(ResponseEvent $event): void {
+  public function onKernelResponse(ResponseEvent $event): void {
 
     // Bail if this is not a node page to avoid false positives.
     if (!$this->wikiNodeRoute->isWikiNodeViewRouteName(
