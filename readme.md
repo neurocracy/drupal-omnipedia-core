@@ -15,6 +15,35 @@ part of this codebase is useful or will inspire someone out there.
 
 ----
 
+# Description
+
+This contains the framework for managing our simulated wiki pages (Drupal nodes)
+and their revisions. This includes various services to find and interact with
+them, and to query and track what simulated revisions they have (one per
+in-universe day). It provides a custom Drupal node class that we extend with
+various convenience methods, and related event subscribers and cache contexts.
+
+Note that this does not contain the framework to manage the simulated date
+system itself; that can be found in the [`omnipedia_date`
+module](https://github.com/neurocracy/drupal-omnipedia-date).
+
+This module is named `omnipedia_core` for historical reasons, as it used to
+contain more than the wiki node framework. In the future, this module may be
+discontinued in favour of a more accurately named module, e.g.
+`omnipedia_node`, or `omnipedia_wiki_node`, etc.
+
+----
+
+# Planned improvements
+
+* [Move the `omnipedia.wiki_node_access` service to the `omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-core/issues/3).
+
+* [Move the `field_hide_from_search` configuration to the `omnipedia_search` module if possible](https://github.com/neurocracy/drupal-omnipedia-core/issues/2).
+
+* [Refactor the Node class as an entity bundle class](https://github.com/neurocracy/drupal-omnipedia-core/issues/4).
+
+----
+
 # Requirements
 
 * [Drupal 9](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
@@ -48,32 +77,3 @@ Then, in your root ```composer.json```, add the following to the
 Then, in your project's root, run ```composer require
 "drupal/omnipedia_core:3.x-dev@dev"``` to have Composer install the module
 and its required dependencies for you.
-
-----
-
-# Description
-
-This contains the framework for managing our simulated wiki pages (Drupal nodes)
-and their revisions. This includes various services to find and interact with
-them, and to query and track what simulated revisions they have (one per
-in-universe day). It provides a custom Drupal node class that we extend with
-various convenience methods, and related event subscribers and cache contexts.
-
-Note that this does not contain the framework to manage the simulated date
-system itself; that can be found in the [`omnipedia_date`
-module](https://github.com/neurocracy/drupal-omnipedia-date).
-
-This module is named `omnipedia_core` for historical reasons, as it used to
-contain more than the wiki node framework. In the future, this module may be
-discontinued in favour of a more accurately named module, e.g.
-`omnipedia_node`, or `omnipedia_wiki_node`, etc.
-
-----
-
-# Planned improvements
-
-* [Move the `omnipedia.wiki_node_access` service to the `omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-core/issues/3).
-
-* [Move the `field_hide_from_search` configuration to the `omnipedia_search` module if possible](https://github.com/neurocracy/drupal-omnipedia-core/issues/2).
-
-* [Refactor the Node class as an entity bundle class](https://github.com/neurocracy/drupal-omnipedia-core/issues/4).
