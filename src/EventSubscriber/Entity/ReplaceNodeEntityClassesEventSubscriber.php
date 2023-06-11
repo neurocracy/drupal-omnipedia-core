@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\EventSubscriber\Entity;
 
+use Drupal\core_event_dispatcher\EntityHookEvents;
 use Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent;
-use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -18,7 +18,7 @@ class ReplaceNodeEntityClassesEventSubscriber implements EventSubscriberInterfac
    */
   public static function getSubscribedEvents(): array {
     return [
-      HookEventDispatcherInterface::ENTITY_TYPE_BUILD => 'replaceNodeEntityClasses',
+      EntityHookEvents::ENTITY_TYPE_BUILD => 'replaceNodeEntityClasses',
     ];
   }
 
