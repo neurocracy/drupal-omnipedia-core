@@ -88,6 +88,7 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
     /** @var \Drupal\Core\Entity\Query\QueryInterface The node count query; note that this obeys access checking for the current user. */
     $query = ($this->nodeStorage->getQuery())
       ->condition('type', Node::getWikiNodeType())
+      ->accessCheck(true)
       ->count();
 
     /** @var int */
