@@ -3,6 +3,10 @@
   "description": "Omnipedia - Core",
   "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
+  "support": {
+    "docs": "https://github.com/neurocracy/drupal-omnipedia-core",
+    "source": "https://github.com/neurocracy/drupal-omnipedia-core"
+  },
   "authors": [
     {
       "name": "Ambient.Impact",
