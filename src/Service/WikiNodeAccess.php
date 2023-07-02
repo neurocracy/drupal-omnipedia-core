@@ -13,7 +13,7 @@ use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 
 /**
- * The Omnipedia wiki node access service interface.
+ * The Omnipedia wiki node access service.
  */
 class WikiNodeAccess implements WikiNodeAccessInterface {
 
