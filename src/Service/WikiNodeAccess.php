@@ -63,8 +63,8 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
   /**
    * {@inheritdoc}
    *
-   * @todo This needs to be properly reworked to account for Permissions by
-   *   Term and other node access checks.
+   * @todo Can this be reworked to use other checks like multiple permissions in
+   *   a more abstracted way?
    */
   public function canUserAccessAnyWikiNode(
     ?AccountInterface $user = null
