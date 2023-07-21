@@ -6,7 +6,12 @@ core_version_requirement: ^9.5 || ^10.0
 
 dependencies:
   - drupal:datetime
+  - drupal:menu_ui
   - drupal:node
+  - drupal:path
+  - drupal:taxonomy
+  - drupal:text
+  - drupal:user
   - hook_event_dispatcher:core_event_dispatcher
 
 config_devel:
