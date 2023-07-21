@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-name: 'Episode tiers'
+name: Episodes
 vid: episode_tiers
-description: 'Associate wiki pages with an episode tier to control access for users.'
+description: 'Associate wiki pages and media with an episode number.'
 weight: 0

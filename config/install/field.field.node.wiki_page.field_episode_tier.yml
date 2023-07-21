@@ -11,8 +11,8 @@ id: node.wiki_page.field_episode_tier
 field_name: field_episode_tier
 entity_type: node
 bundle: wiki_page
-label: 'Episode tier'
-description: 'The lowest episode tier that a user must have to have access to this wiki page.'
+label: Episode
+description: 'The episode this wiki page is part of.'
 required: true
 translatable: false
 default_value:
