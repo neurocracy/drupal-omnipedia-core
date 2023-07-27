@@ -107,6 +107,13 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
     // Parse the provided dates into DrupalDateTime objects so that they can be
     // sorted chronologically.
     foreach ($data['dates'] as $date => $dateNodes) {
+
+      // Skip dates that don't have any nodes any longer. This can occur when
+      // the last node for a date is deleted or changed to a different date.
+      if (empty($dateNodes)) {
+        continue;
+      }
+
       // The date parsed into an array of date parts. We do this so that we
       // don't need to have any knowledge of what format the date is in, just as
       // long as it can be parsed.
