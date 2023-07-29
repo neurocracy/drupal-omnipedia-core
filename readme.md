@@ -48,9 +48,15 @@ discontinued in favour of a more accurately named module, e.g.
 
 * [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
 
-* PHP 8
+* PHP 8.1
 
 * [Composer](https://getcomposer.org/)
+
+## Drupal dependencies
+
+Follow the Composer installation instructions for these dependencies first:
+
+* The [`omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-access).
 
 ----
 
@@ -96,3 +102,9 @@ The following major version bumps indicate breaking changes:
   * Requires Drupal 9.5 or [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0).
 
   * Increases minimum version of [Hook Event Dispatcher](https://www.drupal.org/project/hook_event_dispatcher) to 3.1, removes deprecated code, and adds support for 4.0 which supports Drupal 10.
+
+* 5.x:
+
+  * Now requires PHP 8.1, up from PHP 8.0.
+
+  * Now requires the [`omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-access).

@@ -100,3 +100,23 @@ services:
       - '@omnipedia.wiki_node_route'
     tags:
       - { name: 'event_subscriber' }
+
+  omnipedia_core.wiki_node_edit_local_task_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Menu\WikiNodeEditLocalTaskEventSubscriber
+    arguments:
+      - '@current_route_match'
+      - '@current_user'
+      - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia.wiki_node_resolver'
+    tags:
+      - { name: 'event_subscriber' }
+
+  omnipedia_core.wiki_node_edit_not_found_to_access_denied_event_subscriber:
+    class: Drupal\omnipedia_core\EventSubscriber\Omnipedia\WikiNodeEditNotFoundToAccessDeniedEventSubscriber
+    arguments:
+      - '@current_route_match'
+      - '@current_user'
+      - '@omnipedia.wiki_node_main_page'
+      - '@omnipedia.wiki_node_resolver'
+    tags:
+      - { name: 'event_subscriber' }
