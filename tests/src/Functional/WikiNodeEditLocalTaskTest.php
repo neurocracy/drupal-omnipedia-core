@@ -165,7 +165,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
   /**
    * Test that the 'Edit' local task is visible to users with 'access content'.
    */
-  public function testEditLocalTaskVisibility(): void {
+  public function testWikiNodeEditLocalTaskVisibility(): void {
 
     /** @var \Drupal\node\NodeInterface */
     $node = $this->drupalCreateNode([
@@ -194,7 +194,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
   /**
    * Test that node edit route shows access denied to users w/ 'access content'.
    */
-  public function testEditRouteAccessDenied(): void {
+  public function testWikiNodeEditRouteAccessDenied(): void {
 
     /** @var \Drupal\node\NodeInterface */
     $node = $this->drupalCreateNode([
