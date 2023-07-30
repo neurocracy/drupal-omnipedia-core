@@ -245,4 +245,15 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
   }
 
+  /**
+   * Test that the main page node edit route shows not found.
+   */
+  public function testMainPageEditRouteNotFound(): void {
+
+    $this->drupalGet($this->mainPageNode->toUrl('edit-form'));
+
+    $this->assertSession()->statusCodeEquals(404);
+
+  }
+
 }
