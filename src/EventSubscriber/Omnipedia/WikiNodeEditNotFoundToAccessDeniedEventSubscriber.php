@@ -67,7 +67,7 @@ class WikiNodeEditNotFoundToAccessDeniedEventSubscriber implements EventSubscrib
     // node. Note that the 'node' parameter is not upcast into a Node object if
     // viewing a (Drupal) revision other than the currently published one.
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $node = $this->wikiNodeResolver->resolveNode(
+    $node = $this->wikiNodeResolver->resolveWikiNode(
       $this->currentRouteMatch->getParameter('node'),
     );
 

@@ -256,4 +256,50 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
   }
 
+  /**
+   * Test that non-wiki nodes don't show their 'Edit' local task.
+   *
+   * This ensures that the 'Edit' local task visibility changes we perform are
+   * only applied to wiki nodes and not other content types.
+   */
+  public function testNonWikiNodeLocalTaskVisibility(): void {
+
+    $this->drupalCreateContentType(['type' => 'page']);
+
+    /** @var \Drupal\node\NodeInterface */
+    $node = $this->drupalCreateNode([
+      'title'   => $this->randomMachineName(8),
+      'type'    => 'page',
+      'status'  => NodeInterface::PUBLISHED,
+    ]);
+
+    $this->drupalGet($node->toUrl());
+
+    $this->assertNotHasLocalTask($node->toUrl('edit-form'));
+
+  }
+
+  /**
+   * Test that non-wiki node edit route shows not found.
+   *
+   * This ensures that we only expose 403s on wiki node edit routes and not
+   * other content types.
+   */
+  public function testNonWikiNodeEditRouteNotFound(): void {
+
+    $this->drupalCreateContentType(['type' => 'page']);
+
+    /** @var \Drupal\node\NodeInterface */
+    $node = $this->drupalCreateNode([
+      'title'   => $this->randomMachineName(8),
+      'type'    => 'page',
+      'status'  => NodeInterface::PUBLISHED,
+    ]);
+
+    $this->drupalGet($node->toUrl('edit-form'));
+
+    $this->assertSession()->statusCodeEquals(404);
+
+  }
+
 }
