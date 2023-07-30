@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\omnipedia_core\Functional;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
@@ -56,6 +57,11 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
   protected WikiNodeTrackerInterface $wikiNodeTracker;
+
+  /**
+   * The local tasks HTML 'id' attribute slug.
+   */
+  protected const LOCAL_TASKS_BLOCK_ID = 'local-tasks-block';
 
   /**
    * {@inheritdoc}
@@ -117,8 +123,42 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     $this->wikiNodeMainPage->isMainPage($this->mainPageNode);
 
     $this->drupalPlaceBlock('local_tasks_block', [
-      'region' => 'content', 'id' => 'local-tasks-block',
+      'region' => 'content', 'id' => self::LOCAL_TASKS_BLOCK_ID,
     ]);
+
+  }
+
+  /**
+   * Assert that a local task with the provided Url is present on the page.
+   *
+   * @param \Drupal\Core\Url $url
+   */
+  protected function assertHasLocalTask(Url $url): void {
+
+    // @see \Drupal\Core\Utility\LinkGenerator::generate()
+    //   'data-drupal-link-system-path' attributes are generated here using
+    //   Url::getInternalPath() so we use the same method to build our selector.
+    $this->assertSession()->elementExists('css',
+      '#block-' . self::LOCAL_TASKS_BLOCK_ID . ' ' .
+      'a[data-drupal-link-system-path="' . $url->getInternalPath() . '"]'
+    );
+
+  }
+
+  /**
+   * Assert that a local task with the provided Url is not present on the page.
+   *
+   * @param \Drupal\Core\Url $url
+   */
+  protected function assertNotHasLocalTask(Url $url): void {
+
+    // @see \Drupal\Core\Utility\LinkGenerator::generate()
+    //   'data-drupal-link-system-path' attributes are generated here using
+    //   Url::getInternalPath() so we use the same method to build our selector.
+    $this->assertSession()->elementNotExists('css',
+      '#block-' . self::LOCAL_TASKS_BLOCK_ID . ' ' .
+      'a[data-drupal-link-system-path="' . $url->getInternalPath() . '"]'
+    );
 
   }
 
@@ -136,14 +176,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->drupalGet($node->toUrl());
 
-    // @see \Drupal\Core\Utility\LinkGenerator::generate()
-    //   'data-drupal-link-system-path' attributes are generated here using
-    //   Url::getInternalPath() so we use the same method to build our selector.
-    $this->assertSession()->elementExists(
-      'css', '#block-local-tasks-block a[data-drupal-link-system-path="' .
-        $node->toUrl('edit-form')->getInternalPath() .
-      '"]'
-    );
+    $this->assertHasLocalTask($node->toUrl('edit-form'));
 
     /** @var \Drupal\user\RoleInterface */
     $anonymousRole = $this->roleStorage->load(RoleInterface::ANONYMOUS_ID);
@@ -154,11 +187,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->drupalGet($node->toUrl());
 
-    $this->assertSession()->elementNotExists(
-      'css', '#block-local-tasks-block a[data-drupal-link-system-path="' .
-        $node->toUrl('edit-form')->getInternalPath() .
-      '"]'
-    );
+    $this->assertNotHasLocalTask($node->toUrl('edit-form'));
 
   }
 
@@ -201,11 +230,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->drupalGet('');
 
-    $this->assertSession()->elementNotExists(
-      'css', '#block-local-tasks-block a[data-drupal-link-system-path="' .
-        $this->mainPageNode->toUrl('edit-form')->getInternalPath() .
-      '"]'
-    );
+    $this->assertNotHasLocalTask($this->mainPageNode->toUrl('edit-form'));
 
     $user = $this->drupalCreateUser([
       'access content',
@@ -216,11 +241,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->drupalGet('');
 
-    $this->assertSession()->elementExists(
-      'css', '#block-local-tasks-block a[data-drupal-link-system-path="' .
-        $this->mainPageNode->toUrl('edit-form')->getInternalPath() .
-      '"]'
-    );
+    $this->assertHasLocalTask($this->mainPageNode->toUrl('edit-form'));
 
   }
 
