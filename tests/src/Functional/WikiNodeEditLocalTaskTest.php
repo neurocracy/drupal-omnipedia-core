@@ -42,21 +42,21 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
    *
    * @var \Drupal\node\NodeInterface
    */
-  protected NodeInterface $mainPageNode;
+  protected readonly NodeInterface $mainPageNode;
 
   /**
    * The Omnipedia wiki node main page service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
    */
-  protected WikiNodeMainPageInterface $wikiNodeMainPage;
+  protected readonly WikiNodeMainPageInterface $wikiNodeMainPage;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
    * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
-  protected WikiNodeTrackerInterface $wikiNodeTracker;
+  protected readonly WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * The local tasks HTML 'id' attribute slug.
