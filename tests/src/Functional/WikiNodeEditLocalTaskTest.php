@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\omnipedia_core\Functional;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
@@ -12,7 +13,6 @@ use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
-use Drupal\user\RoleStorageInterface;
 
 /**
  * Tests for wiki node 'Edit' local task visibility.
@@ -31,11 +31,11 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
   protected readonly ConfigFactoryInterface $configFactory;
 
   /**
-   * The Drupal user role entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\user\RoleStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected readonly RoleStorageInterface $roleStorage;
+  protected readonly EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The configured main page wiki node.
@@ -85,6 +85,8 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->configFactory = $this->container->get('config.factory');
 
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
+
     $this->wikiNodeMainPage = $this->container->get(
       'omnipedia.wiki_node_main_page'
     );
@@ -92,10 +94,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     $this->wikiNodeTracker = $this->container->get(
       'omnipedia.wiki_node_tracker'
     );
-
-    $this->roleStorage = $this->container->get(
-      'entity_type.manager'
-    )->getStorage('user_role');
 
     /** @var \Drupal\node\NodeInterface */
     $this->mainPageNode = $this->drupalCreateNode([
@@ -179,7 +177,9 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     $this->assertHasLocalTask($node->toUrl('edit-form'));
 
     /** @var \Drupal\user\RoleInterface */
-    $anonymousRole = $this->roleStorage->load(RoleInterface::ANONYMOUS_ID);
+    $anonymousRole = $this->entityTypeManager->getStorage('user_role')->load(
+      RoleInterface::ANONYMOUS_ID,
+    );
 
     $anonymousRole->revokePermission('access content');
 
@@ -208,7 +208,9 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     /** @var \Drupal\user\RoleInterface */
-    $anonymousRole = $this->roleStorage->load(RoleInterface::ANONYMOUS_ID);
+    $anonymousRole = $this->entityTypeManager->getStorage('user_role')->load(
+      RoleInterface::ANONYMOUS_ID,
+    );
 
     $anonymousRole->revokePermission('access content');
 

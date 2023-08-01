@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
-use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 
@@ -32,11 +31,11 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
   protected AccountProxyInterface $currentUser;
 
   /**
-   * The Drupal node entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\node\NodeStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected NodeStorageInterface $nodeStorage;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs this service object; saves dependencies.
@@ -53,11 +52,11 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
   public function __construct(
     AccountSwitcherInterface    $accountSwitcher,
     AccountProxyInterface       $currentUser,
-    EntityTypeManagerInterface  $entityTypeManager
+    EntityTypeManagerInterface  $entityTypeManager,
   ) {
-    $this->accountSwitcher  = $accountSwitcher;
-    $this->currentUser      = $currentUser;
-    $this->nodeStorage      = $entityTypeManager->getStorage('node');
+    $this->accountSwitcher    = $accountSwitcher;
+    $this->currentUser        = $currentUser;
+    $this->entityTypeManager  = $entityTypeManager;
   }
 
   /**
@@ -86,7 +85,7 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
     $this->accountSwitcher->switchTo($user);
 
     /** @var \Drupal\Core\Entity\Query\QueryInterface The node count query; note that this obeys access checking for the current user. */
-    $query = ($this->nodeStorage->getQuery())
+    $query = ($this->entityTypeManager->getStorage('node')->getQuery())
       ->condition('type', Node::getWikiNodeType())
       ->accessCheck(true)
       ->count();
