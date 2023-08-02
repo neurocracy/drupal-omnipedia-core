@@ -82,12 +82,14 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
     }
 
     // Switch over to the provided user account for access checking.
-    $this->accountSwitcher->switchTo($user);
+    // $this->accountSwitcher->switchTo($user);
 
     /** @var \Drupal\Core\Entity\Query\QueryInterface The node count query; note that this obeys access checking for the current user. */
     $query = ($this->entityTypeManager->getStorage('node')->getQuery())
       ->condition('type', Node::getWikiNodeType())
       ->accessCheck(true)
+      ->addMetaData('account', $user)
+      ->addTag('node_access')
       ->count();
 
     /** @var int */
@@ -98,7 +100,7 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
 
     // Switch back to the current user if we were provided a user to test access
     // for.
-    $this->accountSwitcher->switchBack();
+    // $this->accountSwitcher->switchBack();
 
     return $return;
 
