@@ -7,11 +7,12 @@ namespace Drupal\omnipedia_core\Entity;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
+use Drupal\node\NodeInterface as CoreNodeInterface;
 
 /**
  * Omnipedia node entity interface.
  */
-interface NodeInterface {
+interface NodeInterface extends CoreNodeInterface {
 
   /**
    * Inject dependencies.
