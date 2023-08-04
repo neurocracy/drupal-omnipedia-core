@@ -57,7 +57,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
   }
 
   /**
-   * Data provider for testResolveNodeValid().
+   * Data provider for testResolveNodeValid() / testResolveWikiNodeValid().
    *
    * Note that it doesn't seem possible to create nodes in a data provider
    * method because PHPUnit seems to invoke this before the Drupal services
@@ -110,7 +110,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
   }
 
   /**
-   * Data provider for testResolveNodeInvalid().
+   * Data provider for testResolveNodeInvalid() / testResolveWikiNodeInvalid().
    *
    * This returns various data types that are technically valid types for
    * WikiNodeResolverInterface::resolveNode() but that cannot be resolved to an
@@ -138,6 +138,65 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
     $this->assertNull(
       $this->wikiNodeResolver->resolveNode($data),
+    );
+
+  }
+
+  /**
+   * Test the resolveWikiNode() method with valid values.
+   *
+   * @dataProvider resolveNodeValidProvider
+   */
+  public function testResolveWikiNodeValid(
+    string $methodName, array $arguments,
+  ): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    $node = \call_user_func_array([$this, $methodName], $arguments);
+
+    // Split asserts based on whether this is a wiki node or a different content
+    // type, as the latter is expected to always return null from this method.
+    if ($methodName === 'drupalCreateWikiNode') {
+
+      $this->assertSame(
+        $node, $this->wikiNodeResolver->resolveWikiNode($node),
+      );
+
+      $this->assertEquals(
+        $node->nid->getString(),
+        $this->wikiNodeResolver->resolveWikiNode($node)->nid->getString(),
+      );
+
+      $this->assertEquals(
+        (int) $node->nid->getString(),
+        (int) $this->wikiNodeResolver->resolveWikiNode($node)->nid->getString(),
+      );
+
+    } else {
+
+      $this->assertNull($this->wikiNodeResolver->resolveWikiNode($node));
+
+      $this->assertNull($this->wikiNodeResolver->resolveWikiNode(
+        $node->nid->getString(),
+      ));
+
+      $this->assertNull($this->wikiNodeResolver->resolveWikiNode(
+        (int) $node->nid->getString(),
+      ));
+
+    }
+
+  }
+
+  /**
+   * Test the resolveWikiNode() method with invalid values.
+   *
+   * @dataProvider resolveNodeInvalidProvider
+   */
+  public function testResolveWikiNodeInvalid(mixed $data): void {
+
+    $this->assertNull(
+      $this->wikiNodeResolver->resolveWikiNode($data),
     );
 
   }
