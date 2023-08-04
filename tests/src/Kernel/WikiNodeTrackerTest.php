@@ -226,7 +226,8 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
     $data[1]['untrack'] = [5, 6, 7];
 
-    // Remove this whole date since it won't have any node IDs left in in.
+    // Remove this whole date since it'll be empty and thus not present in the
+    // data returned by the wiki node tracker.
     unset($data[1]['expected']['dates']['2049-09-30']);
 
     unset(
