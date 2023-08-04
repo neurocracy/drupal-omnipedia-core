@@ -213,4 +213,51 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   }
 
+  /**
+   * Test the isWikiNode() method with valid node values.
+   *
+   * @dataProvider resolveNodeValidProvider
+   */
+  public function testIsWikiNodeValid(
+    string $methodName, array $arguments,
+  ): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    $node = \call_user_func_array([$this, $methodName], $arguments);
+
+    /** @var bool True if a wiki node and false otherwise. */
+    $expected = ($methodName === 'drupalCreateWikiNode' ? true : false);
+
+    $this->assertEquals(
+      $expected,
+      $this->wikiNodeResolver->isWikiNode($node),
+    );
+
+    $this->assertEquals(
+      $expected,
+      $this->wikiNodeResolver->isWikiNode($node->nid->getString()),
+    );
+
+    $this->assertEquals(
+      $expected,
+      $this->wikiNodeResolver->isWikiNode((int) $node->nid->getString()),
+    );
+
+  }
+
+
+  /**
+   * Test the isWikiNode() method with invalid (non-node) values.
+   *
+   * @dataProvider resolveNodeInvalidProvider
+   */
+  public function testIsWikiNodeInvalid(mixed $data): void {
+
+    $this->assertEquals(
+      false,
+      $this->wikiNodeResolver->isWikiNode($data),
+    );
+
+  }
+
 }
