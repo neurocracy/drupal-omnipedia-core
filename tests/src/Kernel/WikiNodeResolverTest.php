@@ -77,6 +77,18 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
       ['method' => 'drupalCreateNode',      'arguments' => [
         ['type' => 'page'],
       ]],
+      ['method' => 'drupalCreateWikiNode',  'arguments' => [
+        [], '2049-09-28',
+      ]],
+      ['method' => 'drupalCreateWikiNode',  'arguments' => [
+        [], '2049-09-29',
+      ]],
+      ['method' => 'drupalCreateWikiNode',  'arguments' => [
+        [], '2049-09-30',
+      ]],
+      ['method' => 'drupalCreateNode',      'arguments' => [
+        ['type' => 'page'],
+      ]],
     ];
 
   }
