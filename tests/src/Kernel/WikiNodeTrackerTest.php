@@ -109,6 +109,88 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
           ],
           [
             'nid' => 5, 'title' => 'Page 1', 'date' => '2049-09-30',
+            'status' => WikiNodeInterface::NOT_PUBLISHED,
+          ],
+          [
+            'nid' => 6, 'title' => 'Page 2', 'date' => '2049-09-30',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+          [
+            'nid' => 7, 'title' => 'Page 3', 'date' => '2049-09-30',
+            'status' => WikiNodeInterface::NOT_PUBLISHED,
+          ],
+          [
+            'nid' => 8, 'title' => 'Page 1', 'date' => '2049-10-01',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+          [
+            'nid' => 9, 'title' => 'Page 2', 'date' => '2049-10-01',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+          [
+            'nid' => 10, 'title' => 'Page 3', 'date' => '2049-10-01',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+        ],
+        'expected' => [
+          'dates' => [
+            '2049-09-28' => ['1',  '2'],
+            '2049-09-29' => ['3',  '4'],
+            '2049-09-30' => ['5',  '6',  '7'],
+            '2049-10-01' => ['8',  '9',  '10'],
+          ],
+          'nodes' => [
+            1  => ['title' => 'Page 1', 'date' => '2049-09-28', 'published' => false],
+            2  => ['title' => 'Page 2', 'date' => '2049-09-28', 'published' => false],
+
+            3  => ['title' => 'Page 1', 'date' => '2049-09-29', 'published' => true],
+            4  => ['title' => 'Page 2', 'date' => '2049-09-29', 'published' => true],
+
+            5  => ['title' => 'Page 1', 'date' => '2049-09-30', 'published' => false],
+            6  => ['title' => 'Page 2', 'date' => '2049-09-30', 'published' => true],
+            7  => ['title' => 'Page 3', 'date' => '2049-09-30', 'published' => false],
+
+            8  => ['title' => 'Page 1', 'date' => '2049-10-01', 'published' => true],
+            9  => ['title' => 'Page 2', 'date' => '2049-10-01', 'published' => true],
+            10 => ['title' => 'Page 3', 'date' => '2049-10-01', 'published' => true],
+          ],
+          'titles' => [
+            1   => 'Page 1',
+            2   => 'Page 2',
+
+            3   => 'Page 1',
+            4   => 'Page 2',
+
+            5   => 'Page 1',
+            6   => 'Page 2',
+            7   => 'Page 3',
+
+            8   => 'Page 1',
+            9   => 'Page 2',
+            10  => 'Page 3',
+          ],
+        ],
+      ],
+      [
+        'node_values' => [
+          [
+            'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
+            'status' => WikiNodeInterface::NOT_PUBLISHED,
+          ],
+          [
+            'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
+            'status' => WikiNodeInterface::NOT_PUBLISHED,
+          ],
+          [
+            'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+          [
+            'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
+            'status' => WikiNodeInterface::PUBLISHED,
+          ],
+          [
+            'nid' => 5, 'title' => 'Page 1', 'date' => '2049-09-30',
             'status' => WikiNodeInterface::PUBLISHED,
           ],
           [
@@ -240,6 +322,21 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
       $data[1]['expected']['titles'][5],
       $data[1]['expected']['titles'][6],
       $data[1]['expected']['titles'][7],
+    );
+
+    $data[2]['untrack'] = [6, 10];
+
+    $data[2]['expected']['dates']['2049-09-30'] = ['5', '7'];
+    $data[2]['expected']['dates']['2049-10-01'] = ['8', '9'];
+
+    unset(
+      $data[2]['expected']['nodes'][6],
+      $data[2]['expected']['nodes'][10],
+    );
+
+    unset(
+      $data[2]['expected']['titles'][6],
+      $data[2]['expected']['titles'][10],
     );
 
     return $data;
