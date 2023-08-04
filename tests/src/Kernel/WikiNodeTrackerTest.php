@@ -203,6 +203,49 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
   }
 
   /**
+   * Data provider for tracking and then untracking wiki node data.
+   *
+   * @return array
+   *
+   * @todo Rework this to only explicitly set the 'untrack' array and automate
+   *   the rest based on the values in there for each set.
+   *
+   * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#data-providers
+   */
+  public function untrackWikiNodeDataProvider(): array {
+
+    $data = $this->trackWikiNodeDataProvider();
+
+    $data[0]['untrack'] = [4];
+
+    $data[0]['expected']['dates']['2049-09-29'] = ['3'];
+
+    unset($data[0]['expected']['nodes'][4]);
+
+    unset($data[0]['expected']['titles'][4]);
+
+    $data[1]['untrack'] = [5, 6, 7];
+
+    // Remove this whole date since it won't have any node IDs left in in.
+    unset($data[1]['expected']['dates']['2049-09-30']);
+
+    unset(
+      $data[1]['expected']['nodes'][5],
+      $data[1]['expected']['nodes'][6],
+      $data[1]['expected']['nodes'][7],
+    );
+
+    unset(
+      $data[1]['expected']['titles'][5],
+      $data[1]['expected']['titles'][6],
+      $data[1]['expected']['titles'][7],
+    );
+
+    return $data;
+
+  }
+
+  /**
    * Test tracking and then retrieving data tracked by the wiki node tracker.
    *
    * @dataProvider trackWikiNodeDataProvider
@@ -219,6 +262,47 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
       ], $values['date']);
 
       $this->wikiNodeTracker->trackWikiNode($wikiNode);
+
+    }
+
+    $this->assertEquals(
+      $expected, $this->wikiNodeTracker->getTrackedWikiNodeData(),
+    );
+
+  }
+
+  /**
+   * Test tracking and untracking via the wiki node tracker.
+   *
+   * @dataProvider untrackWikiNodeDataProvider
+   */
+  public function testUntrackWikiNodes(
+    array $nodeValues, array $expected, array $untrack,
+  ): void {
+
+    foreach ($nodeValues as $values) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $wikiNode = $this->drupalCreateWikiNode([
+        'nid'     => $values['nid'],
+        'title'   => $values['title'],
+        'status'  => $values['status'],
+      ], $values['date']);
+
+      $this->wikiNodeTracker->trackWikiNode($wikiNode);
+
+    }
+
+    $nodeStorage = $this->container->get('entity_type.manager')->getStorage(
+      'node'
+    );
+
+    foreach ($untrack as $nid) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      $wikiNode = $nodeStorage->load($nid);
+
+      $this->wikiNodeTracker->untrackWikiNode($wikiNode);
 
     }
 
