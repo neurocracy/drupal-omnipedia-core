@@ -26,14 +26,14 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
   /**
    * The Omnipedia wiki node resolver service.
    *
-   * @var Drupal\omnipedia_core\Service\WikiNodeResolverInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
    */
   protected readonly WikiNodeResolverInterface $wikiNodeResolver;
 
   /**
    * The Omnipedia wiki node tracker service.
    *
-   * @var Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
   protected readonly WikiNodeTrackerInterface $wikiNodeTracker;
 

@@ -20,7 +20,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
   /**
    * The Omnipedia wiki node tracker service.
    *
-   * @var Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
+   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
    */
   protected readonly WikiNodeTrackerInterface $wikiNodeTracker;
 
