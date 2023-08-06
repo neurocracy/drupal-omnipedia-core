@@ -6,6 +6,8 @@ namespace Drupal\omnipedia_core\EventSubscriber\Entity;
 
 use Drupal\core_event_dispatcher\EntityHookEvents;
 use Drupal\core_event_dispatcher\Event\Entity\EntityTypeBuildEvent;
+use Drupal\omnipedia_core\Entity\Node as WikiNode;
+use Drupal\omnipedia_core\Storage\NodeStorage as WikiNodeStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -35,12 +37,14 @@ class ReplaceNodeEntityClassesEventSubscriber implements EventSubscriberInterfac
    *   Our extended Node storage class that we replace the core one with.
    */
   public function replaceNodeEntityClasses(EntityTypeBuildEvent $event): void {
+
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] */
     $entityTypes = $event->getEntityTypes();
 
     $entityTypes['node']
-      ->setClass('Drupal\\omnipedia_core\\Entity\\Node')
-      ->setStorageClass('Drupal\\omnipedia_core\\Storage\\NodeStorage');
+      ->setClass(WikiNode::class)
+      ->setStorageClass(WikiNodeStorage::class);
+
   }
 
 }
