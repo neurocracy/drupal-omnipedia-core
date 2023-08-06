@@ -84,7 +84,6 @@ class Node extends CoreNode implements NodeInterface {
     WikiNodeRevisionInterface $wikiNodeRevision,
     WikiNodeViewedInterface   $wikiNodeViewed
   ): void {
-    // Save dependencies.
     $this->wikiNodeMainPage = $wikiNodeMainPage;
     $this->wikiNodeRevision = $wikiNodeRevision;
     $this->wikiNodeViewed   = $wikiNodeViewed;

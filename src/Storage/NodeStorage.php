@@ -74,7 +74,7 @@ class NodeStorage extends CoreNodeStorage {
   }
 
   /**
-   * Constructs a NodeStorage object.
+   * Constructs this storage object; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The entity type definition.
