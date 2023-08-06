@@ -29,21 +29,7 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
   protected const RECENT_WIKI_NODES_COUNT = 5;
 
   /**
-   * The Symfony session service.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected SessionInterface $session;
-
-  /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
-   * Constructs this service object.
+   * Constructs this service object; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
@@ -52,13 +38,9 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
    *   The Symfony session service.
    */
   public function __construct(
-    WikiNodeResolverInterface $wikiNodeResolver,
-    SessionInterface          $session
-  ) {
-    // Save dependencies.
-    $this->wikiNodeResolver = $wikiNodeResolver;
-    $this->session          = $session;
-  }
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+    protected readonly SessionInterface           $session,
+  ) {}
 
   /**
    * {@inheritdoc}

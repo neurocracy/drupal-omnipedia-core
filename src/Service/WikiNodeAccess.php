@@ -17,27 +17,6 @@ use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 class WikiNodeAccess implements WikiNodeAccessInterface {
 
   /**
-   * The Drupal account switcher service.
-   *
-   * @var \Drupal\Core\Session\AccountSwitcherInterface
-   */
-  protected AccountSwitcherInterface $accountSwitcher;
-
-  /**
-   * The current user proxy service.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected AccountProxyInterface $currentUser;
-
-  /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * Constructs this service object; saves dependencies.
    *
    * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
@@ -50,14 +29,10 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
    *   The Drupal entity type manager.
    */
   public function __construct(
-    AccountSwitcherInterface    $accountSwitcher,
-    AccountProxyInterface       $currentUser,
-    EntityTypeManagerInterface  $entityTypeManager,
-  ) {
-    $this->accountSwitcher    = $accountSwitcher;
-    $this->currentUser        = $currentUser;
-    $this->entityTypeManager  = $entityTypeManager;
-  }
+    protected readonly AccountSwitcherInterface   $accountSwitcher,
+    protected readonly AccountProxyInterface      $currentUser,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * {@inheritdoc}

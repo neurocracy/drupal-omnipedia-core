@@ -7,7 +7,6 @@ namespace Drupal\omnipedia_core\EventSubscriber\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\hook_event_dispatcher\HookEventDispatcherInterface;
 use Drupal\core_event_dispatcher\Event\Form\FormIdAlterEvent;
@@ -23,13 +22,6 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
   use StringTranslationTrait;
 
   /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
    * Event subscriber constructor; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
@@ -39,12 +31,9 @@ class SystemSiteInformationSettingsEventSubscriber implements EventSubscriberInt
    *   The Drupal string translation service.
    */
   public function __construct(
-    WikiNodeResolverInterface $wikiNodeResolver,
-    TranslationInterface      $stringTranslation
-  ) {
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-    $this->stringTranslation  = $stringTranslation;
-  }
+    protected readonly WikiNodeResolverInterface $wikiNodeResolver,
+    protected $stringTranslation,
+  ) {}
 
   /**
    * {@inheritdoc}

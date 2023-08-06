@@ -35,27 +35,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeStorage extends CoreNodeStorage {
 
   /**
-   * The Omnipedia wiki node main page service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
-   */
-  protected WikiNodeMainPageInterface $wikiNodeMainPage;
-
-  /**
-   * The Omnipedia wiki node revision service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
-   */
-  protected WikiNodeRevisionInterface $wikiNodeRevision;
-
-  /**
-   * The Omnipedia wiki node viewed service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeViewedInterface
-   */
-  protected WikiNodeViewedInterface $wikiNodeViewed;
-
-  /**
    * Instantiates a new instance of this entity handler.
    *
    * This is a factory method that returns a new instance of this object. The
@@ -142,19 +121,16 @@ class NodeStorage extends CoreNodeStorage {
     MemoryCacheInterface          $memoryCache,
     EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     EntityTypeManagerInterface    $entityTypeManager,
-    WikiNodeMainPageInterface     $wikiNodeMainPage,
-    WikiNodeRevisionInterface     $wikiNodeRevision,
-    WikiNodeViewedInterface       $wikiNodeViewed
+    protected readonly WikiNodeMainPageInterface  $wikiNodeMainPage,
+    protected readonly WikiNodeRevisionInterface  $wikiNodeRevision,
+    protected readonly WikiNodeViewedInterface    $wikiNodeViewed,
   ) {
+
     parent::__construct(
       $entityType, $database, $entityFieldManager, $cache, $languageManager,
       $memoryCache, $entityTypeBundleInfo, $entityTypeManager
     );
 
-    // Save dependencies.
-    $this->wikiNodeMainPage = $wikiNodeMainPage;
-    $this->wikiNodeRevision = $wikiNodeRevision;
-    $this->wikiNodeViewed   = $wikiNodeViewed;
   }
 
   /**

@@ -30,24 +30,14 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
   protected const WIKI_NODE_TITLES_STATE_KEY = 'omnipedia.wiki_node_titles';
 
   /**
-   * The Drupal state system manager.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected StateInterface $stateManager;
-
-  /**
-   * Constructs this service object.
+   * Constructs this service object; saves dependencies.
    *
    * @param \Drupal\Core\State\StateInterface $stateManager
    *   The Drupal state system manager.
    */
   public function __construct(
-    StateInterface $stateManager
-  ) {
-    // Save dependencies.
-    $this->stateManager = $stateManager;
-  }
+    protected readonly StateInterface $stateManager,
+  ) {}
 
   /**
    * {@inheritdoc}

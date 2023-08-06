@@ -15,21 +15,7 @@ use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 class WikiNodeRevision implements WikiNodeRevisionInterface {
 
   /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected WikiNodeTrackerInterface $wikiNodeTracker;
-
-  /**
-   * Constructs this service object.
+   * Constructs this service object; saves dependencies.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
@@ -38,13 +24,9 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
    *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    WikiNodeResolverInterface $wikiNodeResolver,
-    WikiNodeTrackerInterface  $wikiNodeTracker
-  ) {
-    // Save dependencies.
-    $this->wikiNodeResolver = $wikiNodeResolver;
-    $this->wikiNodeTracker  = $wikiNodeTracker;
-  }
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+    protected readonly WikiNodeTrackerInterface   $wikiNodeTracker,
+  ) {}
 
   /**
    * {@inheritdoc}

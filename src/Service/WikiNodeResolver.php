@@ -15,21 +15,7 @@ use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 class WikiNodeResolver implements WikiNodeResolverInterface {
 
   /**
-   * The Drupal entity type plug-in manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected WikiNodeTrackerInterface $wikiNodeTracker;
-
-  /**
-   * Constructs this service object.
+   * Constructs this service object; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type plug-in manager.
@@ -38,13 +24,9 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
    *   The Omnipedia wiki node tracker service.
    */
   public function __construct(
-    EntityTypeManagerInterface  $entityTypeManager,
-    WikiNodeTrackerInterface    $wikiNodeTracker
-  ) {
-    // Save dependencies.
-    $this->entityTypeManager  = $entityTypeManager;
-    $this->wikiNodeTracker    = $wikiNodeTracker;
-  }
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly WikiNodeTrackerInterface   $wikiNodeTracker,
+  ) {}
 
   /**
    * {@inheritdoc}

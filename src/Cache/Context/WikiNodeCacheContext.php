@@ -20,20 +20,6 @@ use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 class WikiNodeCacheContext implements CalculatedCacheContextInterface {
 
   /**
-   * The Drupal current route match service.
-   *
-   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
-   */
-  protected StackedRouteMatchInterface $currentRouteMatch;
-
-  /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
@@ -43,12 +29,9 @@ class WikiNodeCacheContext implements CalculatedCacheContextInterface {
    *   The Omnipedia wiki node resolver service.
    */
   public function __construct(
-    StackedRouteMatchInterface  $currentRouteMatch,
-    WikiNodeResolverInterface   $wikiNodeResolver
-  ) {
-    $this->currentRouteMatch  = $currentRouteMatch;
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-  }
+    protected readonly StackedRouteMatchInterface $currentRouteMatch,
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+  ) {}
 
   /**
    * {@inheritdoc}

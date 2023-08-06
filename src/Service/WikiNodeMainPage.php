@@ -32,56 +32,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   protected const MAIN_PAGES_CACHE_TAGS_ID = 'omnipedia.main_pages_tags';
 
   /**
-   * The default Drupal cache bin.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected CacheBackendInterface $cache;
-
-  /**
-   * The Drupal configuration object factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected ConfigFactoryInterface $configFactory;
-
-  /**
-   * The Drupal current route match service.
-   *
-   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
-   */
-  protected StackedRouteMatchInterface $currentRouteMatch;
-
-  /**
-   * The Drupal state system manager.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected StateInterface $stateManager;
-
-  /**
-   * The Omnipedia wiki node resolver service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeResolverInterface
-   */
-  protected WikiNodeResolverInterface $wikiNodeResolver;
-
-  /**
-   * The Omnipedia wiki node revision service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
-   */
-  protected WikiNodeRevisionInterface $wikiNodeRevision;
-
-  /**
-   * The Omnipedia wiki node route service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeRouteInterface
-   */
-  protected WikiNodeRouteInterface $wikiNodeRoute;
-
-  /**
-   * Constructs this service object.
+   * Constructs this service object; saves dependencies.
    *
    * @param Drupal\Core\Cache\CacheBackendInterface $cache
    *   The default Drupal cache bin.
@@ -105,23 +56,14 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    *   The Drupal state system manager.
    */
   public function __construct(
-    CacheBackendInterface       $cache,
-    ConfigFactoryInterface      $configFactory,
-    StackedRouteMatchInterface  $currentRouteMatch,
-    WikiNodeResolverInterface   $wikiNodeResolver,
-    WikiNodeRevisionInterface   $wikiNodeRevision,
-    WikiNodeRouteInterface      $wikiNodeRoute,
-    StateInterface              $stateManager
-  ) {
-    // Save dependencies.
-    $this->cache              = $cache;
-    $this->configFactory      = $configFactory;
-    $this->currentRouteMatch  = $currentRouteMatch;
-    $this->wikiNodeResolver   = $wikiNodeResolver;
-    $this->wikiNodeRevision   = $wikiNodeRevision;
-    $this->wikiNodeRoute      = $wikiNodeRoute;
-    $this->stateManager       = $stateManager;
-  }
+    protected readonly CacheBackendInterface      $cache,
+    protected readonly ConfigFactoryInterface     $configFactory,
+    protected readonly StackedRouteMatchInterface $currentRouteMatch,
+    protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
+    protected readonly WikiNodeRevisionInterface  $wikiNodeRevision,
+    protected readonly WikiNodeRouteInterface     $wikiNodeRoute,
+    protected readonly StateInterface             $stateManager,
+  ) {}
 
   /**
    * {@inheritdoc}
