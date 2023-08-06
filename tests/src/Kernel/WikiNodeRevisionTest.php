@@ -230,4 +230,50 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   }
 
+  /**
+   * Test the getWikiNodeRevision() method.
+   *
+   * @dataProvider getWikiNodeRevisionsDataProvider
+   */
+  public function testGetWikiNodeRevision(
+    array $nodesInfo, array $queries,
+  ): void {
+
+    foreach ($nodesInfo as $nodeInfo) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $wikiNode = $this->drupalCreateWikiNode([
+        'nid'     => $nodeInfo['nid'],
+        'title'   => $nodeInfo['title'],
+        'status'  => $nodeInfo['status'],
+      ], $nodeInfo['date']);
+
+      $this->wikiNodeTracker->trackWikiNode($wikiNode);
+
+    }
+
+    foreach ($queries as $item) {
+
+      // We stretch the definition of the 'expected' key slightly so that we can
+      // reuse the same data provider as self::testGetWikiNodeRevisions().
+      foreach ($item['expected'] as $nid => $expectedItem) {
+
+        /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+        $revision = $this->wikiNodeRevision->getWikiNodeRevision(
+          $item['query'], $expectedItem['date'],
+        );
+
+        // Assert that we got an object and not null.
+        $this->assertIsObject($revision);
+
+        // Assert that the node ID from the returned node object matches the
+        // expected nid.
+        $this->assertEquals($nid, (int) $revision->nid->getString());
+
+      }
+
+    }
+
+  }
+
 }
