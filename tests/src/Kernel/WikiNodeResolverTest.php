@@ -260,4 +260,99 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   }
 
+  /**
+   * Data provider for testNodeOrTitleToNids().
+   *
+   * @return array
+   */
+  public function nodeOrTitleToNidsProvider(): array {
+
+    return [
+      [
+        'nodes' => [
+          ['method' => 'drupalCreateWikiNode',  'arguments' => [
+            ['nid' => 1, 'title' => 'Wiki page 1'], '2049-09-28',
+          ]],
+          ['method' => 'drupalCreateWikiNode',  'arguments' => [
+            ['nid' => 2, 'title' => 'Wiki page 2'], '2049-09-28',
+          ]],
+          ['method' => 'drupalCreateWikiNode',  'arguments' => [
+            ['nid' => 3, 'title' => 'Wiki page 1'], '2049-09-29',
+          ]],
+          ['method' => 'drupalCreateWikiNode',  'arguments' => [
+            ['nid' => 4, 'title' => 'Wiki page 2'], '2049-09-29',
+          ]],
+          ['method' => 'drupalCreateNode',      'arguments' => [
+            ['nid' => 5, 'title' => 'Non-wiki-page 1', 'type' => 'page'],
+          ]],
+          ['method' => 'drupalCreateNode',      'arguments' => [
+            ['nid' => 6, 'title' => 'Non-wiki-page 2', 'type' => 'page'],
+          ]],
+        ],
+        'queries' => [
+          ['query' => 'Wiki page 1',      'expected' => [1, 3]],
+          ['query' => 'Wiki page 2',      'expected' => [2, 4]],
+          ['query' => 1,                  'expected' => [1, 3]],
+          ['query' => 2,                  'expected' => [2, 4]],
+          ['query' => 3,                  'expected' => [1, 3]],
+          ['query' => 4,                  'expected' => [2, 4]],
+          ['query' => 5,                  'expected' => []],
+          ['query' => 6,                  'expected' => []],
+          ['query' => 'Non-wiki-page 1',  'expected' => []],
+          ['query' => 'Non-wiki-page 2',  'expected' => []],
+        ],
+      ],
+    ];
+
+  }
+
+  /**
+   * Test the nodeOrTitleToNids() method.
+   *
+   * @dataProvider nodeOrTitleToNidsProvider
+   */
+  public function testNodeOrTitleToNids(
+    array $nodesInfo, array $queries,
+  ): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    $nodes = [];
+
+    foreach ($nodesInfo as $nodeInfo) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $node = \call_user_func_array(
+        [$this, $nodeInfo['method']], $nodeInfo['arguments'],
+      );
+
+      if ($nodeInfo['method'] === 'drupalCreateWikiNode') {
+        $this->wikiNodeTracker->trackWikiNode($node);
+      }
+
+      $nodes[(int) $node->nid->getString()] = $node;
+
+    }
+
+    foreach ($queries as $item) {
+
+      $this->assertEquals(
+        $item['expected'],
+        $this->wikiNodeResolver->nodeOrTitleToNids($item['query']),
+      );
+
+      if (!\is_int($item['query']) || !isset($nodes[$item['query']])) {
+        continue;
+      }
+
+      // Try passing a created node object if the query is an integer that
+      // equates to a key that exists in the $nodes array.
+      $this->assertEquals(
+        $item['expected'],
+        $this->wikiNodeResolver->nodeOrTitleToNids($nodes[$item['query']]),
+      );
+
+    }
+
+  }
+
 }
