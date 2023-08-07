@@ -254,6 +254,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
   public function testGetWikiNodeRevision(
     array $nodesInfo, array $queries,
   ): void {
+
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
