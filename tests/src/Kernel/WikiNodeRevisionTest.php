@@ -371,7 +371,6 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   }
 
-
   /**
    * Test the getWikiNodeRevision() method with non-existent data.
    *
