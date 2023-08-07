@@ -206,6 +206,9 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    $nodes = [];
+
     foreach ($nodesInfo as $nodeInfo) {
 
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
@@ -217,6 +220,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
       $this->wikiNodeTracker->trackWikiNode($wikiNode);
 
+      $nodes[(int) $wikiNode->nid->getString()] = $wikiNode;
+
     }
 
     foreach ($queries as $item) {
@@ -224,6 +229,17 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
       $this->assertEquals(
         $item['expected'],
         $this->wikiNodeRevision->getWikiNodeRevisions($item['query']),
+      );
+
+      // Try passing a created node object if the query is an integer that
+      // equates to a key that exists in the $nodes array.
+      if (!\is_int($item['query']) || !isset($nodes[$item['query']])) {
+        continue;
+      }
+
+      $this->assertEquals(
+        $item['expected'],
+        $this->wikiNodeRevision->getWikiNodeRevisions($nodes[$item['query']]),
       );
 
     }
@@ -238,6 +254,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
   public function testGetWikiNodeRevision(
     array $nodesInfo, array $queries,
   ): void {
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
@@ -249,6 +267,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
       ], $nodeInfo['date']);
 
       $this->wikiNodeTracker->trackWikiNode($wikiNode);
+
+      $nodes[(int) $wikiNode->nid->getString()] = $wikiNode;
 
     }
 
@@ -268,6 +288,22 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
         // Assert that the node ID from the returned node object matches the
         // expected nid.
+        $this->assertEquals($nid, (int) $revision->nid->getString());
+
+        // Try passing a created node object if the query is an integer that
+        // equates to a key that exists in the $nodes array.
+        if (!\is_int($item['query']) || !isset($nodes[$item['query']])) {
+          continue;
+        }
+
+        /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+        $revision = $this->wikiNodeRevision->getWikiNodeRevision(
+          $nodes[$item['query']], $expectedItem['date'],
+        );
+
+        // Assert that we got an object and not null.
+        $this->assertIsObject($revision);
+
         $this->assertEquals($nid, (int) $revision->nid->getString());
 
       }
