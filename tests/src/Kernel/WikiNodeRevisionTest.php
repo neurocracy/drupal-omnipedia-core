@@ -198,6 +198,64 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
   }
 
   /**
+   * Data provider for wiki node revision data.
+   *
+   * @return array
+   */
+  public function getWikiNodeRevisionsNonExistentDataProvider(): array {
+
+    /** @var array */
+    $data = $this->getWikiNodeRevisionsDataProvider();
+
+    $data[0]['queries'] = [
+      // These have valid queries but the dates won't be found.
+      ['query' => 'Page 1', 'date' => '2049-09-27'],
+      ['query' => 'Page 1', 'date' => '2049-09-30'],
+      ['query' => 'Page 2', 'date' => '2049-12-01'],
+      ['query' => 'Page 2', 'date' => '2049-10-01'],
+      ['query' => 1, 'date' => '2049-09-27'],
+      ['query' => 2, 'date' => '2049-09-27'],
+      ['query' => 3, 'date' => '2049-10-01'],
+      ['query' => 4, 'date' => '2049-10-02'],
+      // These have valid dates but the query won't be found.
+      ['query' => 5, 'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+      ['query' => 100, 'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+      ['query' => 'Page 3',  'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+    ];
+
+    $data[1]['queries'] = [
+      // These have valid queries but the dates won't be found.
+      ['query' => 'Page 1', 'date' => '2049-09-27'],
+      ['query' => 'Page 1', 'date' => '2049-10-02'],
+      ['query' => 'Page 2', 'date' => '2049-09-27'],
+      ['query' => 'Page 2', 'date' => '2049-10-02'],
+      ['query' => 1, 'date' => '2049-09-27'],
+      ['query' => 2, 'date' => '2049-09-27'],
+      ['query' => 3, 'date' => '2049-10-02'],
+      ['query' => 4, 'date' => '2049-10-02'],
+      // These have valid dates but the query won't be found.
+      ['query' => 50, 'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+      ['query' => 51, 'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+      ['query' => 'Page 100', 'date' => '2049-09-28',
+        'exception' => \InvalidArgumentException::class,
+      ],
+    ];
+
+    return $data;
+
+  }
+
+  /**
    * Test the getWikiNodeRevisions() method.
    *
    * @dataProvider getWikiNodeRevisionsDataProvider
@@ -308,6 +366,50 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
         $this->assertEquals($nid, (int) $revision->nid->getString());
 
       }
+
+    }
+
+  }
+
+
+  /**
+   * Test the getWikiNodeRevision() method with non-existent data.
+   *
+   * @dataProvider getWikiNodeRevisionsNonExistentDataProvider
+   */
+  public function testGetWikiNodeRevisionNonExistent(
+    array $nodesInfo, array $queries,
+  ): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    $nodes = [];
+
+    foreach ($nodesInfo as $nodeInfo) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $wikiNode = $this->drupalCreateWikiNode([
+        'nid'     => $nodeInfo['nid'],
+        'title'   => $nodeInfo['title'],
+        'status'  => $nodeInfo['status'],
+      ], $nodeInfo['date']);
+
+      $this->wikiNodeTracker->trackWikiNode($wikiNode);
+
+      $nodes[(int) $wikiNode->nid->getString()] = $wikiNode;
+
+    }
+
+    foreach ($queries as $item) {
+
+      // Some of these will throw an exception so expect the ones explicitly
+      // marked as such.
+      if (isset($item['exception'])) {
+        $this->expectException($item['exception']);
+      }
+
+      $this->assertNull($this->wikiNodeRevision->getWikiNodeRevision(
+        $item['query'], $item['date'],
+      ));
 
     }
 
