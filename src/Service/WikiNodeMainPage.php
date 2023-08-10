@@ -78,7 +78,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
 
     /** @var array */
     $mainPageNids = $this->wikiNodeResolver
-      ->nodeOrTitleToNids($this->getDefaultMainPage());
+      ->nodeOrTitleToNids($this->getDefault());
 
     return \in_array($node->nid->getString(), $mainPageNids);
   }
@@ -110,7 +110,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * @throws \UnexpectedValueException
    *   If the default main page has not been set.
    */
-  protected function getDefaultMainPage(): NodeInterface {
+  protected function getDefault(): NodeInterface {
 
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveNode(
@@ -155,7 +155,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   /**
    * {@inheritdoc}
    *
-   * @see $this->getDefaultMainPage()
+   * @see $this->getDefault()
    *   Loads the default main page.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface::getWikiNodeRevision()
@@ -164,7 +164,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   public function getMainPage(string $date): ?NodeInterface {
     try {
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
-      $default = $this->getDefaultMainPage();
+      $default = $this->getDefault();
 
     } catch (\Exception $exception) {
       return null;
@@ -194,7 +194,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
     // Fall back to the default main page if this date doesn't have one, to
     // avoid Drupal throwing an exception if we were to return an empty array.
     if (!($node instanceof NodeInterface)) {
-      $node = $this->getDefaultMainPage();
+      $node = $this->getDefault();
     }
 
     return ['node' => $node->nid->getString()];
@@ -218,7 +218,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
     /** @var array */
     $nids = $this->wikiNodeResolver->nodeOrTitleToNids(
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
-      $this->getDefaultMainPage()
+      $this->getDefault()
     );
 
     /** @var array */
