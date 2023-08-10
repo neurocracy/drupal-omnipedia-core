@@ -34,6 +34,14 @@ interface WikiNodeMainPageInterface {
   public function isCurrentRouteMainPage(): bool;
 
   /**
+   * Set the default main page.
+   *
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface|string|int $nodeOrNid
+   *   A wiki node entity or a node ID (nid) that can be resolved to one.
+   */
+  public function setDefault(NodeInterface|string|int $nodeOrNid): void;
+
+  /**
    * Update the default main page.
    *
    * This is intended to be called whenever the site front page has been

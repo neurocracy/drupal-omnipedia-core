@@ -170,6 +170,29 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function setDefault(NodeInterface|string|int $nodeOrNid): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    $node = $this->wikiNodeResolver->resolveWikiNode($nodeOrNid);
+
+    if (\is_null($node)) {
+
+      throw new \UnexpectedValueException(
+        'Could not resolve the provided value to a wiki node.',
+      );
+
+    }
+
+    $this->stateManager->set(
+      self::DEFAULT_MAIN_PAGE_STATE_KEY,
+      $node->nid->getString()
+    );
+
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @see $this->getDefaultMainPage()
    *   Loads the default main page as configured in the site configuration, so
