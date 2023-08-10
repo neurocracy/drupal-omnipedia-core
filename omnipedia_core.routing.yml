@@ -1,0 +1,9 @@
+omnipedia_core.wiki_node_title_autocomplete:
+  path: '/omnipedia/wiki-node-title-autocomplete'
+  defaults:
+    _controller: 'Drupal\omnipedia_core\Controller\WikiNodeTitleAutocompleteController::autocomplete'
+    _format: json
+  requirements:
+    _permission: 'administer nodes'
+  options:
+    _admin_route: true
