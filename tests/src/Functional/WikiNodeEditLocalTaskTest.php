@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Functional;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -22,13 +21,6 @@ use Drupal\user\RoleInterface;
  * @group omnipedia_core
  */
 class WikiNodeEditLocalTaskTest extends BrowserTestBase {
-
-  /**
-   * The Drupal configuration object factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected readonly ConfigFactoryInterface $configFactory;
 
   /**
    * The Drupal entity type manager.
@@ -83,8 +75,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     parent::setUp();
 
-    $this->configFactory = $this->container->get('config.factory');
-
     $this->entityTypeManager = $this->container->get('entity_type.manager');
 
     $this->wikiNodeMainPage = $this->container->get(
@@ -104,12 +94,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
       'field_date'  => '2049-10-01',
     ]);
 
-    /** @var \Drupal\Core\Config\Config */
-    $config = $this->configFactory->getEditable('system.site');
-
-    $config->set(
-      'page.front', $this->mainPageNode->toUrl()->toString()
-    )->save();
+    $this->wikiNodeMainPage->setDefault($this->mainPageNode);
 
     // Required so the main page service has data to pull in to correctly check
     // if the route is a main page.
@@ -241,7 +226,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $this->drupalLogin($user);
 
-    $this->drupalGet('');
+    $this->drupalGet($this->mainPageNode->toUrl());
 
     $this->assertHasLocalTask($this->mainPageNode->toUrl('edit-form'));
 
