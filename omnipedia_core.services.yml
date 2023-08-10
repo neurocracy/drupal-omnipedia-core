@@ -74,15 +74,6 @@ services:
     tags:
       - { name: 'event_subscriber' }
 
-  # Event subscriber to alter the site settings form.
-  omnipedia_core.form_system_site_information_settings_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Form\SystemSiteInformationSettingsEventSubscriber
-    arguments:
-      - '@omnipedia.wiki_node_resolver'
-      - '@string_translation'
-    tags:
-      - { name: 'event_subscriber' }
-
   # Event subscriber to record when a wiki node is viewed.
   omnipedia_core.kernel_wiki_node_viewed_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
