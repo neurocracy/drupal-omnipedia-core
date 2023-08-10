@@ -9,7 +9,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\Url;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
@@ -104,59 +103,30 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   }
 
   /**
-   * Get the default main page node as configured in the site configuration.
+   * Get the default main page node.
    *
    * @return \Drupal\omnipedia_core\Entity\NodeInterface
    *
    * @throws \UnexpectedValueException
-   *   Exception thrown when the configured front page is not a wiki node, if
-   *   Url::fromUserInput() returns a non-routed URL, or if a date cannot be
-   *   retrieved from the front page node.
+   *   If the default main page has not been set.
    */
   protected function getDefaultMainPage(): NodeInterface {
+
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveNode(
-      $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY)
+      $this->stateManager->get(self::DEFAULT_MAIN_PAGE_STATE_KEY),
     );
 
     if (\is_null($node)) {
-      /** @var \Drupal\Core\Url */
-      $urlObject = Url::fromUserInput(
-        $this->configFactory->get('system.site')->get('page.front')
+
+      throw new \UnexpectedValueException(
+        'No default main page has been set!',
       );
 
-      if (!$urlObject->isRouted()) {
-        throw new \UnexpectedValueException(
-          'The front page does not appear to point to an internal, routed URL.'
-        );
-      }
-
-      /** @var array */
-      $routeParameters = $urlObject->getRouteParameters();
-
-      if (empty($routeParameters['node'])) {
-        throw new \UnexpectedValueException(
-          'The front page does not appear to point to a node.'
-        );
-      }
-
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      $node = $this->wikiNodeResolver->resolveNode($routeParameters['node']);
-
-      if (\is_null($node)) {
-        throw new \UnexpectedValueException(
-          'Could not load a valid node from the front page configuration.'
-        );
-      }
     }
 
-    // Save to state storage.
-    $this->stateManager->set(
-      self::DEFAULT_MAIN_PAGE_STATE_KEY,
-      $node->nid->getString()
-    );
-
     return $node;
+
   }
 
   /**
@@ -186,9 +156,7 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
    * {@inheritdoc}
    *
    * @see $this->getDefaultMainPage()
-   *   Loads the default main page as configured in the site configuration, so
-   *   that we can retrieve its title - this avoids having to hard-code the
-   *   title or any other information about it.
+   *   Loads the default main page.
    *
    * @see \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface::getWikiNodeRevision()
    *   Loads the indicated revision if the $date parameter is not 'default'.
@@ -253,9 +221,8 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
       $this->getDefaultMainPage()
     );
 
-    // Initial tags array containing the front page config tag.
     /** @var array */
-    $tags = ['config:system.site.page.front'];
+    $tags = [];
 
     foreach ($nids as $nid) {
       /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
