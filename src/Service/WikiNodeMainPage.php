@@ -162,15 +162,6 @@ class WikiNodeMainPage implements WikiNodeMainPageInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateDefaultMainPage(): void {
-    // This just deletes the existing state data, so that it's recreated next
-    // time the default main page is fetched.
-    $this->stateManager->delete(self::DEFAULT_MAIN_PAGE_STATE_KEY);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setDefault(NodeInterface|string|int $nodeOrNid): void {
 
     /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
