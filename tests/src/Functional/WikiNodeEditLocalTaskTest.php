@@ -100,11 +100,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     // if the route is a main page.
     $this->wikiNodeTracker->trackWikiNode($this->mainPageNode);
 
-    // Required to trigger the main page service to update the list of main
-    // pages so that it matches when the 'Edit' local task event subscriber
-    // checks if the current route is a main page.
-    $this->wikiNodeMainPage->isMainPage($this->mainPageNode);
-
     $this->drupalPlaceBlock('local_tasks_block', [
       'region' => 'content', 'id' => self::LOCAL_TASKS_BLOCK_ID,
     ]);
