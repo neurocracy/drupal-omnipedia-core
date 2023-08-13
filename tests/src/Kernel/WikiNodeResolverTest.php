@@ -68,7 +68,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    *
    * @return array
    */
-  public function resolveNodeValidProvider(): array {
+  public static function resolveNodeValidProvider(): array {
 
     return [
       ['method' => 'drupalCreateWikiNode',  'arguments' => [
@@ -130,7 +130,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    *
    * @return array
    */
-  public function resolveNodeInvalidProvider(): array {
+  public static function resolveNodeInvalidProvider(): array {
 
     return [
       [new \stdClass()],
@@ -265,7 +265,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    *
    * @return array
    */
-  public function nodeOrTitleToNidsProvider(): array {
+  public static function nodeOrTitleToNidsProvider(): array {
 
     return [
       [

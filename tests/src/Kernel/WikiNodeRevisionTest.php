@@ -54,7 +54,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
    *
    * @return array
    */
-  public function getWikiNodeRevisionsDataProvider(): array {
+  public static function getWikiNodeRevisionsDataProvider(): array {
 
     return [
       [
@@ -202,10 +202,10 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
    *
    * @return array
    */
-  public function getWikiNodeRevisionsNonExistentDataProvider(): array {
+  public static function getWikiNodeRevisionsNonExistentDataProvider(): array {
 
     /** @var array */
-    $data = $this->getWikiNodeRevisionsDataProvider();
+    $data = static::getWikiNodeRevisionsDataProvider();
 
     $data[0]['queries'] = [
       // These have valid queries but the dates won't be found.

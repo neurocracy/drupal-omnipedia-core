@@ -47,7 +47,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
    *
    * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#data-providers
    */
-  public function trackWikiNodeDataProvider(): array {
+  public static function trackWikiNodeDataProvider(): array {
 
     return [
       [
@@ -294,9 +294,9 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
    *
    * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#data-providers
    */
-  public function untrackWikiNodeDataProvider(): array {
+  public static function untrackWikiNodeDataProvider(): array {
 
-    $data = $this->trackWikiNodeDataProvider();
+    $data = static::trackWikiNodeDataProvider();
 
     $data[0]['untrack'] = [4];
 
