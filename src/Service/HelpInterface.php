@@ -9,6 +9,10 @@ use Drupal\Component\Render\MarkupInterface;
 
 /**
  * Omnipedia help service interface.
+ *
+ * @deprecated in 5.x and is removed from 6.x. Use @link
+ *   https://github.com/neurocracy/omnipedia/issues/39 the Hux module @endlink
+ *   for object-oriented hooks instead.
  */
 interface HelpInterface {
 
