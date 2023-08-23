@@ -24,16 +24,6 @@ discontinued in favour of a more accurately named module, e.g.
 
 ----
 
-# Planned improvements
-
-* [Move the `omnipedia.wiki_node_access` service to the `omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-core/issues/3).
-
-* [Move the `field_hide_from_search` configuration to the `omnipedia_search` module if possible](https://github.com/neurocracy/drupal-omnipedia-core/issues/2).
-
-* [Refactor the Node class as an entity bundle class](https://github.com/neurocracy/drupal-omnipedia-core/issues/4).
-
-----
-
 # Requirements
 
 * [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
