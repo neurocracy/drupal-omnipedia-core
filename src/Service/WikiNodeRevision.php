@@ -102,4 +102,59 @@ class WikiNodeRevision implements WikiNodeRevisionInterface {
     return null;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreviousRevision(NodeInterface $node): ?NodeInterface {
+
+    /** @var array */
+    $revisions = $this->getWikiNodeRevisions($node);
+
+    // If no revisions are found, this is probably not a wiki node so return
+    // here.
+    if (count($revisions) === 0) {
+      return null;
+    }
+
+    /** @var int */
+    $nid = (int) $node->nid->getString();
+
+    // If there's only one revision or this node is the first revision, there is
+    // no previous revision.
+    if (
+      count($revisions) === 1 ||
+      \reset($revisions)['nid'] === $nid
+    ) {
+      return null;
+    }
+
+    foreach ($revisions as $data) {
+
+      if ($data['nid'] !== $nid) {
+        \next($revisions);
+
+        continue;
+      }
+
+      /** @var array */
+      $previousNodeData = \prev($revisions);
+
+      return $this->getWikiNodeRevision(
+        $node, $previousNodeData['date'],
+      );
+
+    }
+
+    // If we get to this point, nothing worked so return null.
+    return null;
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasPreviousRevision(NodeInterface $node): bool {
+    return \is_object($this->getPreviousRevision($node));
+  }
+
 }

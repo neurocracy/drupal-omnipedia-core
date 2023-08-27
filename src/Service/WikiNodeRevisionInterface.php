@@ -91,4 +91,31 @@ interface WikiNodeRevisionInterface {
     NodeInterface|int|string $nodeOrTitle, string $date
   ): ?NodeInterface;
 
+  /**
+   * Get the previous wiki node revision of a provided node if one exists.
+   *
+   * Note that this does not do any access checking, so code that calls this is
+   * responsible for not displaying information about nodes the user does not
+   * have access to. For an example of how to accomplish this, see
+   * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
+   *
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   *   A node object.
+   *
+   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
+   *   The node object of the previous revision if it exists or null otherwise.
+   */
+  public function getPreviousRevision(NodeInterface $node): ?NodeInterface;
+
+  /**
+   * Whether a provided wiki node has a previous revision.
+   *
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   *   A node object.
+   *
+   * @return boolean
+   *   True if there is a previous revision or false otherwise.
+   */
+  public function hasPreviousRevision(NodeInterface $node): bool;
+
 }
