@@ -6,6 +6,7 @@ namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 
@@ -83,7 +84,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
     $node = $this->resolveNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
-      return $node->isWikiNode();
+      return $node->getType() === WikiNodeInfo::TYPE;
     } else {
       return false;
     }
