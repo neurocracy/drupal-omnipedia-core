@@ -7,6 +7,7 @@ namespace Drupal\Tests\omnipedia_core\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Storage\NodeStorage as WikiNodeStorage;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 
@@ -85,10 +86,10 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
   ): WikiNodeInterface {
 
     if (!empty($date)) {
-      $values[WikiNode::getWikiNodeDateFieldName()] = $date;
+      $values[WikiNodeInfo::DATE_FIELD] = $date;
     }
 
-    $values['type'] = WikiNode::getWikiNodeType();
+    $values['type'] = WikiNodeInfo::TYPE;
 
     return $this->drupalCreateNode($values);
 

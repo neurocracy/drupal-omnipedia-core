@@ -7,7 +7,7 @@ namespace Drupal\Tests\omnipedia_core\Functional;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
-use Drupal\omnipedia_core\Entity\Node as WikiNode;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -88,7 +88,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     /** @var \Drupal\node\NodeInterface */
     $this->mainPageNode = $this->drupalCreateNode([
       'title'       => $this->randomMachineName(8),
-      'type'        => WikiNode::getWikiNodeType(),
+      'type'        => WikiNodeInfo::TYPE,
       'status'      => NodeInterface::PUBLISHED,
       // A date is required for the wiki node tracker to function correctly.
       'field_date'  => '2049-10-01',
@@ -148,7 +148,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     /** @var \Drupal\node\NodeInterface */
     $node = $this->drupalCreateNode([
       'title'   => $this->randomMachineName(8),
-      'type'    => WikiNode::getWikiNodeType(),
+      'type'    => WikiNodeInfo::TYPE,
       'status'  => NodeInterface::PUBLISHED,
     ]);
 
@@ -179,7 +179,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     /** @var \Drupal\node\NodeInterface */
     $node = $this->drupalCreateNode([
       'title'   => $this->randomMachineName(8),
-      'type'    => WikiNode::getWikiNodeType(),
+      'type'    => WikiNodeInfo::TYPE,
       'status'  => NodeInterface::PUBLISHED,
     ]);
 
@@ -216,7 +216,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
     $user = $this->drupalCreateUser([
       'access content',
-      'edit any ' . WikiNode::getWikiNodeType() . ' content',
+      'edit any ' . WikiNodeInfo::TYPE . ' content',
     ]);
 
     $this->drupalLogin($user);

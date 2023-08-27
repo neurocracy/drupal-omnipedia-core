@@ -7,7 +7,7 @@ namespace Drupal\omnipedia_core\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\omnipedia_core\Entity\Node;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,7 +61,7 @@ class WikiNodeTitleAutocompleteController implements ContainerInjectionInterface
 
     /** @var string[] */
     $nids = ($this->entityTypeManager->getStorage('node')->getQuery())
-      ->condition('type', Node::getWikiNodeType())
+      ->condition('type', WikiNodeInfo::TYPE)
       ->condition('title', $input, 'CONTAINS')
       ->accessCheck(true)
       ->execute();

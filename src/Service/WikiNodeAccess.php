@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
-use Drupal\omnipedia_core\Entity\Node;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeAccessInterface;
 
 /**
@@ -61,7 +61,7 @@ class WikiNodeAccess implements WikiNodeAccessInterface {
 
     /** @var \Drupal\Core\Entity\Query\QueryInterface The node count query; note that this obeys access checking for the current user. */
     $query = ($this->entityTypeManager->getStorage('node')->getQuery())
-      ->condition('type', Node::getWikiNodeType())
+      ->condition('type', WikiNodeInfo::TYPE)
       ->accessCheck(true)
       ->count();
 
