@@ -16,14 +16,10 @@ use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
  * This extends the Drupal core node class to add methods to interact with wiki
  * nodes.
  *
- * @see \Drupal\node\Entity\Node
- *   Drupal core node class.
- *
- * @see https://www.drupal.org/node/3191609
- *   Drupal core 9.3 added support for per-bundle entity classes.
- *
- * @todo Refactor this as a bundle entity class which is supported as of Drupal
- *   core 9.3.
+ * @deprecated in 5.x and is removed from 6.x. Use @link
+ *   https://github.com/neurocracy/drupal-omnipedia-core/issues/4 the Typed
+ *   Entity repository @endlink to wrap node objects and use those methods
+ *   instead.
  */
 class Node extends CoreNode implements NodeInterface {
 

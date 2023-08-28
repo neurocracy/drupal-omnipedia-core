@@ -11,6 +11,11 @@ use Drupal\node\NodeInterface as CoreNodeInterface;
 
 /**
  * Omnipedia node entity interface.
+ *
+ * @deprecated in 5.x and is removed from 6.x. Use @link
+ *   https://github.com/neurocracy/drupal-omnipedia-core/issues/4 the Typed
+ *   Entity repository @endlink to wrap node objects and use those methods
+ *   instead.
  */
 interface NodeInterface extends CoreNodeInterface {
 

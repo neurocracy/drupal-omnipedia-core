@@ -31,6 +31,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see https://www.drupal.org/project/developer_suite
  *   Partially inspired by this module that provides its own NodeStorage class
  *   to allow setting custom classes per node type or other entity bundles.
+ *
+ * @deprecated in 5.x and is removed from 6.x. Use @link
+ *   https://github.com/neurocracy/drupal-omnipedia-core/issues/4 the Typed
+ *   Entity repository @endlink to wrap node objects and use those methods
+ *   instead.
  */
 class NodeStorage extends CoreNodeStorage {
 
