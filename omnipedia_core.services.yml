@@ -43,6 +43,7 @@ services:
     class: Drupal\omnipedia_core\Service\WikiNodeTracker
     arguments:
       - '@state'
+      - '@Drupal\typed_entity\RepositoryManager'
 
   # Wiki node viewed service.
   omnipedia.wiki_node_viewed:

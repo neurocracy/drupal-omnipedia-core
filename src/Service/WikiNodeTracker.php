@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\State\StateInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
+use Drupal\typed_entity\EntityWrapperInterface;
 
 /**
  * The Omnipedia wiki node tracker service.
@@ -34,9 +35,13 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
    *
    * @param \Drupal\Core\State\StateInterface $stateManager
    *   The Drupal state system manager.
+   *
+   * @param \Drupal\typed_entity\EntityWrapperInterface $typedEntityRepositoryManager
+   *   The Typed Entity repository manager.
    */
   public function __construct(
-    protected readonly StateInterface $stateManager,
+    protected readonly StateInterface         $stateManager,
+    protected readonly EntityWrapperInterface $typedEntityRepositoryManager,
   ) {}
 
   /**
@@ -191,8 +196,11 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
     /** @var string */
     $nodeTitle = $node->getTitle();
 
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+    $wrappedNode = $this->typedEntityRepositoryManager->wrap($node);
+
     /** @var string */
-    $nodeDate = $node->getWikiNodeDate();
+    $nodeDate = $wrappedNode->getWikiDate();
 
     $data['nodes'][$nid] = [
       'date'      => $nodeDate,
