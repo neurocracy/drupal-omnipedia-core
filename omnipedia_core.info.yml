@@ -15,6 +15,7 @@ dependencies:
   - drupal:user
   - hook_event_dispatcher:core_event_dispatcher
   - omnipedia_access:omnipedia_access
+  - typed_entity:typed_entity
 
 config_devel:
   install:
