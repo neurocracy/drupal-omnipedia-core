@@ -27,4 +27,32 @@ class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface {
     return null;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getWikiRevisions(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWikiRevision(string $date): ?NodeWithWikiInfoInterface {
+    return null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPreviousWikiRevision(): ?NodeWithWikiInfoInterface {
+    return null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasPreviousWikiRevision(): bool {
+    return false;
+  }
+
 }
