@@ -414,4 +414,97 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   }
 
+  /**
+   * Data provider for testPreviousRevision().
+   *
+   * @return array
+   */
+  public static function previousRevisionDataProvider(): array {
+
+    /** @var array */
+    $data = static::getWikiNodeRevisionsDataProvider();
+
+    $data[0]['queries'] = [
+      ['query' => 1, 'expected' => null],
+      ['query' => 2, 'expected' => null],
+      ['query' => 3, 'expected' => 1],
+      ['query' => 4, 'expected' => 2],
+    ];
+
+    $data[1]['queries'] = [
+      ['query' => 1, 'expected' => null],
+      ['query' => 2, 'expected' => null],
+      ['query' => 3, 'expected' => 1],
+      ['query' => 4, 'expected' => 2],
+      ['query' => 5, 'expected' => 3],
+      ['query' => 6, 'expected' => 4],
+      ['query' => 7, 'expected' => null],
+      ['query' => 8, 'expected' => 5],
+      ['query' => 9, 'expected' => 6],
+      ['query' => 10, 'expected' => 7],
+    ];
+
+    return $data;
+
+  }
+
+  /**
+   * Test the getPreviousRevision() and hasPreviousRevision() methods.
+   *
+   * @dataProvider previousRevisionDataProvider
+   */
+  public function testPreviousRevision(
+    array $nodesInfo, array $queries,
+  ): void {
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    $nodes = [];
+
+    foreach ($nodesInfo as $nodeInfo) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $node = $this->drupalCreateWikiNode([
+        'nid'     => $nodeInfo['nid'],
+        'title'   => $nodeInfo['title'],
+        'status'  => $nodeInfo['status'],
+      ], $nodeInfo['date']);
+
+      $this->wikiNodeTracker->trackWikiNode($node);
+
+      $nodes[(int) $node->id()] = $node;
+
+    }
+
+    foreach ($queries as $item) {
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $currentNode = $nodes[$item['query']];
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      $previousNode = $this->wikiNodeRevision->getPreviousRevision($currentNode);
+
+      if (\is_int($item['expected'])) {
+
+        $this->assertIsObject($previousNode);
+
+        $this->assertEquals($item['expected'], (int) $previousNode->id());
+
+        $this->assertTrue($this->wikiNodeRevision->hasPreviousRevision(
+          $currentNode,
+        ));
+
+      } else {
+
+        $this->assertNull($previousNode);
+
+        $this->assertFalse($this->wikiNodeRevision->hasPreviousRevision(
+          $currentNode,
+        ));
+
+      }
+
+    }
+
+  }
+
 }
