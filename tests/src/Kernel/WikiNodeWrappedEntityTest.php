@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\omnipedia_core\WrappedEntities\Node;
 use Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface;
 use Drupal\omnipedia_core\WrappedEntities\WikiNode;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\typed_entity\EntityWrapperInterface;
 
 /**
@@ -25,12 +28,21 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
     createContentType as drupalCreateContentType;
   }
 
+  use WikiNodeProvidersTrait;
+
   /**
    * The Typed Entity repository manager.
    *
    * @var \Drupal\typed_entity\EntityWrapperInterface
    */
   protected readonly EntityWrapperInterface $typedEntityRepositoryManager;
+
+  /**
+   * The Omnipedia wiki node revision service.
+   *
+   * @var \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface
+   */
+  protected readonly WikiNodeRevisionInterface $wikiNodeRevision;
 
   /**
    * The Omnipedia wiki node tracker service.
@@ -45,6 +57,10 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
   protected function setUp(): void {
 
     parent::setUp();
+
+    $this->wikiNodeRevision = $this->container->get(
+      'omnipedia.wiki_node_revision'
+    );
 
     $this->wikiNodeTracker = $this->container->get(
       'omnipedia.wiki_node_tracker'
@@ -124,6 +140,85 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
       $this->assertFalse($wrappedNode->isWikiNode());
 
       $this->assertNull($wrappedNode->getWikiDate());
+
+    }
+
+  }
+
+  /**
+   * Test the various revisions methods against their service counterparts.
+   *
+   * @todo Add asserts for NodeWithWikiInfoInterface::getWikiRevision().
+   */
+  public function testRevisions(): void {
+
+    $parameters = static::generateWikiNodeValues();
+
+    /** @var \Drupal\node\NodeInterface[] Node objects keyed by their nid. */
+    $nodes = [];
+
+    foreach ($parameters as $values) {
+
+      /** @var \Drupal\node\NodeInterface */
+      $node = $this->drupalCreateNode($values);
+      // $node = \call_user_func_array([$this, 'drupalCreateNode'], $values);
+
+      $this->wikiNodeTracker->trackWikiNode($node);
+
+      $nodes[(int) $node->id()] = $node;
+
+    }
+
+    foreach ($nodes as $nid => $node) {
+
+       /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+      $wrappedNode = $this->typedEntityRepositoryManager->wrap($node);
+
+      $revisions = $this->wikiNodeRevision->getWikiNodeRevisions($node);
+
+      // Just in case.
+      $this->assertNotCount(0, $revisions);
+
+      $this->assertEquals($revisions, $wrappedNode->getWikiRevisions());
+
+      // @todo Add asserts for NodeWithWikiInfoInterface::getWikiRevision().
+
+      /** @var \Drupal\node\NodeInterface|null */
+      $previousService = $this->wikiNodeRevision->getPreviousRevision($node);
+
+       /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface|null */
+      $previousWrapped = $wrappedNode->getPreviousWikiRevision();
+
+      if (\is_object($previousService)) {
+
+        $this->assertIsObject($previousWrapped);
+
+        $this->assertInstanceOf(
+          NodeWithWikiInfoInterface::class, $previousWrapped,
+        );
+
+        $this->assertEquals(
+          $previousService->id(),
+          $previousWrapped->getEntity()->id(),
+        );
+
+        $this->assertEquals(
+          $previousService->get(WikiNodeInfo::DATE_FIELD)->getString(),
+          $previousWrapped->getWikiDate(),
+        );
+
+      } else {
+
+        $this->assertNull($previousService);
+
+        $this->assertNull($previousWrapped);
+
+      }
+
+      $this->assertEquals(
+        $this->wikiNodeRevision->hasPreviousRevision($node),
+        $wrappedNode->hasPreviousWikiRevision(),
+      );
 
     }
 
