@@ -159,7 +159,6 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
       /** @var \Drupal\node\NodeInterface */
       $node = $this->drupalCreateNode($values);
-      // $node = \call_user_func_array([$this, 'drupalCreateNode'], $values);
 
       $this->wikiNodeTracker->trackWikiNode($node);
 
@@ -169,7 +168,7 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
     foreach ($nodes as $nid => $node) {
 
-       /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+      /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
       $wrappedNode = $this->typedEntityRepositoryManager->wrap($node);
 
       $revisions = $this->wikiNodeRevision->getWikiNodeRevisions($node);
