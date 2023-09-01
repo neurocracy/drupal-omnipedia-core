@@ -93,7 +93,7 @@ class WikiNode extends Node {
 
     if (\is_object($node)) {
 
-      return $this->respositoryManager->wrap($node);
+      return $this->repositoryManager->wrap($node);
 
     }
 
