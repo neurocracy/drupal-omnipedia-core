@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Unit;
 
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\Tests\UnitTestCase;
 
@@ -87,9 +88,6 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
    * Tests the generateWikiNodeValues() method return values.
    *
    * @covers ::generateWikiNodeValues
-   *
-   * @todo Add asserts for the actual return structure to ensure it's the
-   *   expected format.
    */
   public function testGenerateWikiNodeValues(): void {
 
@@ -133,8 +131,22 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
     $this->assertNotCount(0, $parameters);
 
-    // @todo Add asserts for the actual return structure to ensure it's the
-    //   expected format.
+    foreach ($parameters as $i => $values) {
+
+      $this->assertIsArray($values);
+
+      $this->assertArrayHasKey('type', $values);
+
+      // @todo Change this if/when we implement randomly adding other content
+      //   types to the generated values. This currently acts to enforce the
+      //   expectation that the wiki node type is always the only one.
+      $this->assertEquals(WikiNodeInfo::TYPE, $values['type']);
+
+      $this->assertArrayHasKey('title', $values);
+
+      $this->assertArrayHasKey(WikiNodeInfo::DATE_FIELD, $values);
+
+    }
 
   }
 
