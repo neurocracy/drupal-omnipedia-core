@@ -14,6 +14,16 @@ use Drupal\typed_entity\WrappedEntities\WrappedEntityBase;
 class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface {
 
   /**
+   * Get the wrapped node entity identifier (nid).
+   *
+   * @return string
+   *   The wrapped node identifier (nid) as a string.
+   */
+  public function id(): string {
+    return $this->getEntity()->id();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isWikiNode(): bool {

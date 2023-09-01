@@ -191,7 +191,7 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
         $this->assertEquals(
           $revisionInfo['nid'],
-          $revisionWrapped->getEntity()->id(),
+          $revisionWrapped->id(),
         );
 
         $this->assertEquals(
@@ -217,7 +217,7 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
         $this->assertEquals(
           $previousService->id(),
-          $previousWrapped->getEntity()->id(),
+          $previousWrapped->id(),
         );
 
         $this->assertEquals(
