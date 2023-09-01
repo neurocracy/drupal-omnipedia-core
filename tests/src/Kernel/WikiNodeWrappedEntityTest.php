@@ -147,8 +147,6 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the various revisions methods against their service counterparts.
-   *
-   * @todo Add asserts for NodeWithWikiInfoInterface::getWikiRevision().
    */
   public function testRevisions(): void {
 
@@ -181,7 +179,28 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
       $this->assertEquals($revisions, $wrappedNode->getWikiRevisions());
 
-      // @todo Add asserts for NodeWithWikiInfoInterface::getWikiRevision().
+      // Test all of the revisions returned from the service against what the
+      // wrapped entity provides us to assert they're equivalent.
+      foreach ($revisions as $revisionNid => $revisionInfo) {
+
+         /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+        $revisionWrapped = $wrappedNode->getWikiRevision($revisionInfo['date']);
+
+        $this->assertInstanceOf(
+          NodeWithWikiInfoInterface::class, $revisionWrapped,
+        );
+
+        $this->assertEquals(
+          $revisionInfo['nid'],
+          $revisionWrapped->getEntity()->id(),
+        );
+
+        $this->assertEquals(
+          $revisionInfo['date'],
+          $revisionWrapped->getWikiDate(),
+        );
+
+      }
 
       /** @var \Drupal\node\NodeInterface|null */
       $previousService = $this->wikiNodeRevision->getPreviousRevision($node);
