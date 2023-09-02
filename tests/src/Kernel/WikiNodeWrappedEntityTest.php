@@ -81,26 +81,24 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
    */
   public static function contentTypesProvider(): array {
 
-    return [
-      ['method' => 'drupalCreateWikiNode',  'arguments' => [
-        [], '2049-09-28',
-      ]],
-      ['method' => 'drupalCreateNode',      'arguments' => [
-        ['type' => 'page'],
-      ]],
-      ['method' => 'drupalCreateWikiNode',  'arguments' => [
-        [], '2049-09-28',
-      ]],
-      ['method' => 'drupalCreateWikiNode',  'arguments' => [
-        [], '2049-09-29',
-      ]],
-      ['method' => 'drupalCreateWikiNode',  'arguments' => [
-        [], '2049-09-30',
-      ]],
-      ['method' => 'drupalCreateNode',      'arguments' => [
-        ['type' => 'page'],
-      ]],
-    ];
+    $data = [];
+
+    $generatedValues = static::generateWikiNodeValues(limit: 10);
+
+    foreach ($generatedValues as $values) {
+
+      $data[] = [$values];
+
+      // Roughly 1 out of 3 times, insert a non-wiki 'page' node type.
+      if (\rand(1, 3) !== 1) {
+
+        $data[] = [['type' => 'page']];
+
+      }
+
+    }
+
+    return $data;
 
   }
 
@@ -109,25 +107,25 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
    *
    * @dataProvider contentTypesProvider
    */
-  public function testContentTypes(
-    string $methodName, array $arguments,
-  ): void {
+  public function testContentTypes(array $values): void {
 
     /** @var \Drupal\node\NodeInterface */
-    $node = \call_user_func_array([$this, $methodName], $arguments);
+    $node = $this->drupalCreateNode($values);
 
     /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
     $wrappedNode = $this->typedEntityRepositoryManager->wrap($node);
 
     $this->assertInstanceOf(NodeWithWikiInfoInterface::class, $wrappedNode);
 
-    if ($methodName === 'drupalCreateWikiNode') {
+    if ($values['type'] === WikiNodeInfo::TYPE) {
 
       $this->assertInstanceOf(WikiNode::class, $wrappedNode);
 
       $this->assertTrue($wrappedNode->isWikiNode());
 
-      $this->assertEquals($arguments[1], $wrappedNode->getWikiDate());
+      $this->assertEquals(
+        $values[WikiNodeInfo::DATE_FIELD], $wrappedNode->getWikiDate(),
+      );
 
     } else {
 
