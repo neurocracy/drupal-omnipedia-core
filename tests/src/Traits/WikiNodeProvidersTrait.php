@@ -92,7 +92,7 @@ trait WikiNodeProvidersTrait {
     /** @var \Drupal\Component\Utility\Random */
     $randomizer = new Random();
 
-    for ($i=0; $i < $count; $i++) {
+    for ($i = 0; $i < $count; $i++) {
       $titles[] = $randomizer->name($length);
     }
 
