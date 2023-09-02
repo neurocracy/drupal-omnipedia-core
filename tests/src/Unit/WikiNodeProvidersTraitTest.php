@@ -150,4 +150,27 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   }
 
+  /**
+   * Tests the generateWikiNodeValues() method's $limit parameter.
+   *
+   * @covers ::generateWikiNodeValues
+   */
+  public function testGenerateWikiNodeValuesLimit(): void {
+
+    $maxDates = count(static::generateWikiDates());
+
+    foreach ([0, 1, 3, 5, 8, 10, 12, 20, 100] as $limit) {
+
+      // The expected count. This ensures that whatever value we use is never
+      // higher than the maximum number of dates available.
+      $expectedCount = \min([$limit, $maxDates]);
+
+      $parameters = static::generateWikiNodeValues(limit: $expectedCount);
+
+      $this->assertCount($expectedCount, $parameters);
+
+    }
+
+  }
+
 }

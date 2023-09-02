@@ -113,7 +113,12 @@ trait WikiNodeProvidersTrait {
    * @param string[] $titles
    *   Array of unique string titles.
    *
+   * @param int $limit
+   *   The maximum number of items in the return array.
+   *
    * @return array
+   *   An array containing zero or more arrays; each array is a valid $values
+   *   parameter for NodeCreationTrait::createNode().
    *
    * @throws \ArgumentCountError
    *   If $counts is provided but $dates is not, or if $titles is provided but
@@ -127,6 +132,7 @@ trait WikiNodeProvidersTrait {
     array $dates  = [],
     array $counts = [],
     array $titles = [],
+    int   $limit = -1,
   ): array {
 
     if (count($dates) === 0 && count($counts) > 0) {
@@ -157,11 +163,24 @@ trait WikiNodeProvidersTrait {
       $titles = static::generateWikiNodeTitles(\end($counts));
     }
 
+    if ($limit > -1) {
+      $max = \min([$limit, \end($counts)]);
+    } else {
+      $max = \end($counts);
+    }
+
     $parameters = [];
 
     foreach ($counts as $date => $count) {
 
       for ($i = 0; $i < $count; $i++) {
+
+        // Break out of both loops if we've hit the maximum number of parameters
+        // requested.
+        if (count($parameters) === $max) {
+          break 2;
+        }
+
         $parameters[] = [
           'type'  => WikiNodeInfo::TYPE,
           'title' => $titles[$i],
