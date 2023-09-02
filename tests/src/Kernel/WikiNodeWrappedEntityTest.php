@@ -162,7 +162,7 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
       $this->wikiNodeTracker->trackWikiNode($node);
 
-      $nodes[(int) $node->id()] = $node;
+      $nodes[$node->id()] = $node;
 
     }
 
