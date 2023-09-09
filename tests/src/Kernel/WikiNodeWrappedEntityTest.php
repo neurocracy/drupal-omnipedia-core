@@ -90,7 +90,7 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
       $data[] = [$values];
 
       // Roughly 1 out of 3 times, insert a non-wiki 'page' node type.
-      if (\rand(1, 3) !== 1) {
+      if (\rand(1, 3) === 1) {
 
         $data[] = [['type' => 'page']];
 
