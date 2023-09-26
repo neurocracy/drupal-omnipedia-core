@@ -9,7 +9,6 @@ use Drupal\core_event_dispatcher\Event\Menu\MenuLocalTasksAlterEvent;
 use Drupal\core_event_dispatcher\MenuHookEvents;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,16 +26,12 @@ class WikiNodeEditLocalTaskEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    */
   public function __construct(
     protected readonly StackedRouteMatchInterface $currentRouteMatch,
     protected readonly AccountProxyInterface      $currentUser,
-    protected readonly WikiNodeMainPageInterface  $wikiNodeMainPage,
     protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
   ) {}
 
@@ -87,15 +82,14 @@ class WikiNodeEditLocalTaskEventSubscriber implements EventSubscriberInterface {
     }
 
     // Only show the local task if the current user has view access to the node
-    // in question and the node isn't a main page node.
+    // in question.
     //
     // @see \Drupal\omnipedia_core\EventSubscriber\Omnipedia\WikiNodeEditNotFoundToAccessDeniedEventSubscriber::onAccessDeniedToNotFound()
     //   Must be kept in sync with this with the same logic.
     $data['tabs'][0][
       'entity.node.edit_form'
     ]['#access'] = AccessResult::allowedIf(
-      $node->access('view', $this->currentUser) === true &&
-      !$this->wikiNodeMainPage->isMainPage($node)
+      $node->access('view', $this->currentUser) === true,
     );
 
   }

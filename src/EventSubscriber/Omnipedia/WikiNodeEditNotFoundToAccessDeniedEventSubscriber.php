@@ -8,7 +8,6 @@ use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\omnipedia_access\Event\Omnipedia\AccessDeniedToNotFoundEvent;
 use Drupal\omnipedia_access\Event\Omnipedia\AccessDeniedToNotFoundEventsInterface;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -27,16 +26,12 @@ class WikiNodeEditNotFoundToAccessDeniedEventSubscriber implements EventSubscrib
    * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
    *   The Omnipedia wiki node main page service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
    */
   public function __construct(
     protected readonly StackedRouteMatchInterface $currentRouteMatch,
     protected readonly AccountProxyInterface      $currentUser,
-    protected readonly WikiNodeMainPageInterface  $wikiNodeMainPage,
     protected readonly WikiNodeResolverInterface  $wikiNodeResolver,
   ) {}
 
@@ -76,13 +71,12 @@ class WikiNodeEditNotFoundToAccessDeniedEventSubscriber implements EventSubscrib
     }
 
     // Only show the 403 if the current user has view access to the node in
-    // question and the node isn't a main page node.
+    // question.
     //
     // @see \Drupal\omnipedia_core\EventSubscriber\Menu\WikiNodeEditLocalTaskEventSubscriber::onMenuLocalTaskAlter()
     //   Must be kept in sync with this with the same logic.
     if (
-      $node->access('view', $this->currentUser) === false ||
-      $this->wikiNodeMainPage->isMainPage($node)
+      $node->access('view', $this->currentUser) === false
     ) {
       return;
     }

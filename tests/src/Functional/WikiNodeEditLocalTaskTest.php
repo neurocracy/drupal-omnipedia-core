@@ -8,8 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
-use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
@@ -28,27 +26,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected readonly EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The configured main page wiki node.
-   *
-   * @var \Drupal\node\NodeInterface
-   */
-  protected readonly NodeInterface $mainPageNode;
-
-  /**
-   * The Omnipedia wiki node main page service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface
-   */
-  protected readonly WikiNodeMainPageInterface $wikiNodeMainPage;
-
-  /**
-   * The Omnipedia wiki node tracker service.
-   *
-   * @var \Drupal\omnipedia_core\Service\WikiNodeTrackerInterface
-   */
-  protected readonly WikiNodeTrackerInterface $wikiNodeTracker;
 
   /**
    * The local tasks HTML 'id' attribute slug.
@@ -76,29 +53,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     parent::setUp();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
-
-    $this->wikiNodeMainPage = $this->container->get(
-      'omnipedia.wiki_node_main_page'
-    );
-
-    $this->wikiNodeTracker = $this->container->get(
-      'omnipedia.wiki_node_tracker'
-    );
-
-    /** @var \Drupal\node\NodeInterface */
-    $this->mainPageNode = $this->drupalCreateNode([
-      'title'       => $this->randomMachineName(8),
-      'type'        => WikiNodeInfo::TYPE,
-      'status'      => NodeInterface::PUBLISHED,
-      // A date is required for the wiki node tracker to function correctly.
-      'field_date'  => '2049-10-01',
-    ]);
-
-    $this->wikiNodeMainPage->setDefault($this->mainPageNode);
-
-    // Required so the main page service has data to pull in to correctly check
-    // if the route is a main page.
-    $this->wikiNodeTracker->trackWikiNode($this->mainPageNode);
 
     $this->drupalPlaceBlock('local_tasks_block', [
       'region' => 'content', 'id' => self::LOCAL_TASKS_BLOCK_ID,
@@ -197,42 +151,6 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
     $anonymousRole->trustData()->save();
 
     $this->drupalGet($node->toUrl('edit-form'));
-
-    $this->assertSession()->statusCodeEquals(404);
-
-  }
-
-  /**
-   * Test that the 'Edit' local task only appear on main pages for real editors.
-   *
-   * I.e. it's hidden for users without real edit access but shown as expected
-   * for users who actually have access to edit the page.
-   */
-  public function testMainPageNoEditLocalTask(): void {
-
-    $this->drupalGet('');
-
-    $this->assertNotHasLocalTask($this->mainPageNode->toUrl('edit-form'));
-
-    $user = $this->drupalCreateUser([
-      'access content',
-      'edit any ' . WikiNodeInfo::TYPE . ' content',
-    ]);
-
-    $this->drupalLogin($user);
-
-    $this->drupalGet($this->mainPageNode->toUrl());
-
-    $this->assertHasLocalTask($this->mainPageNode->toUrl('edit-form'));
-
-  }
-
-  /**
-   * Test that the main page node edit route shows not found.
-   */
-  public function testMainPageEditRouteNotFound(): void {
-
-    $this->drupalGet($this->mainPageNode->toUrl('edit-form'));
 
     $this->assertSession()->statusCodeEquals(404);
 
