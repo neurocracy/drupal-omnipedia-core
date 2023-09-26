@@ -23,8 +23,8 @@ class WikiNodeEditLocalTaskEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $currentRouteMatch
    *   The Drupal current route match service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The Drupal current user account proxy service.
    *
    * @param \Drupal\omnipedia_core\Service\WikiNodeResolverInterface $wikiNodeResolver
    *   The Omnipedia wiki node resolver service.
