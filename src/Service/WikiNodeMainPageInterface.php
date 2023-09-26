@@ -8,6 +8,9 @@ use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node main page service interface.
+ *
+ * @deprecated in 5.x and is removed from 6.x. Use the equivalent services in
+ *   the omnipedia_main_page module instead.
  */
 interface WikiNodeMainPageInterface {
 
