@@ -14,6 +14,10 @@ use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
  *
  * This allows for caching to vary on whether the current route is a wiki main
  * page.
+ *
+ * @deprecated in 5.x and is removed from 6.x. Use
+ *   \Drupal\omnipedia_main_page\Cache\Context\IsWikiMainPageCacheContext
+ *   instead.
  */
 class IsWikiMainPageCacheContext implements CalculatedCacheContextInterface {
 
