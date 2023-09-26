@@ -8,18 +8,6 @@ services:
       - '@current_user'
       - '@entity_type.manager'
 
-  # Wiki node main page service.
-  omnipedia.wiki_node_main_page:
-    class: Drupal\omnipedia_core\Service\WikiNodeMainPage
-    arguments:
-      - '@cache.default'
-      - '@config.factory'
-      - '@current_route_match'
-      - '@omnipedia.wiki_node_resolver'
-      - '@omnipedia.wiki_node_revision'
-      - '@omnipedia.wiki_node_route'
-      - '@state'
-
   # Wiki node resolver service.
   omnipedia.wiki_node_resolver:
     class: Drupal\omnipedia_core\Service\WikiNodeResolver
@@ -51,14 +39,6 @@ services:
     arguments:
       - '@omnipedia.wiki_node_resolver'
       - '@session'
-
-  # Is wiki main page cache context.
-  cache_context.omnipedia_is_wiki_main_page:
-    class: Drupal\omnipedia_core\Cache\Context\IsWikiMainPageCacheContext
-    arguments:
-      - '@omnipedia.wiki_node_main_page'
-    tags:
-      - { name: cache.context }
 
   # Wiki node cache context.
   cache_context.omnipedia_wiki_node:
