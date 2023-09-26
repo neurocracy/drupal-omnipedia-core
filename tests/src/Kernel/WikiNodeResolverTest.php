@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -102,7 +101,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
     string $methodName, array $arguments,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $node = \call_user_func_array([$this, $methodName], $arguments);
 
     $this->assertSame(
@@ -163,7 +162,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
     string $methodName, array $arguments,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $node = \call_user_func_array([$this, $methodName], $arguments);
 
     // Split asserts based on whether this is a wiki node or a different content
@@ -222,7 +221,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
     string $methodName, array $arguments,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $node = \call_user_func_array([$this, $methodName], $arguments);
 
     /** @var bool True if a wiki node and false otherwise. */
@@ -315,12 +314,12 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    /** @var \Drupal\node\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $node = \call_user_func_array(
         [$this, $nodeInfo['method']], $nodeInfo['arguments'],
       );

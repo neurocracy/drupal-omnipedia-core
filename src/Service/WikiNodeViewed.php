@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeViewedInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -46,7 +46,7 @@ class WikiNodeViewed implements WikiNodeViewedInterface {
    * {@inheritdoc}
    */
   public function addNode(NodeInterface|int|string $node): void {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->wikiNodeResolver->resolveWikiNode($node);
 
     // Return if this is not a wiki node.

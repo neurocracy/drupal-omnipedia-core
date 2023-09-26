@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Storage\NodeStorage as WikiNodeStorage;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -76,14 +76,14 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
    * @param string $date
    *   An optional wiki date.
    *
-   * @return \Drupal\omnipedia_core\Entity\NodeInterface
+   * @return \Drupal\node\NodeInterface
    *
    * @see \Drupal\Tests\node\Traits\NodeCreationTrait::createNode()
    *   We wrap this, setting the node type and date field value.
    */
   protected function drupalCreateWikiNode(
     array $values, string $date = ''
-  ): WikiNodeInterface {
+  ): NodeInterface {
 
     if (!empty($date)) {
       $values[WikiNodeInfo::DATE_FIELD] = $date;

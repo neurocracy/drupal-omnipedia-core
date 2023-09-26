@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * The Omnipedia wiki node viewed service interface.
@@ -14,7 +14,7 @@ interface WikiNodeViewedInterface {
   /**
    * Add a wiki node to a user's recently viewed session.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $node
+   * @param \Drupal\node\NodeInterface|int|string $node
    *   Either a node object or a numeric value (integer or string) that equates
    *   to an existing node ID (nid) to load.
    *

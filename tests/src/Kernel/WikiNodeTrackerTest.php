@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
 
@@ -54,19 +54,19 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
         'node_values' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
         ],
         'expected' => [
@@ -93,43 +93,43 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
         'node_values' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 5, 'title' => 'Page 1', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 6, 'title' => 'Page 2', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 7, 'title' => 'Page 3', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 8, 'title' => 'Page 1', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 9, 'title' => 'Page 2', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 10, 'title' => 'Page 3', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
         ],
         'expected' => [
@@ -175,59 +175,59 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
         'node_values' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 5, 'title' => 'Page 1', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 6, 'title' => 'Page 2', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 7, 'title' => 'Page 3', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 8, 'title' => 'Page 1', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 9, 'title' => 'Page 2', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 10, 'title' => 'Page 3', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 11, 'title' => 'Page 1', 'date' => '2049-10-02',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 12, 'title' => 'Page 2', 'date' => '2049-10-02',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 13, 'title' => 'Page 3', 'date' => '2049-10-02',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 14, 'title' => 'Page 4', 'date' => '2049-10-02',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
         ],
         'expected' => [
@@ -352,7 +352,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
     foreach ($nodeValues as $values) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $wikiNode = $this->drupalCreateWikiNode([
         'nid'     => $values['nid'],
         'title'   => $values['title'],
@@ -380,7 +380,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
     foreach ($nodeValues as $values) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $wikiNode = $this->drupalCreateWikiNode([
         'nid'     => $values['nid'],
         'title'   => $values['title'],
@@ -397,7 +397,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
     foreach ($untrack as $nid) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      /** @var \Drupal\node\NodeInterface|null */
       $wikiNode = $nodeStorage->load($nid);
 
       $this->wikiNodeTracker->untrackWikiNode($wikiNode);

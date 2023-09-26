@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_core\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
@@ -37,7 +37,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
       return $node;
 
     } else if (\is_numeric($node)) {
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      /** @var \Drupal\node\NodeInterface|null */
       return $this->entityTypeManager->getStorage('node')->load($node);
 
     } else {
@@ -56,7 +56,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
       $title = $nodeOrTitle;
 
     } else {
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      /** @var \Drupal\node\NodeInterface|null */
       $node = $this->resolveNode($nodeOrTitle);
 
       if ($node instanceof NodeInterface) {
@@ -80,7 +80,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
    * {@inheritdoc}
    */
   public function isWikiNode(mixed $node): bool {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->resolveNode($node);
 
     if (\is_object($node) && $node instanceof NodeInterface) {
@@ -94,7 +94,7 @@ class WikiNodeResolver implements WikiNodeResolverInterface {
    * {@inheritdoc}
    */
   public function resolveWikiNode(mixed $node): ?NodeInterface {
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+    /** @var \Drupal\node\NodeInterface|null */
     $node = $this->resolveNode($node);
 
     if ($this->isWikiNode($node)) {

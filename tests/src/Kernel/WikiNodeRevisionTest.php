@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
-use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
@@ -61,19 +61,19 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
         'node_values' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
         ],
         'queries' => [
@@ -107,43 +107,43 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
         'node_values' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 2, 'title' => 'Page 2', 'date' => '2049-09-28',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 3, 'title' => 'Page 1', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 4, 'title' => 'Page 2', 'date' => '2049-09-29',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 5, 'title' => 'Page 1', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 6, 'title' => 'Page 2', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 7, 'title' => 'Page 3', 'date' => '2049-09-30',
-            'status' => WikiNodeInterface::NOT_PUBLISHED,
+            'status' => NodeInterface::NOT_PUBLISHED,
           ],
           [
             'nid' => 8, 'title' => 'Page 1', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 9, 'title' => 'Page 2', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
           [
             'nid' => 10, 'title' => 'Page 3', 'date' => '2049-10-01',
-            'status' => WikiNodeInterface::PUBLISHED,
+            'status' => NodeInterface::PUBLISHED,
           ],
         ],
         'queries' => [
@@ -264,12 +264,12 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    /** @var \Drupal\node\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $wikiNode = $this->drupalCreateWikiNode([
         'nid'     => $nodeInfo['nid'],
         'title'   => $nodeInfo['title'],
@@ -313,12 +313,12 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    /** @var \Drupal\node\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $wikiNode = $this->drupalCreateWikiNode([
         'nid'     => $nodeInfo['nid'],
         'title'   => $nodeInfo['title'],
@@ -337,7 +337,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
       // reuse the same data provider as self::testGetWikiNodeRevisions().
       foreach ($item['expected'] as $nid => $expectedItem) {
 
-        /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+        /** @var \Drupal\node\NodeInterface|null */
         $revision = $this->wikiNodeRevision->getWikiNodeRevision(
           $item['query'], $expectedItem['date'],
         );
@@ -355,7 +355,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
           continue;
         }
 
-        /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+        /** @var \Drupal\node\NodeInterface|null */
         $revision = $this->wikiNodeRevision->getWikiNodeRevision(
           $nodes[$item['query']], $expectedItem['date'],
         );
@@ -380,12 +380,12 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    /** @var \Drupal\node\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $wikiNode = $this->drupalCreateWikiNode([
         'nid'     => $nodeInfo['nid'],
         'title'   => $nodeInfo['title'],
@@ -457,12 +457,12 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
     array $nodesInfo, array $queries,
   ): void {
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface[] The created node objects, keyed by their integer node IDs. */
+    /** @var \Drupal\node\NodeInterface[] The created node objects, keyed by their integer node IDs. */
     $nodes = [];
 
     foreach ($nodesInfo as $nodeInfo) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $node = $this->drupalCreateWikiNode([
         'nid'     => $nodeInfo['nid'],
         'title'   => $nodeInfo['title'],
@@ -477,10 +477,10 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
     foreach ($queries as $item) {
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $currentNode = $nodes[$item['query']];
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      /** @var \Drupal\node\NodeInterface|null */
       $previousNode = $this->wikiNodeRevision->getPreviousRevision($currentNode);
 
       if (\is_int($item['expected'])) {

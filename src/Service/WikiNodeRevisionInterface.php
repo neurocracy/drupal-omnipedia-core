@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * The Omnipedia wiki node revision service interface.
@@ -19,10 +19,10 @@ interface WikiNodeRevisionInterface {
    * have access to. For an example of how to accomplish this, see
    * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $nodeOrTitle
+   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
    *   Must be one of the following:
    *
-   *   - An instance of \Drupal\omnipedia_core\Entity\NodeInterface, i.e. a node
+   *   - An instance of \Drupal\node\NodeInterface, i.e. a node
    *     object.
    *
    *   - An integer or a numeric string that equates to a node ID (nid).
@@ -64,10 +64,10 @@ interface WikiNodeRevisionInterface {
    * have access to. For an example of how to accomplish this, see
    * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface|int|string $nodeOrTitle
+   * @param \Drupal\node\NodeInterface|int|string $nodeOrTitle
    *   Must be one of the following:
    *
-   *   - An instance of \Drupal\omnipedia_core\Entity\NodeInterface, i.e. a node
+   *   - An instance of \Drupal\node\NodeInterface, i.e. a node
    *     object.
    *
    *   - An integer or a numeric string that equates to an node ID (nid).
@@ -77,7 +77,7 @@ interface WikiNodeRevisionInterface {
    * @param string $date
    *   A date string in the format stored in a wiki node's date field.
    *
-   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
+   * @return \Drupal\node\NodeInterface|null
    *   Returns the node object if $nodeOrTitle can be resolved to a wiki node;
    *   if $nodeOrTitle cannot be resolved to a wiki node, returns null; if
    *   $nodeOrTitle is a numeric value that doesn't equate to a wiki node's ID,
@@ -99,10 +99,10 @@ interface WikiNodeRevisionInterface {
    * have access to. For an example of how to accomplish this, see
    * \Drupal\omnipedia_block\Plugin\Block\PageRevisionHistory::build().
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
-   * @return \Drupal\omnipedia_core\Entity\NodeInterface|null
+   * @return \Drupal\node\NodeInterface|null
    *   The node object of the previous revision if it exists or null otherwise.
    */
   public function getPreviousRevision(NodeInterface $node): ?NodeInterface;
@@ -110,7 +110,7 @@ interface WikiNodeRevisionInterface {
   /**
    * Whether a provided wiki node has a previous revision.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @return boolean
