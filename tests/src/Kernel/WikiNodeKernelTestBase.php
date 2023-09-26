@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\omnipedia_core\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
-use Drupal\omnipedia_core\Storage\NodeStorage as WikiNodeStorage;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
@@ -35,9 +33,7 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
    * {@inheritdoc}
    *
    * This installs the minimum required entity schemas and config to be able to
-   * create wiki nodes, and sets our wiki node storage as the node storage along
-   * with our extend node entity class since our entity type build hook is not
-   * called here.
+   * create wiki nodes.
    */
   protected function setUp(): void {
 
@@ -50,20 +46,6 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
     $this->installEntitySchema('user');
 
     $this->installConfig(['field', 'filter', 'node', 'omnipedia_core']);
-
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface The Drupal entity type manager. */
-    $entityTypeManager = $this->container->get('entity_type.manager');
-
-    // These two are necessary for our custom node entity and storage classes to
-    // be used by Drupal. This would normally be handled by Drupal when
-    // invoking the entity type build hook, but that hook isn't invoked during
-    // kernel tests.
-    $entityTypeManager->clearCachedDefinitions();
-    $this->container->get('entity.memory_cache')->reset();
-
-    $entityTypeManager->getDefinition('node')
-      ->setClass(WikiNode::class)
-      ->setStorageClass(WikiNodeStorage::class);
 
   }
 

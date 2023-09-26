@@ -49,12 +49,6 @@ services:
     tags:
       - { name: cache.context }
 
-  # Event subscriber to replace core Node classes with our own.
-  omnipedia_core.entity_replace_node_classes_event_subscriber:
-    class: Drupal\omnipedia_core\EventSubscriber\Entity\ReplaceNodeEntityClassesEventSubscriber
-    tags:
-      - { name: 'event_subscriber' }
-
   # Event subscriber to record when a wiki node is viewed.
   omnipedia_core.kernel_wiki_node_viewed_event_subscriber:
     class: Drupal\omnipedia_core\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
