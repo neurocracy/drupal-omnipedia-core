@@ -7,12 +7,17 @@ namespace Drupal\Tests\omnipedia_core\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Base class for wiki node kernel tests.
  */
 abstract class WikiNodeKernelTestBase extends KernelTestBase {
+
+  use ContentTypeCreationTrait {
+    createContentType as drupalCreateContentType;
+  }
 
   use NodeCreationTrait {
     getNodeByTitle  as drupalGetNodeByTitle;
