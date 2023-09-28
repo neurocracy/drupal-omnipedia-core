@@ -9,12 +9,17 @@ use Drupal\omnipedia_core\Entity\NodeInterface as WikiNodeInterface;
 use Drupal\omnipedia_core\Entity\Node as WikiNode;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Storage\NodeStorage as WikiNodeStorage;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Base class for wiki node kernel tests.
  */
 abstract class WikiNodeKernelTestBase extends KernelTestBase {
+
+  use ContentTypeCreationTrait {
+    createContentType as drupalCreateContentType;
+  }
 
   use NodeCreationTrait {
     getNodeByTitle  as drupalGetNodeByTitle;
