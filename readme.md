@@ -26,7 +26,7 @@ discontinued in favour of a more accurately named module, e.g.
 
 # Requirements
 
-* [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
+* [Drupal 10](https://www.drupal.org/download)
 
 * PHP 8.1
 
@@ -88,3 +88,9 @@ The following major version bumps indicate breaking changes:
   * Now requires PHP 8.1, up from PHP 8.0.
 
   * Now requires the [`omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-access).
+
+* 6.x:
+
+  * Now requires Drupal core 10.
+
+  * Increases minimum version of [Hook Event Dispatcher](https://www.drupal.org/project/hook_event_dispatcher) to 4.0.

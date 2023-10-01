@@ -16,8 +16,8 @@
   ],
   "require": {
     "php": "^8.1",
-    "drupal/core": "^9.5 || ^10.0",
-    "drupal/hook_event_dispatcher": "^3.3 || ^4.0",
+    "drupal/core": "^10.0",
+    "drupal/hook_event_dispatcher": "^4.0",
     "drupal/omnipedia_access": "5.x-dev@dev",
     "drupal/typed_entity": "^4.0"
   }

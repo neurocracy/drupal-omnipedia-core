@@ -2,7 +2,7 @@ name: Omnipedia - Core
 type: module
 description: Provides core functionality for Omnipedia.
 package: Omnipedia
-core_version_requirement: ^9.5 || ^10.0
+core_version_requirement: ^10.0
 php: 8.1
 
 dependencies:
