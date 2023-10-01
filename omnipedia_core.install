@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Clear entity caches after removing custom node entity and storage classes.
+ */
+function omnipedia_core_update_106001(): void {
+
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface The Drupal entity type manager. */
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+
+  // Don't do anything if our old node entity class is not the current entity
+  // class. This can happen if updates are run in an unexpected order or
+  // something else has occurred that we didn't anticipate.
+  if (!$entityTypeManager->getStorage(
+    'node',
+  )->getEntityClass() === 'Drupal\omnipedia_core\Entity\Node') {
+    return;
+  }
+
+  // This forces a rebuild of the container so that our event subscriber that
+  // previously replaced the node entity and storage classes is no longer
+  // referenced, since it's been removed.
+  \Drupal::service('kernel')->invalidateContainer();
+
+  $entityTypeManager->clearCachedDefinitions();
+
+  $entityTypeManager->getStorage('node')->resetCache();
+
+}
