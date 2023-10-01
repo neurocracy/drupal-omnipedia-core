@@ -94,3 +94,9 @@ The following major version bumps indicate breaking changes:
   * Now requires Drupal core 10.
 
   * Increases minimum version of [Hook Event Dispatcher](https://www.drupal.org/project/hook_event_dispatcher) to 4.0.
+
+  * Removed all classes and interfaces deprecated by the following:
+
+    * Our custom node entity and storage; [these caused multiple issues](https://github.com/neurocracy/drupal-omnipedia-core/issues/4) and [have been replaced with Typed Entities](https://github.com/neurocracy/drupal-omnipedia-core/issues/19).
+
+    * [Main page services and related code](https://github.com/neurocracy/drupal-omnipedia-core/issues/18); they're now found in [the omnipedia_main_page module](https://github.com/neurocracy/drupal-omnipedia-main-page).
