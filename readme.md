@@ -10,8 +10,7 @@ provides the wiki node framework for [Omnipedia](https://omnipedia.app/).
 This contains the framework for managing our simulated wiki pages (Drupal nodes)
 and their revisions. This includes various services to find and interact with
 them, and to query and track what simulated revisions they have (one per
-in-universe day). It provides a custom Drupal node class that we extend with
-various convenience methods, and related event subscribers and cache contexts.
+in-universe day).
 
 Note that this does not contain the framework to manage the simulated date
 system itself; that can be found in the [`omnipedia_date`
