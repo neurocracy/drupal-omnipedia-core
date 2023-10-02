@@ -107,7 +107,7 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
       // Ensure that the default values work correctly when not provided.
       $this->assertNotCount(
-        0, \call_user_func_array('static::generateWikiNodeValues', $values),
+        0, \call_user_func_array([$this, 'generateWikiNodeValues'], $values),
       );
 
     }
@@ -123,7 +123,7 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
       $this->expectException(\ArgumentCountError::class);
 
-      \call_user_func_array('static::generateWikiNodeValues', $values);
+      \call_user_func_array([$this, 'generateWikiNodeValues'], $values);
 
     }
 
