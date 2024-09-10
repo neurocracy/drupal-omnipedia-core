@@ -58,6 +58,7 @@ class WikiNode extends Node {
     return $context->offsetGet('entity')->getType() === WikiNodeInfo::TYPE;
 
   }
+
   /**
    * {@inheritdoc}
    */
