@@ -14,7 +14,7 @@ in-universe day).
 
 Note that this does not contain the framework to manage the simulated date
 system itself; that can be found in the [`omnipedia_date`
-module](https://github.com/neurocracy/drupal-omnipedia-date).
+module](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-date).
 
 This module is named `omnipedia_core` for historical reasons, as it used to
 contain more than the wiki node framework. In the future, this module may be
@@ -35,7 +35,7 @@ discontinued in favour of a more accurately named module, e.g.
 
 Follow the Composer installation instructions for these dependencies first:
 
-* The [`omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-access).
+* The [`omnipedia_access` module](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-access).
 
 ----
 
@@ -58,9 +58,10 @@ should get you up and running.
 In your root `composer.json`, add the following to the `"repositories"` section:
 
 ```json
-"drupal/omnipedia_core": {
+{
   "type": "vcs",
-  "url": "https://github.com/neurocracy/drupal-omnipedia-core.git"
+  "url": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core.git",
+  "only": ["drupal/omnipedia_core"]
 }
 ```
 
@@ -86,7 +87,7 @@ The following major version bumps indicate breaking changes:
 
   * Now requires PHP 8.1, up from PHP 8.0.
 
-  * Now requires the [`omnipedia_access` module](https://github.com/neurocracy/drupal-omnipedia-access).
+  * Now requires the [`omnipedia_access` module](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-access).
 
 * 6.x:
 
@@ -96,6 +97,6 @@ The following major version bumps indicate breaking changes:
 
   * Removed all classes and interfaces deprecated by the following:
 
-    * Our custom node entity and storage; [these caused multiple issues](https://github.com/neurocracy/drupal-omnipedia-core/issues/4) and [have been replaced with Typed Entities](https://github.com/neurocracy/drupal-omnipedia-core/issues/19).
+    * Our custom node entity and storage; [these caused multiple issues](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core/issues/4) and [have been replaced with Typed Entities](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core/issues/19).
 
-    * [Main page services and related code](https://github.com/neurocracy/drupal-omnipedia-core/issues/18); they're now found in [the omnipedia_main_page module](https://github.com/neurocracy/drupal-omnipedia-main-page).
+    * [Main page services and related code](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core/issues/18); they're now found in [the omnipedia_main_page module](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-main-page).

@@ -4,8 +4,8 @@
   "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
   "support": {
-    "docs": "https://github.com/neurocracy/drupal-omnipedia-core",
-    "source": "https://github.com/neurocracy/drupal-omnipedia-core"
+    "docs": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core",
+    "source": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core"
   },
   "authors": [
     {
