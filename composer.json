@@ -2,7 +2,7 @@
   "name": "drupal/omnipedia_core",
   "description": "Omnipedia - Core",
   "type": "drupal-custom-module",
-  "license": "GPL-2.0-or-later",
+  "license": "GPL-3.0-or-later",
   "support": {
     "docs": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core",
     "source": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core"
