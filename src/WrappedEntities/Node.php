@@ -6,12 +6,13 @@ namespace Drupal\omnipedia_core\WrappedEntities;
 
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface;
+use Drupal\omnipedia_core\WrappedEntities\PublishedInterface;
 use Drupal\typed_entity\WrappedEntities\WrappedEntityBase;
 
 /**
  * Wraps the Node entity.
  */
-class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface {
+class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface, PublishedInterface {
 
   /**
    * Get the wrapped node entity identifier (nid).
@@ -21,6 +22,13 @@ class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface {
    */
   public function id(): string {
     return $this->getEntity()->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPublished(): bool {
+    return $this->getEntity()->isPublished();
   }
 
   /**

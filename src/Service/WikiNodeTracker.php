@@ -205,7 +205,7 @@ class WikiNodeTracker implements WikiNodeTrackerInterface {
     $data['nodes'][$nid] = [
       'date'      => $nodeDate,
       'title'     => $nodeTitle,
-      'published' => $node->isPublished(),
+      'published' => $wrappedNode->isPublished(),
     ];
 
     $data['dates'][$nodeDate][] = $nid;
