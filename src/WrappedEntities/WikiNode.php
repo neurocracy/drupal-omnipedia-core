@@ -55,7 +55,10 @@ class WikiNode extends Node {
    */
   public static function applies(TypedEntityContext $context): bool {
 
-    return $context->offsetGet('entity')->getType() === WikiNodeInfo::TYPE;
+    return (
+      $context->offsetGet('entity')->getType() === WikiNodeInfo::TYPE &&
+      parent::applies($context)
+    );
 
   }
 

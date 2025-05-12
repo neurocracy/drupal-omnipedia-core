@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\WrappedEntities;
 
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface;
 use Drupal\omnipedia_core\WrappedEntities\PublishedInterface;
+use Drupal\typed_entity\TypedEntityContext;
 use Drupal\typed_entity\WrappedEntities\WrappedEntityBase;
 
 /**
@@ -29,6 +31,13 @@ class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface, Publi
    */
   public function isPublished(): bool {
     return $this->getEntity()->isPublished();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function applies(TypedEntityContext $context): bool {
+    return $context->offsetGet('entity') instanceof NodeInterface;
   }
 
   /**
