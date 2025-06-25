@@ -1,0 +1,10 @@
+services:
+
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  omnipedia_core_refreshless.kernel_wiki_node_viewed_event_subscriber:
+    class: Drupal\omnipedia_core_refreshless\EventSubscriber\Kernel\WikiNodeViewedEventSubscriber
+    decorates: omnipedia_core.kernel_wiki_node_viewed_event_subscriber
+    public: false

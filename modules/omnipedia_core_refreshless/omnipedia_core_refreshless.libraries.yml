@@ -1,0 +1,5 @@
+prefetch_used_notify:
+  js:
+    javascript/prefetch_used_notify.js: { attributes: { defer: true } }
+  dependencies:
+    - ambientimpact_core/framework

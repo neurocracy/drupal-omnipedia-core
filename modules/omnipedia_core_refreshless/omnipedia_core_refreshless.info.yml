@@ -1,0 +1,10 @@
+name: Omnipedia - Core - RefreshLess integration
+type: module
+description: Provides <a href="https://www.drupal.org/project/refreshless">RefreshLess</a> integration for wiki pages.
+package: Omnipedia
+core_version_requirement: ^10.0 || ^11.0
+php: 8.1
+
+dependencies:
+  - omnipedia_core:omnipedia_core
+  - refreshless:refreshless
