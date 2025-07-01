@@ -59,7 +59,6 @@ class WikiNodeViewedEventSubscriber implements EventSubscriberInterface {
       $requestWrapper->isPrefetch() === true ||
       $requestWrapper->isPreload() === true
     )) {
-      \Drupal::logger('omnipedia_core_refreshless')->debug('Ignored view.');
       return;
     }
 
