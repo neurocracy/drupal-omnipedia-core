@@ -29,10 +29,6 @@ function(component, $) {
     },
     function(context, settings, trigger) {
 
-      if (trigger !== 'unload') {
-        return;
-      }
-
       $(this).off(`refreshless:prefetch-used.${eventNamespace}`);
 
     },
