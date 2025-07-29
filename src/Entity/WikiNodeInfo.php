@@ -20,6 +20,11 @@ final class WikiNodeInfo {
   public const DATE_FIELD = 'field_date';
 
   /**
+   * The name of the entity reference field name containing the episode.
+   */
+  public const EPISODE_FIELD = 'field_episode_tier';
+
+  /**
    * The name of the hide from search flag field on wiki nodes.
    */
   public const HIDDEN_FROM_SEARCH_FIELD = 'field_hide_from_search';

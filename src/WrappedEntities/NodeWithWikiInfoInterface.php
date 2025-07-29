@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_core\WrappedEntities;
 
+use Drupal\omnipedia_core\WrappedEntities\TaxonomyTermWithWikiInfoInterface;
+
 /**
  * Defines an interface for wrapped node entities with wiki information.
  */
@@ -91,5 +93,13 @@ interface NodeWithWikiInfoInterface {
    *   True if there is a previous revision or false otherwise.
    */
   public function hasPreviousWikiRevision(): bool;
+
+  /**
+   * Get the episode taxonomy term for this node, if any.
+   *
+   * @return \Drupal\omnipedia_core\WrappedEntities\TaxonomyTermWithWikiInfoInterface|null
+   *   Either a wrapped taxonomy term, or null if one doesn't exist.
+   */
+  public function getEpisode(): ?TaxonomyTermWithWikiInfoInterface;
 
 }

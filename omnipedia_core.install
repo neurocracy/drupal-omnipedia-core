@@ -29,3 +29,14 @@ function omnipedia_core_update_106001(): void {
   $entityTypeManager->getStorage('node')->resetCache();
 
 }
+
+/**
+ * Clear typed entity cached definitions to pick up taxonomy term repository.
+ */
+function omnipedia_core_update_106002(): void {
+
+  \Drupal::service(
+    'plugin.manager.typed_entity_repository',
+  )->clearCachedDefinitions();
+
+}

@@ -8,6 +8,7 @@ use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface;
 use Drupal\omnipedia_core\WrappedEntities\PublishedInterface;
+use Drupal\omnipedia_core\WrappedEntities\TaxonomyTermWithWikiInfoInterface;
 use Drupal\omnipedia_core\WrappedEntities\WrappedEntityBase;
 use Drupal\typed_entity\TypedEntityContext;
 
@@ -70,6 +71,13 @@ class Node extends WrappedEntityBase implements NodeWithWikiInfoInterface, Publi
    */
   public function hasPreviousWikiRevision(): bool {
     return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEpisode(): ?TaxonomyTermWithWikiInfoInterface {
+    return null;
   }
 
 }

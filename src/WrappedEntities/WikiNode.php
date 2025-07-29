@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\WrappedEntities\Node;
+use Drupal\omnipedia_core\WrappedEntities\TaxonomyTermWithWikiInfoInterface;
 use Drupal\typed_entity\RepositoryManager;
 use Drupal\typed_entity\TypedEntityContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -129,6 +130,15 @@ class WikiNode extends Node {
   public function hasPreviousWikiRevision(): bool {
 
     return $this->wikiNodeRevision->hasPreviousRevision($this->getEntity());
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEpisode(): ?TaxonomyTermWithWikiInfoInterface {
+
+    return $this->wrapReference(WikiNodeInfo::EPISODE_FIELD);
 
   }
 
