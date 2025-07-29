@@ -24,9 +24,11 @@ config_devel:
     - field.field.node.wiki_page.field_episode_tier
     - field.field.node.wiki_page.field_date
     - field.field.node.wiki_page.body
+    - field.field.taxonomy_term.episode_tiers.field_discourse_permalink
     - field.storage.node.field_date
     - field.storage.node.field_episode_tier
     - field.storage.node.field_hide_from_search
+    - field.storage.taxonomy_term.field_discourse_permalink
     - core.entity_view_display.node.wiki_page.teaser
     - core.entity_view_display.node.wiki_page.search_result
     - core.entity_view_display.node.wiki_page.search_index
