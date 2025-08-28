@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Clear entity caches after removing custom node entity and storage classes.
  */
@@ -38,5 +41,97 @@ function omnipedia_core_update_106002(): void {
   \Drupal::service(
     'plugin.manager.typed_entity_repository',
   )->clearCachedDefinitions();
+
+}
+
+/**
+ * Remove any tracked wiki node data referencing non-existent nodes.
+ */
+function omnipedia_core_update_106003(): TranslatableMarkup {
+
+  $nodeStorage = \Drupal::service('entity_type.manager')->getStorage('node');
+
+  $state = \Drupal::service('state');
+
+  $stateNodeDates = $state->get('omnipedia.wiki_node_dates');
+
+  $stateNodeInfo = $state->get('omnipedia.wiki_node_info');
+
+  $stateNodeTitles = $state->get('omnipedia.wiki_node_titles');
+
+  $existingIds = array_values(($nodeStorage->getQuery())
+    ->condition('type', 'wiki_page')
+    ->accessCheck(false)
+    ->execute());
+
+  $nonExistentIds = [];
+
+  foreach ($stateNodeDates as $date => $nids) {
+
+    // $existing = array_filter($nids, fn($nid) => isset($existingIds[$nid]));
+    $existing = array_intersect($nids, $existingIds);
+
+    if (count($nids) === count($existing)) {
+      continue;
+    }
+
+    $nonExisting = array_diff($nids, $existing);
+
+    $nonExistentIds = array_merge($nonExistentIds, $nonExisting);
+
+    $stateNodeDates[$date] = array_intersect($stateNodeDates[$date], $existing);
+
+  }
+
+  $state->set('omnipedia.wiki_node_dates', $stateNodeDates);
+
+  $nonExistentInfo = array_diff_key(
+    $stateNodeInfo, $existingIds,
+  );
+
+  foreach ($nonExistentInfo as $nid => $info) {
+
+    $nonExistentIds[] = $nid;
+
+    unset($stateNodeInfo[$nid]);
+
+  }
+
+  $state->set('omnipedia.wiki_node_info', $stateNodeInfo);
+
+  $nonExistentTitles = array_diff_key(
+    $stateNodeTitles, $existingIds,
+  );
+
+  foreach ($nonExistentTitles as $nid => $title) {
+
+    $nonExistentIds[] = $nid;
+
+    unset($nonExistentTitles[$nid]);
+
+  }
+
+  $state->set('omnipedia.wiki_node_titles', $stateNodeTitles);
+
+  $nonExistentIds = array_unique($nonExistentIds);
+
+  if (count($nonExistentIds) === 0) {
+
+    return new TranslatableMarkup(
+      'Did not find any references to non-existent wiki nodes.',
+    );
+
+  }
+
+  return new PluralTranslatableMarkup(
+    count($nonExistentIds),
+    'Found and fixed a reference to 1 non-existent wiki node.',
+    'Found and fixed references to @count non-existent wiki nodes.',
+  );
+
+  // \Drupal::service('state')->set(
+  //   'omnipedia.wiki_node_dates',
+  //   array_map(\Drupal::service('state')->get('omnipedia.wiki_node_dates'))
+  // );
 
 }
