@@ -58,7 +58,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
     return [
       [
-        'node_values' => [
+        'nodesInfo' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
             'status' => NodeInterface::NOT_PUBLISHED,
@@ -104,7 +104,7 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
         ],
       ],
       [
-        'node_values' => [
+        'nodesInfo' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
             'status' => NodeInterface::NOT_PUBLISHED,

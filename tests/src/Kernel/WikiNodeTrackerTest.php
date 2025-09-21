@@ -51,7 +51,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
     return [
       [
-        'node_values' => [
+        'nodeValues' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
             'status' => NodeInterface::NOT_PUBLISHED,
@@ -90,7 +90,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
         ],
       ],
       [
-        'node_values' => [
+        'nodeValues' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
             'status' => NodeInterface::NOT_PUBLISHED,
@@ -172,7 +172,7 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
         ],
       ],
       [
-        'node_values' => [
+        'nodeValues' => [
           [
             'nid' => 1, 'title' => 'Page 1', 'date' => '2049-09-28',
             'status' => NodeInterface::NOT_PUBLISHED,

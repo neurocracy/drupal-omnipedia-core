@@ -98,11 +98,11 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    * @dataProvider resolveNodeValidProvider
    */
   public function testResolveNodeValid(
-    string $methodName, array $arguments,
+    string $method, array $arguments,
   ): void {
 
     /** @var \Drupal\node\NodeInterface */
-    $node = \call_user_func_array([$this, $methodName], $arguments);
+    $node = \call_user_func_array([$this, $method], $arguments);
 
     $this->assertSame(
       $node, $this->wikiNodeResolver->resolveNode($node),
@@ -159,15 +159,15 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    * @dataProvider resolveNodeValidProvider
    */
   public function testResolveWikiNodeValid(
-    string $methodName, array $arguments,
+    string $method, array $arguments,
   ): void {
 
     /** @var \Drupal\node\NodeInterface */
-    $node = \call_user_func_array([$this, $methodName], $arguments);
+    $node = \call_user_func_array([$this, $method], $arguments);
 
     // Split asserts based on whether this is a wiki node or a different content
     // type, as the latter is expected to always return null from this method.
-    if ($methodName === 'drupalCreateWikiNode') {
+    if ($method === 'drupalCreateWikiNode') {
 
       $this->assertSame(
         $node, $this->wikiNodeResolver->resolveWikiNode($node),
@@ -218,14 +218,14 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
    * @dataProvider resolveNodeValidProvider
    */
   public function testIsWikiNodeValid(
-    string $methodName, array $arguments,
+    string $method, array $arguments,
   ): void {
 
     /** @var \Drupal\node\NodeInterface */
-    $node = \call_user_func_array([$this, $methodName], $arguments);
+    $node = \call_user_func_array([$this, $method], $arguments);
 
     /** @var bool True if a wiki node and false otherwise. */
-    $expected = ($methodName === 'drupalCreateWikiNode' ? true : false);
+    $expected = ($method === 'drupalCreateWikiNode' ? true : false);
 
     $this->assertEquals(
       $expected,
@@ -268,7 +268,7 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
     return [
       [
-        'nodes' => [
+        'nodesInfo' => [
           ['method' => 'drupalCreateWikiNode',  'arguments' => [
             ['nid' => 1, 'title' => 'Wiki page 1'], '2049-09-28',
           ]],
