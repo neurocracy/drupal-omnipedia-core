@@ -1,0 +1,17 @@
+name: Omnipedia - Core - Wiki node test dependencies module
+type: module
+description: Support module for testing wiki nodes.
+package: Testing
+core_version_requirement: ^10.5 || ^11.2
+php: 8.2
+
+dependencies:
+  # Note that we shouldn't set omnipedia_core as a dependency here as that will
+  # cause Drupal to install it before this module, leading to the fatal errors
+  # we're aiming to fix with this module.
+  - drupal:node
+  - drupal:text
+
+config_devel:
+  install:
+    - field.storage.node.body

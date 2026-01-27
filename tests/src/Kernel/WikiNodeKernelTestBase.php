@@ -30,8 +30,9 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
    * These are the minimum modules currently required to create wiki nodes.
    */
   protected static $modules = [
-    'datetime', 'field', 'filter', 'menu_ui', 'node', 'omnipedia_core',
-    'system', 'taxonomy', 'text', 'typed_entity', 'user',
+    'datetime', 'field', 'filter', 'menu_ui', 'node',
+    'omnipedia_core_wiki_node_test_dependencies', 'omnipedia_core', 'system',
+    'taxonomy', 'text', 'typed_entity', 'user',
   ];
 
   /**
@@ -50,7 +51,10 @@ abstract class WikiNodeKernelTestBase extends KernelTestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
 
-    $this->installConfig(['field', 'filter', 'node', 'omnipedia_core']);
+    $this->installConfig([
+      'field', 'filter', 'node', 'omnipedia_core_wiki_node_test_dependencies',
+      'omnipedia_core',
+    ]);
 
   }
 

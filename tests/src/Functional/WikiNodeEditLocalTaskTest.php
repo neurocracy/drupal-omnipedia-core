@@ -41,8 +41,8 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'block', 'field', 'node', 'omnipedia_access', 'omnipedia_core', 'system',
-    'user',
+    'block', 'field', 'node', 'omnipedia_access',
+    'omnipedia_core_wiki_node_test_dependencies', 'system', 'user',
   ];
 
   /**
@@ -51,6 +51,13 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
   protected function setUp(): void {
 
     parent::setUp();
+
+    // We're installing this here rather than in $modules to work around
+    // field.storage.node.body not being found, giving the test module above a
+    // chance to install it before omnipedia_core is installed.
+    //
+    // @see https://gitlab.com/neurocracy/omnipedia/omnipedia/-/work_items/77
+    $this->container->get('module_installer')->install(['omnipedia_core']);
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
 
