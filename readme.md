@@ -27,9 +27,9 @@ discontinued in favour of a more accurately named module, e.g.
 
 # Requirements
 
-* [Drupal 10 or 11](https://www.drupal.org/download)
+* [Drupal 10.5 or 11.2](https://www.drupal.org/download)
 
-* PHP 8.1
+* PHP 8.2
 
 * [Composer](https://getcomposer.org/)
 
