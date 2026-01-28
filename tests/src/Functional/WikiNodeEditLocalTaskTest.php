@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\omnipedia_core\Functional;
 
+use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -41,8 +42,7 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'block', 'field', 'node', 'omnipedia_access',
-    'omnipedia_core_wiki_node_test_dependencies', 'system', 'user',
+    'block', 'field', 'node', 'omnipedia_access', 'system', 'user',
   ];
 
   /**
@@ -51,6 +51,21 @@ class WikiNodeEditLocalTaskTest extends BrowserTestBase {
   protected function setUp(): void {
 
     parent::setUp();
+
+    // This needs to catch \Drupal\Core\Config\PreExistingConfigException if
+    // thrown. Drupal >= 11.3 will not have field.storage.node.body, so we need
+    // to attempt to install the module below which provides it, but doing will
+    // result in PreExistingConfigException being thrown due to the field
+    // storage already existing in Drupal < 11.3.
+    //
+    // @see https://gitlab.com/neurocracy/omnipedia/omnipedia/-/work_items/77
+    try {
+
+      $this->container->get('module_installer')->install([
+        'omnipedia_core_wiki_node_test_dependencies',
+      ]);
+
+    } catch (PreExistingConfigException $exception) {}
 
     // We're installing this here rather than in $modules to work around
     // field.storage.node.body not being found, giving the test module above a
