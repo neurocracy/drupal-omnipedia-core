@@ -8,12 +8,16 @@ services:
       - '@current_user'
       - '@entity_type.manager'
 
+  Drupal\omnipedia_core\Service\WikiNodeAccessInterface: '@omnipedia.wiki_node_access'
+
   # Wiki node resolver service.
   omnipedia.wiki_node_resolver:
     class: Drupal\omnipedia_core\Service\WikiNodeResolver
     arguments:
       - '@entity_type.manager'
       - '@omnipedia.wiki_node_tracker'
+
+  Drupal\omnipedia_core\Service\WikiNodeResolverInterface: '@omnipedia.wiki_node_resolver'
 
   # Wiki node revision service.
   omnipedia.wiki_node_revision:
@@ -22,9 +26,13 @@ services:
       - '@omnipedia.wiki_node_resolver'
       - '@omnipedia.wiki_node_tracker'
 
+  Drupal\omnipedia_core\Service\WikiNodeRevisionInterface: '@omnipedia.wiki_node_revision'
+
   # Wiki node route service.
   omnipedia.wiki_node_route:
     class: Drupal\omnipedia_core\Service\WikiNodeRoute
+
+  Drupal\omnipedia_core\Service\WikiNodeRouteInterface: '@omnipedia.wiki_node_route'
 
   # Wiki node tracker service.
   omnipedia.wiki_node_tracker:
@@ -33,12 +41,16 @@ services:
       - '@state'
       - '@Drupal\typed_entity\RepositoryManager'
 
+  Drupal\omnipedia_core\Service\WikiNodeTrackerInterface: '@omnipedia.wiki_node_tracker'
+
   # Wiki node viewed service.
   omnipedia.wiki_node_viewed:
     class: Drupal\omnipedia_core\Service\WikiNodeViewed
     arguments:
       - '@omnipedia.wiki_node_resolver'
       - '@session'
+
+  Drupal\omnipedia_core\Service\WikiNodeViewedInterface: '@omnipedia.wiki_node_viewed'
 
   # Wiki node cache context.
   cache_context.omnipedia_wiki_node:
