@@ -6,5 +6,6 @@ core_version_requirement: ^10.0 || ^11.0
 php: 8.1
 
 dependencies:
+  - hux:hux
   - omnipedia_core:omnipedia_core
   - refreshless:refreshless
