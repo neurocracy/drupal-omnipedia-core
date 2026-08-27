@@ -7,16 +7,16 @@ namespace Drupal\Tests\omnipedia_core\Unit;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversTrait;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests for the Omnipedia wiki node providers trait.
- *
- * @group omnipedia
- *
- * @group omnipedia_core
- *
- * @coversDefaultClass \Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait
  */
+#[Group('omnipedia')]
+#[Group('omnipedia_core')]
+#[CoversTrait(WikiNodeProvidersTrait::class)]
 class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   use WikiNodeProvidersTrait;

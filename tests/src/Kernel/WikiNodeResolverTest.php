@@ -8,14 +8,15 @@ use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the Omnipedia wiki node resolver service.
- *
- * @group omnipedia
- *
- * @group omnipedia_core
  */
+#[Group('omnipedia')]
+#[Group('omnipedia_core')]
+#[RunTestsInSeparateProcesses]
 class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   use ContentTypeCreationTrait {

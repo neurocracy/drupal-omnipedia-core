@@ -11,14 +11,15 @@ use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for wiki node 'Edit' local task visibility.
- *
- * @group omnipedia
- *
- * @group omnipedia_core
  */
+#[Group('omnipedia')]
+#[Group('omnipedia_core')]
+#[RunTestsInSeparateProcesses]
 class WikiNodeEditLocalTaskTest extends BrowserTestBase {
 
   /**

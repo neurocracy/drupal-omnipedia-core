@@ -8,14 +8,15 @@ use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the Omnipedia wiki node revision service.
- *
- * @group omnipedia
- *
- * @group omnipedia_core
  */
+#[Group('omnipedia')]
+#[Group('omnipedia_core')]
+#[RunTestsInSeparateProcesses]
 class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   /**

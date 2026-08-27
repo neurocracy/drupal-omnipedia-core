@@ -14,14 +14,15 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\typed_entity\EntityWrapperInterface;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests for the Omnipedia wiki node wrapped entity.
- *
- * @group omnipedia
- *
- * @group omnipedia_core
  */
+#[Group('omnipedia')]
+#[Group('omnipedia_core')]
+#[RunTestsInSeparateProcesses]
 class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
   use ContentTypeCreationTrait {
