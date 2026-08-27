@@ -7,6 +7,7 @@ namespace Drupal\omnipedia_core_content_moderation\Hooks;
 use Drupal\hux\Attribute\Alter;
 use Drupal\omnipedia_core_content_moderation\WrappedEntities\NodeWithModerationState;
 use Drupal\omnipedia_core_content_moderation\WrappedEntities\WikiNodeWithModerationState;
+use Drupal\typed_entity\ClassWithVariants;
 use function array_push;
 use function array_unshift;
 
@@ -24,10 +25,16 @@ class TypedRepositoryHooks {
    */
   public function addModerationStateDefinitions(array &$definitions): void {
 
+    /** @var string Fallback class name. */
+    $fallback = $definitions['node']['wrappers']->fallback;
+
+    /** @var string[] Variant class names. */
+    $variants = $definitions['node']['wrappers']->variants;
+
     // Prepend this class so that it gets to try to match before the other
     // variants.
     array_unshift(
-      $definitions['node']['wrappers']->variants,
+      $variants,
       WikiNodeWithModerationState::class,
     );
 
@@ -35,8 +42,12 @@ class TypedRepositoryHooks {
     //
     // @todo Should this be before the WikiNode class from the parent module?
     array_push(
-      $definitions['node']['wrappers']->variants,
+      $variants,
       NodeWithModerationState::class,
+    );
+
+    $definitions['node']['wrappers'] = new ClassWithVariants(
+      $fallback, $variants,
     );
 
   }
