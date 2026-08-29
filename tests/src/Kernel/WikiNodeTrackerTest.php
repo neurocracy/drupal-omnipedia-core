@@ -7,6 +7,7 @@ namespace Drupal\Tests\omnipedia_core\Kernel;
 use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -346,9 +347,8 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
   /**
    * Test tracking and then retrieving data tracked by the wiki node tracker.
-   *
-   * @dataProvider trackWikiNodeDataProvider
    */
+  #[DataProvider('trackWikiNodeDataProvider')]
   public function testTrackWikiNodes(array $nodeValues, array $expected): void {
 
     foreach ($nodeValues as $values) {
@@ -372,9 +372,8 @@ class WikiNodeTrackerTest extends WikiNodeKernelTestBase {
 
   /**
    * Test tracking and untracking via the wiki node tracker.
-   *
-   * @dataProvider untrackWikiNodeDataProvider
    */
+  #[DataProvider('untrackWikiNodeDataProvider')]
   public function testUntrackWikiNodes(
     array $nodeValues, array $expected, array $untrack,
   ): void {

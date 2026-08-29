@@ -8,6 +8,7 @@ use Drupal\omnipedia_core\Service\WikiNodeResolverInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -95,9 +96,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the resolveNode() method with valid values.
-   *
-   * @dataProvider resolveNodeValidProvider
    */
+  #[DataProvider('resolveNodeValidProvider')]
   public function testResolveNodeValid(
     string $method, array $arguments,
   ): void {
@@ -143,9 +143,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the resolveNode() method with invalid values.
-   *
-   * @dataProvider resolveNodeInvalidProvider
    */
+  #[DataProvider('resolveNodeInvalidProvider')]
   public function testResolveNodeInvalid(mixed $data): void {
 
     $this->assertNull(
@@ -156,9 +155,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the resolveWikiNode() method with valid values.
-   *
-   * @dataProvider resolveNodeValidProvider
    */
+  #[DataProvider('resolveNodeValidProvider')]
   public function testResolveWikiNodeValid(
     string $method, array $arguments,
   ): void {
@@ -202,9 +200,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the resolveWikiNode() method with invalid values.
-   *
-   * @dataProvider resolveNodeInvalidProvider
    */
+  #[DataProvider('resolveNodeInvalidProvider')]
   public function testResolveWikiNodeInvalid(mixed $data): void {
 
     $this->assertNull(
@@ -215,9 +212,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the isWikiNode() method with valid node values.
-   *
-   * @dataProvider resolveNodeValidProvider
    */
+  #[DataProvider('resolveNodeValidProvider')]
   public function testIsWikiNodeValid(
     string $method, array $arguments,
   ): void {
@@ -248,9 +244,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the isWikiNode() method with invalid (non-node) values.
-   *
-   * @dataProvider resolveNodeInvalidProvider
    */
+  #[DataProvider('resolveNodeInvalidProvider')]
   public function testIsWikiNodeInvalid(mixed $data): void {
 
     $this->assertEquals(
@@ -308,9 +303,8 @@ class WikiNodeResolverTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the nodeOrTitleToNids() method.
-   *
-   * @dataProvider nodeOrTitleToNidsProvider
    */
+  #[DataProvider('nodeOrTitleToNidsProvider')]
   public function testNodeOrTitleToNids(
     array $nodesInfo, array $queries,
   ): void {

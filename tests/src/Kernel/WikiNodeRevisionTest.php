@@ -8,6 +8,7 @@ use Drupal\node\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_core\Service\WikiNodeTrackerInterface;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -258,9 +259,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the getWikiNodeRevisions() method.
-   *
-   * @dataProvider getWikiNodeRevisionsDataProvider
    */
+  #[DataProvider('getWikiNodeRevisionsDataProvider')]
   public function testGetWikiNodeRevisions(
     array $nodesInfo, array $queries,
   ): void {
@@ -307,9 +307,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the getWikiNodeRevision() method.
-   *
-   * @dataProvider getWikiNodeRevisionsDataProvider
    */
+  #[DataProvider('getWikiNodeRevisionsDataProvider')]
   public function testGetWikiNodeRevision(
     array $nodesInfo, array $queries,
   ): void {
@@ -374,9 +373,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the getWikiNodeRevision() method with non-existent data.
-   *
-   * @dataProvider getWikiNodeRevisionsNonExistentDataProvider
    */
+  #[DataProvider('getWikiNodeRevisionsNonExistentDataProvider')]
   public function testGetWikiNodeRevisionNonExistent(
     array $nodesInfo, array $queries,
   ): void {
@@ -451,9 +449,8 @@ class WikiNodeRevisionTest extends WikiNodeKernelTestBase {
 
   /**
    * Test the getPreviousRevision() and hasPreviousRevision() methods.
-   *
-   * @dataProvider previousRevisionDataProvider
    */
+  #[DataProvider('previousRevisionDataProvider')]
   public function testPreviousRevision(
     array $nodesInfo, array $queries,
   ): void {

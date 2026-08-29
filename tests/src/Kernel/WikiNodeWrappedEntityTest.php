@@ -14,6 +14,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\omnipedia_core\Kernel\WikiNodeKernelTestBase;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\typed_entity\EntityWrapperInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -105,9 +106,8 @@ class WikiNodeWrappedEntityTest extends WikiNodeKernelTestBase {
 
   /**
    * Test creating wiki node and non-wiki node wrapped entities.
-   *
-   * @dataProvider contentTypesProvider
    */
+  #[DataProvider('contentTypesProvider')]
   public function testContentTypes(array $values): void {
 
     /** @var \Drupal\node\NodeInterface */

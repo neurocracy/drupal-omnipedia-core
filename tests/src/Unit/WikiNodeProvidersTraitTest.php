@@ -7,6 +7,7 @@ namespace Drupal\Tests\omnipedia_core\Unit;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -16,14 +17,16 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('omnipedia')]
 #[Group('omnipedia_core')]
 #[CoversTrait(WikiNodeProvidersTrait::class)]
+#[CoversMethod(WikiNodeProvidersTrait::class, 'generateWikiDates')]
+#[CoversMethod(WikiNodeProvidersTrait::class, 'generateWikiNodeCounts')]
+#[CoversMethod(WikiNodeProvidersTrait::class, 'generateWikiNodeTitles')]
+#[CoversMethod(WikiNodeProvidersTrait::class, 'generateWikiNodeValues')]
 class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   use WikiNodeProvidersTrait;
 
   /**
    * Tests the generateWikiDates() method return values.
-   *
-   * @covers ::generateWikiDates
    */
   public function testGenerateWikiNodeDates(): void {
 
@@ -37,8 +40,6 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   /**
    * Tests the generateWikiNodeCounts() method return values.
-   *
-   * @covers ::generateWikiNodeCounts
    */
   public function testGenerateWikiNodeCounts(): void {
 
@@ -61,8 +62,6 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   /**
    * Tests the generateWikiNodeTitles() method return values.
-   *
-   * @covers ::generateWikiNodeTitles
    */
   public function testGenerateWikiNodeTitles(): void {
 
@@ -85,8 +84,6 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   /**
    * Tests the generateWikiNodeValues() method return values.
-   *
-   * @covers ::generateWikiNodeValues
    */
   public function testGenerateWikiNodeValues(): void {
 
@@ -151,8 +148,6 @@ class WikiNodeProvidersTraitTest extends UnitTestCase {
 
   /**
    * Tests the generateWikiNodeValues() method's $limit parameter.
-   *
-   * @covers ::generateWikiNodeValues
    */
   public function testGenerateWikiNodeValuesLimit(): void {
 
