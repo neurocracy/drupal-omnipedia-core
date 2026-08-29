@@ -8,7 +8,6 @@ use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\Tests\omnipedia_core\Traits\WikiNodeProvidersTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversTrait;
-use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
