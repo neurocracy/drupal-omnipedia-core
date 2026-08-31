@@ -60,3 +60,12 @@ function omnipedia_core_update_106004(): void {
   )->clearCachedDefinitions();
 
 }
+
+/**
+ * Rebuild container for addition of update wiki node tracking hooks.
+ */
+function omnipedia_core_update_106005(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
